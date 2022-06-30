@@ -1,0 +1,273 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { View, StatusBar, StyleSheet, Pressable, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+import {
+  Container,
+  IconWithBg,
+  Text,
+  BottomHalfModal,
+  Snackbar,
+  NoRelation,
+  Picker,
+} from '../../components/common';
+import ExpectationInfoModal from '../../components/expectations';
+
+import getLoginClient from '../../libs/api/loginClientApi';
+import {
+  saveActiveRel,
+  WomanInfoContext,
+} from '../../libs/context/womanInfoContext';
+
+import { COLORS, rh, rw } from '../../configs';
+
+const HusbandExpectationsScreen = ({ navigation }) => {
+  const womanInfo = useContext(WomanInfoContext);
+  const [expectations, setExpectations] = useState({});
+  const [isStoring, setIsStoring] = useState({ storing: false, exId: null });
+  const [showModal, setShowModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [resetPicker, setResetPicker] = useState(false);
+  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const selectedExp = useRef(null);
+
+  const getExpectationsFromSpouse = async function () {
+    if (!womanInfo.activeRel) {
+      return;
+    }
+    const loginClient = await getLoginClient();
+    loginClient
+      .get(
+        `index/expectation?relation_id=${womanInfo.activeRel.relId}&gender=woman`,
+      )
+      .then((response) => {
+        if (response.data.is_successful) {
+          setExpectations(response.data.data);
+        } else {
+          setSnackbar({
+            msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+            visible: true,
+          });
+        }
+      });
+  };
+
+  const handleVisible = () => {
+    setSnackbar({
+      visible: !snackbar.visible,
+    });
+  };
+
+  const storeExpectation = async function (id) {
+    const loginClient = await getLoginClient();
+    setIsStoring({ storing: true, exId: id });
+    const formData = new FormData();
+    formData.append('expectation_id', id);
+    formData.append('relation_id', womanInfo.activeRel.relId);
+    formData.append('gender', 'woman');
+    loginClient.post('store/expectation', formData).then((response) => {
+      setIsStoring({ storing: false, exId: null });
+      if (response.data.is_successful) {
+        handleModal();
+      } else {
+        setSnackbar({
+          msg: response.data.message,
+          visible: true,
+        });
+      }
+    });
+  };
+
+  const setActiveSpouse = async function (value) {
+    resetPicker && setResetPicker(false);
+    const loginClient = await getLoginClient();
+    const formData = new FormData();
+    formData.append('relation_id', value);
+    formData.append('gender', 'woman');
+    loginClient.post('active/relation', formData).then((response) => {
+      if (response.data.is_successful) {
+        AsyncStorage.setItem(
+          'lastActiveRelId',
+          JSON.stringify(response.data.data.id),
+        );
+        saveActiveRel({
+          relId: response.data.data.id,
+          label: response.data.data.man_name,
+        });
+        setSnackbar({
+          msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
+          visible: true,
+          type: 'success',
+        });
+      } else {
+        setResetPicker(true);
+        setSnackbar({
+          msg: response.data.message,
+          visible: true,
+        });
+      }
+    });
+  };
+
+  const handleModal = function () {
+    setShowModal(!showModal);
+  };
+
+  const openInfoModal = (exp) => {
+    selectedExp.current = exp;
+    setShowInfoModal(true);
+  };
+
+  const onSelectSpouse = (spouse) => {
+    setActiveSpouse(spouse);
+  };
+
+  const RenderExpectations = ({ item }) => {
+    return (
+      <Pressable
+        style={styles.expItem}
+        onPress={() => storeExpectation(item.id)}>
+        {isStoring.storing && isStoring.exId === item.id ? (
+          <IconWithBg
+            bgColor={COLORS.white}
+            width="80px"
+            height="80px"
+            borderRadius="50px"
+            borderColor="red"
+            borderWidth="2px"
+            loading
+          />
+        ) : (
+          <IconWithBg
+            bgColor={COLORS.white}
+            width="80px"
+            height="80px"
+            borderRadius="50px"
+            icon="account-heart"
+            iconColor={COLORS.red}
+            iconSize={50}
+            borderColor="red"
+            borderWidth="2px"
+          />
+        )}
+
+        <View style={styles.expTitleContainer}>
+          <Text color={COLORS.red} small textAlign="right">
+            {item.title}
+          </Text>
+          <Pressable hitSlop={7} onPress={() => openInfoModal(item)}>
+            <FontAwesome5
+              name="exclamation-circle"
+              size={20}
+              style={styles.expIcon}
+            />
+          </Pressable>
+        </View>
+      </Pressable>
+    );
+  };
+
+  useEffect(() => {
+    getExpectationsFromSpouse();
+  }, [womanInfo.activeRel]);
+
+  return (
+    <Container justifyContent="flex-start">
+      <StatusBar translucent backgroundColor="transparent" />
+      <Pressable
+        onPress={() => navigation.openDrawer()}
+        style={{ alignSelf: 'flex-end' }}>
+        <MaterialCommunityIcons
+          name="menu"
+          color={COLORS.grey}
+          size={28}
+          style={{ marginRight: 20 }}
+        />
+      </Pressable>
+      {womanInfo.relations.length && womanInfo.activeRel ? (
+        <FlatList
+          data={expectations}
+          keyExtractor={(item) => item.id}
+          renderItem={RenderExpectations}
+          numColumns={3}
+          style={{ marginTop: 30, width: '100%' }}
+          contentContainerStyle={{
+            alignSelf: 'center',
+            width: '100%',
+          }}
+        />
+      ) : womanInfo.relations.length && !womanInfo.activeRel ? (
+        <View style={styles.noRel}>
+          <Text color={COLORS.red}>رابطه فعال خود را انتخاب کنید</Text>
+          <Picker
+            data={womanInfo.relations}
+            onItemSelect={onSelectSpouse}
+            reset={resetPicker}
+            placeholder="انتخاب رابطه"
+          />
+        </View>
+      ) : (
+        <NoRelation navigation={navigation} />
+      )}
+      <BottomHalfModal
+        visible={showModal}
+        closeModal={handleModal}
+        text="با موفقیت ثبت شد"
+      />
+      {selectedExp.current && (
+        <ExpectationInfoModal
+          visible={showInfoModal}
+          closeModal={() => setShowInfoModal(false)}
+          exp={selectedExp.current}
+        />
+      )}
+
+      {snackbar.visible === true ? (
+        <Snackbar
+          message={snackbar.msg}
+          type={snackbar.type}
+          handleVisible={handleVisible}
+        />
+      ) : null}
+    </Container>
+  );
+};
+
+const styles = StyleSheet.create({
+  btn: {
+    width: '45%',
+    height: 40,
+    borderRadius: 30,
+    justifyContent: 'center',
+    marginTop: 20,
+    alignSelf: 'center',
+  },
+  noRel: {
+    width: '100%',
+    marginTop: 20,
+  },
+  expTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexShrink: 1,
+    width: '100%',
+    marginTop: rh(1),
+  },
+  expItem: {
+    marginHorizontal: rw(2),
+    width: rw(50),
+    marginVertical: rh(1),
+    flexShrink: 1,
+    padding: 10,
+  },
+  expIcon: {
+    marginLeft: rw(1),
+    alignSelf: 'flex-start',
+  },
+});
+
+export default HusbandExpectationsScreen;

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "771260036544",
+    "project_id": "ghaedegi-woman",
+    "storage_bucket": "ghaedegi-woman.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771260036544:android:0b0ac34527aadb3f934425",
+        "android_client_info": {
+          "package_name": "com.orkideh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771260036544-d7seg35202kfq92iqkcj7ftok95pi1fu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnBKYqo5RXcPl7_F0KY4yqYZLYPcsunhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771260036544-d7seg35202kfq92iqkcj7ftok95pi1fu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
