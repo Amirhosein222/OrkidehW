@@ -1,7 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { View, StatusBar, StyleSheet, Pressable, FlatList } from 'react-native';
+import {
+  View,
+  StatusBar,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Image,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -23,7 +30,7 @@ import {
   WomanInfoContext,
 } from '../../libs/context/womanInfoContext';
 
-import { COLORS, rh, rw } from '../../configs';
+import { baseUrl, COLORS, rh, rw } from '../../configs';
 
 const HusbandExpectationsScreen = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
@@ -72,6 +79,11 @@ const HusbandExpectationsScreen = ({ navigation }) => {
     loginClient.post('store/expectation', formData).then((response) => {
       setIsStoring({ storing: false, exId: null });
       if (response.data.is_successful) {
+        setSnackbar({
+          msg: 'با موفقیت ثبت شد.',
+          visible: true,
+          type: 'success',
+        });
         handleModal();
       } else {
         setSnackbar({
@@ -97,6 +109,8 @@ const HusbandExpectationsScreen = ({ navigation }) => {
         saveActiveRel({
           relId: response.data.data.id,
           label: response.data.data.man_name,
+          image: response.data.data.man_image,
+          mobile: response.data.data.mobile,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -130,29 +144,42 @@ const HusbandExpectationsScreen = ({ navigation }) => {
     return (
       <Pressable
         style={styles.expItem}
+        disabled={isStoring.storing}
         onPress={() => storeExpectation(item.id)}>
         {isStoring.storing && isStoring.exId === item.id ? (
           <IconWithBg
             bgColor={COLORS.white}
-            width="80px"
-            height="80px"
+            width="89px"
+            height="89px"
             borderRadius="50px"
             borderColor="red"
             borderWidth="2px"
             loading
           />
         ) : (
-          <IconWithBg
-            bgColor={COLORS.white}
-            width="80px"
-            height="80px"
-            borderRadius="50px"
-            icon="account-heart"
-            iconColor={COLORS.red}
-            iconSize={50}
-            borderColor="red"
-            borderWidth="2px"
-          />
+          <>
+            {item.image ? (
+              <View style={styles.expImageContainer}>
+                <Image
+                  source={{ uri: baseUrl + item.image }}
+                  style={styles.expImage}
+                  resizeMode="contain"
+                />
+              </View>
+            ) : (
+              <IconWithBg
+                bgColor={COLORS.white}
+                width="89px"
+                height="89px"
+                borderRadius="50px"
+                icon="account-heart"
+                iconColor={COLORS.red}
+                iconSize={50}
+                borderColor="red"
+                borderWidth="2px"
+              />
+            )}
+          </>
         )}
 
         <View style={styles.expTitleContainer}>
@@ -177,7 +204,11 @@ const HusbandExpectationsScreen = ({ navigation }) => {
 
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Pressable
         onPress={() => navigation.openDrawer()}
         style={{ alignSelf: 'flex-end' }}>
@@ -213,11 +244,11 @@ const HusbandExpectationsScreen = ({ navigation }) => {
       ) : (
         <NoRelation navigation={navigation} />
       )}
-      <BottomHalfModal
+      {/* <BottomHalfModal
         visible={showModal}
         closeModal={handleModal}
         text="با موفقیت ثبت شد"
-      />
+      /> */}
       {selectedExp.current && (
         <ExpectationInfoModal
           visible={showInfoModal}
@@ -267,6 +298,21 @@ const styles = StyleSheet.create({
   expIcon: {
     marginLeft: rw(1),
     alignSelf: 'flex-start',
+  },
+  expImage: {
+    width: 50,
+    height: 50,
+  },
+  expImageContainer: {
+    width: 89,
+    height: 89,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 45,
+    borderColor: 'red',
+    borderWidth: 2,
+    alignSelf: 'center',
+    overflow: 'hidden',
   },
 });
 

@@ -14,7 +14,7 @@ import {
 import { PsychologyTestCard } from '../../components/PsychologyTests';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 import { showSnackbar } from '../../libs/helpers';
 
 const PsychologyTestsScreen = ({ navigation }) => {
@@ -68,7 +68,11 @@ const PsychologyTestsScreen = ({ navigation }) => {
   if (isFetching === true) {
     return (
       <Container justifyContent="center">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <ActivityIndicator
           size="large"
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
@@ -78,10 +82,14 @@ const PsychologyTestsScreen = ({ navigation }) => {
   } else if (testsList.length === 0) {
     return (
       <Container justifyContent="space-between">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
         />
         <Text large color={COLORS.blue}>
           در حال حاضر هیچ تستی وجود ندارد!
@@ -93,16 +101,24 @@ const PsychologyTestsScreen = ({ navigation }) => {
   } else {
     return (
       <Container justifyContent="flex-start">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
         />
         <FlatList
           data={testsList}
           keyExtractor={(item) => item.id}
           renderItem={RenderTests}
           style={{ marginTop: 20 }}
+          contentContainerStyle={{
+            marginBottom: rh(2),
+            width: rw(90),
+          }}
         />
         <TabBar seperate={true} navigation={navigation} />
         {snackbar.visible === true ? (

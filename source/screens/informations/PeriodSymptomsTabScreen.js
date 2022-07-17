@@ -6,6 +6,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
+  View,
+  Image,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HorizontalDatePicker from '@logisticinfotech/react-native-horizontal-date-picker';
@@ -21,7 +23,7 @@ import {
 } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, rh, rw } from '../../configs';
+import { baseUrl, COLORS, rh, rw } from '../../configs';
 
 const PeriodSymptomsTabScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -78,17 +80,28 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
       <Pressable
         onPress={() => onSymptomSelect(item)}
         style={styles.symptomContainer}>
-        <IconWithBg
-          bgColor={COLORS.white}
-          width="89px"
-          height="89px"
-          borderRadius="50px"
-          icon="account-heart"
-          iconColor={COLORS.red}
-          iconSize={50}
-          borderColor="red"
-          borderWidth="2px"
-        />
+        {item.image ? (
+          <View style={styles.sympImageContainer}>
+            <Image
+              source={{ uri: baseUrl + item.image }}
+              style={styles.sympImage}
+              resizeMode="contain"
+            />
+          </View>
+        ) : (
+          <IconWithBg
+            bgColor={COLORS.white}
+            width="89px"
+            height="89px"
+            borderRadius="50px"
+            icon="account-heart"
+            iconColor={COLORS.red}
+            iconSize={50}
+            borderColor="red"
+            borderWidth="2px"
+          />
+        )}
+
         <Text color={COLORS.red} style={{ marginTop: rh(1) }}>
           {item.title}
         </Text>
@@ -112,7 +125,11 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
   } else {
     return (
       <Container>
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <Pressable
           onPress={() => navigation.openDrawer()}
           style={{ alignSelf: 'flex-end' }}>
@@ -191,6 +208,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,
+  },
+  sympImage: {
+    width: 50,
+    height: 50,
+  },
+  sympImageContainer: {
+    width: 89,
+    height: 89,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 45,
+    borderColor: 'red',
+    borderWidth: 2,
+    alignSelf: 'center',
+    overflow: 'hidden',
   },
 });
 

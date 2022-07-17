@@ -19,15 +19,21 @@ const PMSInfoScreen = ({}) => {
   const isPeriodDay = useIsPeriodDay();
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <RowContainer marginTop="20px">
-        <Text marginRight={4}>میانگین داده شما در طول 6 دوره آخر</Text>
+        <Text marginRight={4} bold>
+          میانگین داده شما در طول 6 دوره آخر
+        </Text>
         <Icon
           name="long-arrow-alt-left"
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
           size={25}
         />
-        <Text small bold marginLeft={4}>
+        <Text bold marginLeft={4}>
           پی ام اس شما
         </Text>
       </RowContainer>
@@ -38,7 +44,7 @@ const PMSInfoScreen = ({}) => {
             width="75px"
             height="75px"
           />
-          <Text>1 بار</Text>
+          <Text>1 روز</Text>
         </View>
         <View style={styles.pmsInfoCont}>
           <Image
@@ -46,7 +52,7 @@ const PMSInfoScreen = ({}) => {
             width="75px"
             height="75px"
           />
-          <Text>2 بار</Text>
+          <Text>2 روز</Text>
         </View>
         <View style={styles.pmsInfoCont}>
           <Image
@@ -54,7 +60,7 @@ const PMSInfoScreen = ({}) => {
             width="75px"
             height="75px"
           />
-          <Text>1 بار</Text>
+          <Text>1 روز</Text>
         </View>
         <View style={styles.pmsInfoCont}>
           <Image
@@ -62,14 +68,15 @@ const PMSInfoScreen = ({}) => {
             width="75px"
             height="75px"
           />
-          <Text>6 بار</Text>
+          <Text>6 روز</Text>
         </View>
       </RowContainer>
       <Divider color={COLORS.pink} width="90%" />
       <Text
-        alignSelf="flex-end"
+        alignSelf="center"
         marginRight="20"
         marginTop="20"
+        bold
         color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
         مقایسه علائم PMS شما و همسالان شما
       </Text>

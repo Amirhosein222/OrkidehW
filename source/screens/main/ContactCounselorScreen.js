@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { StatusBar, StyleSheet, ScrollView, Keyboard } from 'react-native';
 import { Button } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormData from 'form-data';
 
 import getLoginClient from '../../libs/api/loginClientApi';
@@ -23,6 +24,7 @@ import {
   COLORS,
   SCROLL_VIEW_CONTAINER,
   STATUS_BAR_HEIGHT,
+  rh,
 } from '../../configs';
 
 const ContactCounselorScreen = ({ navigation }) => {
@@ -101,11 +103,18 @@ const ContactCounselorScreen = ({ navigation }) => {
   };
 
   return (
-    <Container>
-      <StatusBar translucent backgroundColor="transparent" />
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: '#ffffff' }}
+      contentContainerStyle={{ backgroundColor: '#ffffff', flex: 1 }}>
+      {/* <Container> */}
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Header
         navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
       />
       <ScrollView
         style={{ flex: 1, width: '100%', marginTop: 30 }}
@@ -182,7 +191,8 @@ const ContactCounselorScreen = ({ navigation }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+      {/* </Container> */}
+    </KeyboardAwareScrollView>
   );
 };
 

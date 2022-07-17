@@ -11,7 +11,7 @@ import {
   Header,
 } from '../../components/common';
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
 
 const AppGuideScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -19,10 +19,14 @@ const AppGuideScreen = ({ navigation }) => {
   const [title, setTitle] = useState('');
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Header
         navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
       />
       <View style={styles.container}>
         <FontAwesome5

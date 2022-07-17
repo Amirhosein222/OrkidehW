@@ -31,9 +31,11 @@ import {
 } from '../../components/common';
 import ExpectationCard from '../../components/common/ExpectationCard';
 
-import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
+import { useIsPeriodDay } from '../../libs/hooks';
 
 const SymptomsScreen = ({ navigation }) => {
+  const isPeriodDay = useIsPeriodDay();
   const [expectations, setExpectation] = useState([]);
   const [spouseMoods, setSpouseMoods] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -96,6 +98,8 @@ const SymptomsScreen = ({ navigation }) => {
         saveActiveRel({
           relId: response.data.data.id,
           label: response.data.data.man_name,
+          image: response.data.data.man_image,
+          mobile: response.data.data.mobile,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -140,13 +144,17 @@ const SymptomsScreen = ({ navigation }) => {
 
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <View style={styles.topContent}>
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5 }}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
         />
-        <Divider width="80%" color={COLORS.grey} style={{ marginBottom: 5 }} />
+        <Divider width="90%" color={COLORS.grey} style={{ marginBottom: 5 }} />
 
         {womanInfo.relations.length && womanInfo.activeRel ? (
           <View
@@ -161,7 +169,6 @@ const SymptomsScreen = ({ navigation }) => {
               onDateSelected={(date) => onDateChange(date)}
               minDate={new Date(Date.now() - 12096e5)}
               maxDate={new Date()}
-              defaultSelected={selectedDate ? selectedDate : moment()}
               dayFormat="jDD"
               monthFormat="jMMMM"
               isShowYear={false}
@@ -169,7 +176,9 @@ const SymptomsScreen = ({ navigation }) => {
               datePickerContainerStyle={{ backgroundColor: 'white' }}
               selectedTextStyle={styles.selectedDate}
               unSelectedTextStyle={styles.unselectedDate}
+              isPeriodDay={isPeriodDay}
             />
+
             {spouseMoods.length ? (
               <FlatList
                 data={spouseMoods}
@@ -179,7 +188,11 @@ const SymptomsScreen = ({ navigation }) => {
               />
             ) : (
               <View
-                style={{ width: '100%', alignSelf: 'center', marginTop: 5 }}>
+                style={{
+                  width: '100%',
+                  alignSelf: 'center',
+                  marginTop: rh(2),
+                }}>
                 {isLoading ? (
                   <ActivityIndicator size="large" color={COLORS.pink} />
                 ) : (
@@ -190,7 +203,7 @@ const SymptomsScreen = ({ navigation }) => {
               </View>
             )}
 
-            <Divider width="75%" color={COLORS.pink} style={{ marginTop: 5 }} />
+            <Divider width="90%" color={COLORS.pink} style={{ marginTop: 5 }} />
             <Text color={COLORS.grey} medium>
               انتظارات همسر
             </Text>
@@ -260,7 +273,19 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 0,
+  },
+  selectedDate: {
+    fontFamily: 'Vazir',
+    fontSize: 12,
+    color: COLORS.white,
+    textAlign: 'center',
+  },
+  unselectedDate: {
+    fontFamily: 'Vazir',
+    fontSize: 12,
+    textAlign: 'center',
+    color: COLORS.dark,
   },
 });
 

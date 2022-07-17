@@ -10,6 +10,7 @@ import {
   SymptomsScreen,
   PMSInfoScreen,
   EnterInfoScreen,
+  WelcomeScreen,
 } from '../screens';
 
 import DrawerNavigator from './DrawerNavigation';
@@ -59,7 +60,7 @@ export default function MainStackNavigator({ isLoggedin }) {
           component={EnterInfoScreen}
           initialParams={{ editProfile: false, reEnter: false }}
         />
-
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="SetAlarm" component={SetAlarmScreen} />
         <Stack.Screen name="PMSInfo" component={PMSInfoScreen} />
         <Stack.Screen name="Symptoms" component={SymptomsScreen} />

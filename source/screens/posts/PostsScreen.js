@@ -25,7 +25,8 @@ import {
 } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, STATUS_BAR_HEIGHT, baseUrl, rh } from '../../configs';
+import { COLORS, STATUS_BAR_HEIGHT, baseUrl, rh, rw } from '../../configs';
+import { numberConverter } from '../../libs/helpers';
 
 const PostsScreen = ({ navigation, route }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -88,17 +89,27 @@ const PostsScreen = ({ navigation, route }) => {
           />
         )}
 
-        <Text
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          medium
-          alignSelf="flex-end"
-          marginRight="20"
-          marginTop="20">
-          {item.title}
-        </Text>
-        <Text color={COLORS.dark} medium>
-          {item.text.replace(/(<([^>]+)>)/gi, '')}
-        </Text>
+        <View
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            paddingHorizontal: rw(4),
+            alignSelf: 'center',
+            marginTop: rh(1),
+            marginBottom: rh(2),
+          }}>
+          <Text
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            medium
+            alignSelf="flex-end"
+            marginRight="0"
+            marginTop="10">
+            {numberConverter(item.title)}
+          </Text>
+          <Text color={COLORS.dark} medium textAlign="right" alignSelf="center">
+            {numberConverter(item.text.replace(/(<([^>]+)>)/gi, ''))}
+          </Text>
+        </View>
 
         <View style={{ flexDirection: 'row', width: '100%' }}>
           <Pressable
@@ -184,7 +195,11 @@ const PostsScreen = ({ navigation, route }) => {
   } else {
     return (
       <Container justifyContent="flex-start">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()}>
             <IconWithBg
@@ -256,6 +271,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     margin: 5,
+    // paddingHorizontal: rw(4)
   },
   header: {
     flexDirection: 'row',

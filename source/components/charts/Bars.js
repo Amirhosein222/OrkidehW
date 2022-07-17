@@ -31,7 +31,7 @@ const Bars = ({ data }) => {
           alignSelf="flex-end"
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
           bold>
-          شما 6 بار
+          شما 6 روز
         </Text>
       </View>
 

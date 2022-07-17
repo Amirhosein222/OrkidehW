@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useIsFocused } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 import { showSnackbar } from '../../libs/helpers';
@@ -23,7 +24,7 @@ import {
 } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
 
 const AddMemoryScreen = ({ navigation, route }) => {
   const params = route.params;
@@ -174,76 +175,84 @@ const AddMemoryScreen = ({ navigation, route }) => {
   }, [isFocused]);
 
   return (
-    <View
-      style={{
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flex: 1,
-        backgroundColor: 'white',
-      }}>
-      <StatusBar translucent backgroundColor="transparent" />
-      <Header
-        navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
-      />
-      <Text
-        marginTop="10"
-        large
-        bold
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
-        ثبت و ویرایش خاطره
-      </Text>
+    <KeyboardAwareScrollView>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flex: 1,
+          backgroundColor: 'white',
+        }}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <Header
+          navigation={navigation}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
+        />
+        <Text
+          marginTop="10"
+          large
+          bold
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+          ثبت و ویرایش خاطره
+        </Text>
 
-      <Text marginTop="10" medium>
-        موضوع خاطره
-      </Text>
-      {categories.length ? (
-        <Picker
-          data={categories}
-          onItemSelect={onSelectTitle}
-          placeholder={
-            currentTitle ? currentTitle : 'موضوع خاطره را انتخاب کنید'
+        <Text marginTop="10" medium>
+          موضوع خاطره
+        </Text>
+        {categories.length ? (
+          <Picker
+            data={categories}
+            onItemSelect={onSelectTitle}
+            placeholder={
+              currentTitle ? currentTitle : 'موضوع خاطره را انتخاب کنید'
+            }
+            reset={resetPicker}
+            defaultValue={currentTitle}
+            isMemory={true}
+          />
+        ) : (
+          <ActivityIndicator size="large" color={COLORS.pink} />
+        )}
+
+        <Text marginTop="10" medium>
+          متن خاطره
+        </Text>
+        <TextInput
+          multiline={true}
+          lineNums={10}
+          style={styles.textArea}
+          onChangeText={handleTextInput}
+          textColor="black"
+          editedText={
+            memoryText || memoryText === '' ? memoryText : params.text
           }
-          reset={resetPicker}
-          defaultValue={currentTitle}
-          isMemory={true}
         />
-      ) : (
-        <ActivityIndicator size="large" color={COLORS.pink} />
-      )}
+        <Button
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          mode="contained"
+          style={styles.btn}
+          loading={isSending ? true : false}
+          disabled={isSending ? true : false}
+          onPress={
+            params.edit === true ? () => updateMemory() : () => addMemory()
+          }>
+          <Text color="white">ثبت / ویرایش خاطره</Text>
+        </Button>
+        <TabBar seperate={true} navigation={navigation} />
 
-      <Text marginTop="10" medium>
-        متن خاطره
-      </Text>
-      <TextInput
-        multiline={true}
-        lineNums={10}
-        style={styles.textArea}
-        onChangeText={handleTextInput}
-        textColor="black"
-        editedText={memoryText || memoryText === '' ? memoryText : params.text}
-      />
-      <Button
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-        mode="contained"
-        style={styles.btn}
-        loading={isSending ? true : false}
-        disabled={isSending ? true : false}
-        onPress={
-          params.edit === true ? () => updateMemory() : () => addMemory()
-        }>
-        <Text color="white">ثبت / ویرایش خاطره</Text>
-      </Button>
-      <TabBar seperate={true} navigation={navigation} />
-
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null}
-    </View>
+        {snackbar.visible === true ? (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            handleVisible={handleVisible}
+          />
+        ) : null}
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 

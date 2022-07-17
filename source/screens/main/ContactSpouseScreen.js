@@ -21,7 +21,7 @@ import {
   saveWomanRelations,
   saveActiveRel,
 } from '../../libs/context/womanInfoContext';
-import { validatePhoneNumber } from '../../libs/helpers';
+import { validatePhoneNumber, numberConverter } from '../../libs/helpers';
 import {
   Container,
   Text,
@@ -85,7 +85,7 @@ const ContactSpouseScreen = ({ navigation }) => {
       return;
     }
     ImagePicker.openPicker({
-      width: 300,
+      width: 400,
       height: 400,
       cropping: true,
     }).then((image) => {
@@ -132,20 +132,27 @@ const ContactSpouseScreen = ({ navigation }) => {
       formData.append('include_man', 1);
       formData.append('include_woman', 1);
       formData.append('gender', 'woman');
-
+      console.log('formData ', formData);
       loginClient
         .post('store/relation', formData)
         .then((response) => {
           setIsAdding(false);
-          setSnackbar({
-            msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
-            visible: true,
-            type: 'success',
-          });
-          setSpouseName('');
-          setSpouseNumber('');
-          setSpousePicture('');
-          setShouldUpdate(!shouldUpdate);
+          if (response.data.is_successful) {
+            setSnackbar({
+              msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
+              visible: true,
+              type: 'success',
+            });
+            setSpouseName('');
+            setSpouseNumber('');
+            setSpousePicture('');
+            setShouldUpdate(!shouldUpdate);
+          } else {
+            setSnackbar({
+              msg: response.data.message,
+              visible: true,
+            });
+          }
         })
         .catch((e) => {
           setIsAdding(false);
@@ -225,6 +232,8 @@ const ContactSpouseScreen = ({ navigation }) => {
   };
 
   const getRelations = async function () {
+    const lastActiveRel = await AsyncStorage.getItem('lastActiveRelId');
+
     saveActiveRel(null);
     setLoadingRelations(true);
     const loginClient = await getLoginClient();
@@ -232,8 +241,8 @@ const ContactSpouseScreen = ({ navigation }) => {
       .get('index/relation?include_man=1&include_woman=1&gender=woman')
       .then((response) => {
         setLoadingRelations(false);
+        console.log('my rels ', response.data.data);
         if (response.data.is_successful) {
-          console.log('rels ', response.data.data);
           let rels = [];
           let activeRel = null;
           setRelations(response.data.data);
@@ -244,7 +253,7 @@ const ContactSpouseScreen = ({ navigation }) => {
               is_active: rel.is_active,
               is_verified: rel.is_verified,
             });
-            if (rel.is_active === 1) {
+            if (rel.is_active === 1 && rel.id === Number(lastActiveRel)) {
               activeRel = rel;
             }
           });
@@ -252,6 +261,8 @@ const ContactSpouseScreen = ({ navigation }) => {
             saveActiveRel({
               relId: activeRel.id,
               label: activeRel.man_name,
+              image: activeRel.man_image,
+              mobile: activeRel.man.mobile,
             });
           }
           AsyncStorage.setItem('rels', JSON.stringify(rels));
@@ -303,7 +314,7 @@ const ContactSpouseScreen = ({ navigation }) => {
               ویرایش
             </Text>
           </Button>
-          <Text marginRight="10">{item.man.mobile}</Text>
+          <Text marginRight="10">{numberConverter(item.man.mobile)}</Text>
         </View>
         {item.is_verified === 0 && item.applicant === 'man' ? (
           <Button
@@ -329,10 +340,14 @@ const ContactSpouseScreen = ({ navigation }) => {
 
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Header
         navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
       />
       <ScrollView
         style={{ width: '100%' }}
@@ -342,7 +357,7 @@ const ContactSpouseScreen = ({ navigation }) => {
         </Text>
         <Divider
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          width="80%"
+          width="90%"
           style={{ marginTop: 10 }}
         />
         <Text marginTop="20" medium bold>
@@ -423,7 +438,7 @@ const ContactSpouseScreen = ({ navigation }) => {
 
         <Divider
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          width="80%"
+          width="90%"
         />
 
         <Text marginTop="20" medium bold>

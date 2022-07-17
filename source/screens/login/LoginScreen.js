@@ -1,31 +1,31 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect } from 'react';
-import { View, StatusBar, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, StatusBar, StyleSheet, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import { CommonActions } from '@react-navigation/native';
 
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import authApi from '../../libs/api/authApi';
-import { validatePhoneNumber } from '../../libs/helpers';
+import { useApi } from '../../libs/hooks';
+import { getSettings } from '../../libs/apiCalls';
+import { getFromAsyncStorage, validatePhoneNumber } from '../../libs/helpers';
 
-import {
-  Container,
-  Text,
-  TextInput,
-  Image,
-  Snackbar,
-} from '../../components/common';
-import { COLORS } from '../../configs';
+import { Text, TextInput, Snackbar } from '../../components/common';
+import { COLORS, rh, rw } from '../../configs';
 
 const LoginScreen = ({ navigation, route }) => {
-  const params = route.params || {};
+  const { saveSettings } = useContext(WomanInfoContext);
+  const [settings, setSettings] = useApi(() => getSettings(''));
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [biometryType, setBiometryType] = useState(null);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [loginSettings, setLoginSettings] = useState(null);
+  const [hasToken, setHasToken] = useState(null);
 
   const handleTextInput = function (text, name) {
     if (name === 'phoneNumber') {
@@ -66,13 +66,15 @@ const LoginScreen = ({ navigation, route }) => {
     return true;
   };
 
-  const onPressLogin = async function () {
+  const onPressLogin = async function (isBiometric = false) {
     if (validateInput()) {
       setIsSending(true);
       const formData = new FormData();
       formData.append('mobile', phoneNumber);
-      formData.append('password', password);
       formData.append('gender', 'woman');
+      isBiometric
+        ? formData.append('isBiometric', true)
+        : formData.append('password', password);
       authApi.post('login', formData).then((response) => {
         setIsSending(false);
         if (response.data.is_successful) {
@@ -106,6 +108,7 @@ const LoginScreen = ({ navigation, route }) => {
       });
     }
   };
+
   const getMessage = function () {
     if (biometryType === 'Face ID') {
       return 'Scan your Face on the device to continue';
@@ -115,13 +118,26 @@ const LoginScreen = ({ navigation, route }) => {
   };
 
   const showAuthenticationDialog = function () {
+    if (!hasToken) {
+      setSnackbar({
+        msg: 'لطفا ابتدا با رمز عبور وارد شوید.',
+        visible: true,
+      });
+      return false;
+    }
     if (validateInput(true)) {
       if (biometryType !== null && biometryType !== undefined) {
         FingerprintScanner.authenticate({
           description: getMessage(),
         })
-          .then(() => {
-            onPressLogin();
+          .then(async () => {
+            await AsyncStorage.setItem('logedOut', 'false');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'HomeDrawer' }],
+              }),
+            );
           })
           .catch((error) => {
             console.log('Authentication error is => ', error);
@@ -133,90 +149,123 @@ const LoginScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    setSettings();
     FingerprintScanner.isSensorAvailable()
       .then((bioType) => {
         setBiometryType(bioType);
       })
       .catch((error) =>
         setSnackbar({
-          msg: 'دستگاه شما از قابلیت اثر انگشت برخوردار نمی باشد.',
+          msg: 'دستگاه شما از قابلیت اسکن اثر انگشت برخوردار نمی باشد.',
           visible: true,
         }),
       );
+    getFromAsyncStorage('userToken').then((res) => {
+      if (res) {
+        setHasToken(true);
+      }
+    });
   }, []);
 
+  useEffect(() => {
+    console.log('settings.data ', settings.data);
+    if (settings.data && settings.data.is_successful) {
+      const result = settings.data.data.find(
+        (e) => e.key === 'app_image_login_page',
+      );
+      result && setLoginSettings(result);
+      const settingsObj = settings.data.data.reduce(
+        (acc, cur) => ({ ...acc, [cur.key]: cur }),
+        {},
+      );
+      saveSettings(settingsObj);
+    }
+  }, [settings]);
+
   return (
-    <Container>
-      <StatusBar translucent backgroundColor="transparent" />
-      <Text medium color="#fe0294">
-        شماره موبایل
-      </Text>
-      <TextInput
-        placeholder="شماره تماس خود را وارد کنید"
-        textColor={COLORS.pink}
-        phColor={COLORS.pink}
-        style={styles.input}
-        keyboardType="numeric"
-        testID="pinput"
-        onChangeText={handleTextInput}
-        inputName="phoneNumber"
+    <View style={styles.container}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
       />
 
-      <Text medium color="#fe0294">
-        رمز عبور
-      </Text>
-      <TextInput
-        placeholder="رمز عبور خود را وارد کنید"
-        phColor={COLORS.pink}
-        textColor={COLORS.pink}
-        style={styles.input}
-        testID="pinput"
-        onChangeText={handleTextInput}
-        inputName="password"
-      />
+      <View style={styles.content}>
+        <Text large color="#fe0294">
+          سلام عزیزم! به نرم افزار ارکیده خوش اومدی.
+        </Text>
+        {/* <Text medium color="#fe0294" marginTop={rh(5)}>
+          شماره موبایل
+        </Text> */}
+        <TextInput
+          placeholder="لطفا شماره موبایلت رو اینجا وارد کن."
+          textColor={COLORS.white}
+          phColor={COLORS.white}
+          style={{ ...styles.input, marginTop: rh(8) }}
+          keyboardType="numeric"
+          testID="pinput"
+          onChangeText={handleTextInput}
+          inputName="phoneNumber"
+          fontWeight="bold"
+        />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          justifyContent: 'center',
-        }}>
+        {/* <Text medium color="#fe0294">
+          رمز عبور
+        </Text> */}
+        <TextInput
+          placeholder="لطفا رمز عبورت رو اینجا وارد کن."
+          textColor={COLORS.white}
+          phColor={COLORS.white}
+          style={styles.input}
+          testID="pinput"
+          onChangeText={handleTextInput}
+          inputName="password"
+          fontWeight="bold"
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'center',
+          }}>
+          <Button
+            color={COLORS.pink}
+            mode="contained"
+            style={styles.btn}
+            testID="loginBtn"
+            loading={isSending ? true : false}
+            disabled={isSending ? true : false}
+            onPress={() => onPressLogin()}>
+            <Text color="white">ورود کاربر</Text>
+          </Button>
+          <Button
+            color={COLORS.pink}
+            mode="contained"
+            style={[styles.btn, { width: '40%' }]}
+            testID="loginBtn"
+            onPress={() => showAuthenticationDialog()}>
+            <Text color="white" small>
+              ورود با اثر انگشت
+            </Text>
+          </Button>
+        </View>
+
         <Button
           color={COLORS.pink}
-          mode="contained"
-          style={styles.btn}
+          mode="outlined"
+          style={{ width: '50%', borderRadius: 40, marginTop: rh(1) }}
           testID="loginBtn"
-          loading={isSending ? true : false}
-          disabled={isSending ? true : false}
-          onPress={() => onPressLogin()}>
-          <Text color="white">ورود کاربر</Text>
-        </Button>
-        <Button
-          color={COLORS.pink}
-          mode="contained"
-          style={[styles.btn, { width: '40%' }]}
-          testID="loginBtn"
-          onPress={() => showAuthenticationDialog()}>
-          <Text color="white" small>
-            ورود با اثر انگشت
-          </Text>
+          disabled={!settings.data ? true : false}
+          onPress={() => navigation.navigate('Register')}>
+          <Text color={COLORS.pink}>ایجاد حساب کاربری</Text>
         </Button>
       </View>
 
-      <Button
-        color={COLORS.pink}
-        mode="outlined"
-        style={{ width: '50%', borderRadius: 40, marginBottom: 5 }}
-        testID="loginBtn"
-        onPress={() => navigation.navigate('Register')}>
-        <Text color={COLORS.pink}>ایجاد حساب کاربری</Text>
-      </Button>
       <Image
-        imageSource={require('../../assets/images/period+date.jpg')}
-        width="80%"
-        height="40%"
-        borderRadius="20px"
+        source={{ uri: loginSettings && loginSettings.value }}
+        style={{ ...styles.image, backgroundColor: 'rgba(200,200,200, 0.6)' }}
       />
+
       {snackbar.visible === true ? (
         <Snackbar
           message={snackbar.msg}
@@ -224,11 +273,22 @@ const LoginScreen = ({ navigation, route }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  content: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: rw(100),
+    marginTop: rh(2),
+  },
   btn: {
     width: '30%',
     height: 40,
@@ -239,6 +299,12 @@ const styles = StyleSheet.create({
   input: {
     width: '75%',
     margin: 10,
+  },
+  image: {
+    width: rw(73),
+    height: rh(35),
+    borderRadius: 15,
+    marginTop: rh(8),
   },
   snackbar: {
     backgroundColor: COLORS.red,

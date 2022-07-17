@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StatusBar,
@@ -8,11 +8,14 @@ import {
   ActivityIndicator,
   ScrollView,
   Keyboard,
+  Image,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
 import Swiper from 'react-native-swiper';
 
-import VideoPlayerModal from '../../components/learningBank/VideoPlayerModal/VideoPlayerModal';
+import { VideoPlayerModal } from '../../components/learningBank';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
@@ -21,7 +24,6 @@ import {
   IconWithBg,
   Divider,
   Text,
-  Image,
   CommentModal,
   TextInput,
   Snackbar,
@@ -35,15 +37,16 @@ import {
   SCROLL_VIEW_CONTAINER,
   baseUrl,
   rw,
+  rh,
 } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
+import { numberConverter } from '../../libs/helpers';
 
 const FullPostScreen = ({ navigation, route }) => {
   const params = route.params;
   const isPeriodDay = useIsPeriodDay();
   const [post, setPost] = useState(null);
   const [medias, setMedias] = useState([]);
-
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,15 +55,21 @@ const FullPostScreen = ({ navigation, route }) => {
   const [btnPressed, setBtnPressed] = useState(false);
   const [replyCmId, setReplyCmId] = useState(null);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
+  const video = useRef(null);
 
   const getFullPost = async function () {
+    !isLoading && setIsLoading(true);
+    post && setPost(null);
+    medias.length && setMedias([]);
+    comments.length && setComments([]);
+
     const loginClient = await getLoginClient();
     loginClient
       .get(`show/post/detail?id=${params.post.id}&gender=woman`)
       .then((response) => {
         setIsLoading(false);
         if (response.data.is_successful) {
-          console.log('full post ', response.data.data);
           setPost(response.data.data);
           setMedias([
             ...response.data.data[0].images,
@@ -133,9 +142,20 @@ const FullPostScreen = ({ navigation, route }) => {
     setShowModal(!showModal);
   };
 
+  const onPlayVideo = (vid) => {
+    video.current = vid;
+    setVideoModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setVideoModalVisible(false);
+  };
+
   useEffect(() => {
+    setVideoModalVisible(false);
+    video.current = null;
     getFullPost();
-  }, []);
+  }, [params]);
 
   if (isLoading) {
     return (
@@ -160,10 +180,13 @@ const FullPostScreen = ({ navigation, route }) => {
       </Container>
     );
   } else {
-    console.log('medias ', medias);
     return (
       <Container justifyContent="flex-start">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()}>
             <IconWithBg
@@ -200,39 +223,66 @@ const FullPostScreen = ({ navigation, route }) => {
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={[SCROLL_VIEW_CONTAINER]}>
+          {medias.length ? (
+            <View style={styles.mediaContainer}>
+              <Swiper width={WIDTH} height={200} showsButtons={true}>
+                {medias.map((item) => {
+                  return item.hasOwnProperty('image') ? (
+                    <Image
+                      source={{ uri: baseUrl + item.image }}
+                      style={{ width: rw(100), height: '100%' }}
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <View>
+                      <Image
+                        source={{
+                          uri:
+                            baseUrl +
+                            '/uploads/videos/1/07303aeaf362082fbace7d775980190f35134338-144p.mp4',
+                        }}
+                        style={styles.videoThumbnail}
+                        resizeMode="contain"
+                      />
+                      <Pressable
+                        style={styles.playVideo}
+                        onPress={() => onPlayVideo(item.video)}>
+                        <Text color="white">مشاهده ویدیو</Text>
+                        <FontAwesome5
+                          name="play-circle"
+                          size={28}
+                          color="white"
+                          style={{ marginTop: rh(1) }}
+                        />
+                      </Pressable>
+                    </View>
+                  );
+                })}
+              </Swiper>
+            </View>
+          ) : (
+            <Image
+              source={require('../../assets/images/01.png')}
+              style={{ width: 100, height: 180 }}
+            />
+          )}
+
           {post ? (
             <>
-              <View style={styles.mediaContainer}>
-                {post[0].images.length ? (
-                  <Swiper width={WIDTH} height={200} showsButtons={true}>
-                    {post[0].images.map((img) => {
-                      return (
-                        <Image
-                          imageSource={{ uri: baseUrl + img.image }}
-                          width="100%"
-                          height="100%"
-                        />
-                      );
-                    })}
-                  </Swiper>
-                ) : (
-                  <Image
-                    imageSource={require('../../assets/images/01.png')}
-                    width="100%"
-                    height="180px"
-                  />
-                )}
-              </View>
               <View style={styles.textContainer}>
                 <Text
                   color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
                   medium
                   alignSelf="flex-end"
                   marginTop="20">
-                  {post[0].title}
+                  {numberConverter(post[0].title)}
                 </Text>
-                <Text color={COLORS.dark} medium textAlign="right">
-                  {post[0].text.replace(/(<([^>]+)>)/gi, '')}
+                <Text
+                  color={COLORS.dark}
+                  medium
+                  textAlign="right"
+                  alignSelf="center">
+                  {numberConverter(post[0].text.replace(/(<([^>]+)>)/gi, ''))}
                 </Text>
               </View>
 
@@ -353,6 +403,12 @@ const FullPostScreen = ({ navigation, route }) => {
             handleVisible={handleVisible}
           />
         ) : null}
+
+        <VideoPlayerModal
+          visible={videoModalVisible}
+          video={video.current}
+          closeModal={closeModal}
+        />
       </Container>
     );
   }
@@ -362,7 +418,7 @@ const styles = StyleSheet.create({
   mediaContainer: {
     width: '100%',
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: 'yellow',
   },
   textContainer: {
     width: '100%',
@@ -406,6 +462,22 @@ const styles = StyleSheet.create({
     margin: 10,
     width: '100%',
     justifyContent: 'flex-end',
+  },
+  playVideo: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: COLORS.pink,
+    width: rw(20),
+    height: rh(11),
+    left: rw(78),
+    top: rh(1),
+    borderRadius: 7,
+  },
+  videoThumbnail: {
+    width: rw(100),
+    height: '100%',
+    backgroundColor: 'yellow',
   },
 });
 

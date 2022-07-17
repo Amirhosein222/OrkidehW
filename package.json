@@ -47,6 +47,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-modal": "^11.6.1",
+    "react-native-orientation-locker": "^1.5.0",
     "react-native-paper": "^4.5.0",
     "react-native-picker-select": "^8.0.4",
     "react-native-read-more": "^1.0.0",

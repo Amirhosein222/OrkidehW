@@ -91,11 +91,11 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
       formData.append('man_image', spousePicture);
 
       loginClient.post('update/relation', formData).then((response) => {
+        setIsUpdating(false);
         if (response.data.is_successful) {
+          showSnackbar('تغییرات با موفقیت اعمال شد.', 'success');
           setSpouseName('');
           setSpouseNumber('');
-          showSnackbar('تغییرات با موفقیت اعمال شد.', 'success');
-          setIsUpdating(false);
           closeModal('', true);
         } else {
           showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید');
@@ -119,43 +119,51 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
       animationOutTiming={0}
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
-      animationIn="fadeIn"
-      animationOut="fadeOut"
+      animationIn="zoomIn"
+      animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
           ...styles.modalContent,
-          backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
+          backgroundColor: '#ffffff',
         }}>
         <View style={styles.header}>
-          <View style={{ marginLeft: rw(30) }}>
-            <Text color="white">ویرایش اطلاعات همسر</Text>
+          <View style={{ marginLeft: rw(26) }}>
+            <Text color={COLORS.dark} medium bold>
+              ویرایش اطلاعات همسر
+            </Text>
           </View>
 
           <AntDesign
             onPress={() => closeModal()}
             name="closecircle"
             size={26}
-            color="white"
+            color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
             style={styles.closeIcon}
           />
         </View>
-        <Text color={COLORS.white} marginTop={rh(6)} medium>
+        <Text color={COLORS.dark} marginTop={rh(6)} medium>
           نام همسر
         </Text>
         <TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.lightPink,
+          }}
           onChangeText={handleTextInput}
           inputName="spouseName"
           editedText={
             spouseName || spouseName === '' ? spouseName : relation.man_name
           }
         />
-        <Text color={COLORS.white} marginTop={rh(4)} medium>
+        <Text color={COLORS.dark} marginTop={rh(4)} medium>
           شماره موبایل همسر
         </Text>
         <TextInput
-          style={styles.input}
+          style={{
+            ...styles.input,
+            backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.lightPink,
+          }}
           keyboardType="numeric"
           onChangeText={handleTextInput}
           inputName="spouseNumber"
@@ -170,7 +178,7 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
           <Pressable
             onPress={() => selectPicture(true)}
             style={{ marginTop: rh(4), alignItems: 'center' }}>
-            <Text color={COLORS.white} medium>
+            <Text color={COLORS.dark} medium>
               حذف تصویر پروفایل
             </Text>
             <View style={styles.userIcon}>
@@ -187,26 +195,28 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
           <Pressable
             onPress={() => selectPicture()}
             style={{ marginTop: rh(4), alignItems: 'center' }}>
-            <Text color={COLORS.white} medium>
+            <Text color={COLORS.dark} medium>
               انتخاب تصویر پروفایل
             </Text>
-            <View style={styles.userIcon}>
-              <Icon
-                name="user-alt"
-                size={40}
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-              />
+            <View
+              style={{
+                ...styles.userIcon,
+                backgroundColor: isPeriodDay
+                  ? COLORS.lightRed
+                  : COLORS.lightPink,
+              }}>
+              <Icon name="user-alt" size={40} color={COLORS.white} />
             </View>
           </Pressable>
         )}
 
         <Button
-          color={COLORS.white}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
           mode="contained"
           style={[styles.btn, { width: '25%', height: 40, marginTop: 'auto' }]}
           loading={isUpdating ? true : false}
           onPress={() => updateRelation()}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>ثبت</Text>
+          <Text color={COLORS.white}>ثبت</Text>
         </Button>
       </View>
       {snackbar.visible === true ? (
@@ -235,7 +245,6 @@ const styles = StyleSheet.create({
   userIcon: {
     width: 79,
     height: 79,
-    backgroundColor: COLORS.white,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -254,7 +263,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-
     borderRadius: 20,
     height: '70%',
     justifyContent: 'center',

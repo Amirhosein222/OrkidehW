@@ -5,16 +5,18 @@ import { COLORS } from '../../configs';
 
 const Input = ({
   onChangeText,
+  onSubmitEditing = null,
   placeholder,
   keyboardType,
   style,
   phColor,
-  multiline = false,
+  multiline = true,
   lineNums = 2,
   testId,
   inputName,
   textColor,
   editedText = null,
+  fontWeight = 'normal',
 }) => {
   const styles = StyleSheet.create({
     input: {
@@ -23,13 +25,13 @@ const Input = ({
       backgroundColor: COLORS.lightPink,
       color: textColor ? textColor : 'white',
       borderRadius: 5,
-      fontFamily: 'Vazir',
+      fontFamily: fontWeight === 'normal' ? 'Vazir' : 'Vazir-Bold',
     },
   });
   return (
     <TextInput
       placeholder={placeholder}
-      multiline
+      multiline={multiline}
       value={editedText}
       numberOfLines={lineNums}
       placeholderTextColor={phColor ? phColor : '#fff'}
@@ -37,6 +39,7 @@ const Input = ({
       keyboardType={keyboardType}
       testId="textInput"
       onChangeText={(value) => onChangeText(value, inputName)}
+      onSubmitEditing={onSubmitEditing ? () => onSubmitEditing() : () => {}}
     />
   );
 };

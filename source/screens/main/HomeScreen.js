@@ -21,7 +21,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import getWomanClient from '../../libs/api/womanApi';
-import { useIsPeriodDay } from '../../libs/hooks';
+import { getWomanInfo } from '../../libs/apiCalls';
+import { useIsPeriodDay, useApi } from '../../libs/hooks';
 import {
   saveWomanRelations,
   WomanInfoContext,
@@ -31,6 +32,7 @@ import getLoginClient from '../../libs/api/loginClientApi';
 import {
   getFromAsyncStorage,
   showSnackbar,
+  numberConverter,
   getDeviceId,
 } from '../../libs/helpers';
 
@@ -49,9 +51,10 @@ import { TabActions } from '@react-navigation/native';
 const HomeScreen = ({ navigation, route }) => {
   const params = route.params || {};
   const isPeriodDay = useIsPeriodDay();
-  const { handleUserPeriodDays, handleUserCalendar } = useContext(
+  const { saveFullInfo, handleUserPeriodDays, handleUserCalendar } = useContext(
     WomanInfoContext,
   );
+  const [loginWomanInfo, setLoginWomanInfo] = useApi(() => getWomanInfo());
   const [pregnancy, setPregnancy] = useState(null);
   const [loadingPregnancy, setLoadingPregnancy] = useState(false);
   const [periodStart, setPeriodStart] = useState(null);
@@ -67,6 +70,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const getPregnancyPercent = async function (activeRel) {
+    console.log('getPregnancyPercent');
     setLoadingPregnancy(true);
     const loginClient = await getLoginClient();
     const formData = new FormData();
@@ -111,6 +115,7 @@ const HomeScreen = ({ navigation, route }) => {
     date === 'today' && setFetching(true);
     const selectedDate =
       date === 'today' ? moment().locale('en').format('jYYYY/jMM/jDD') : date;
+    console.log(selectedDate);
     const womanClient = await getWomanClient();
     const formData = new FormData();
     formData.append('date', selectedDate);
@@ -163,9 +168,12 @@ const HomeScreen = ({ navigation, route }) => {
             }
           });
           if (activeRel) {
+            console.log('activeRel ', activeRel);
             saveActiveRel({
               relId: activeRel.id,
               label: activeRel.man_name,
+              image: activeRel.man_image,
+              mobile: activeRel.man.mobile,
             });
           }
           AsyncStorage.setItem('rels', JSON.stringify(rels));
@@ -231,6 +239,8 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (womanInfo.activeRel) {
       getPregnancyPercent(womanInfo.activeRel.relId);
+    } else {
+      getPregnancyPercent();
     }
   }, [womanInfo.activeRel]);
 
@@ -240,26 +250,45 @@ const HomeScreen = ({ navigation, route }) => {
         sendFcmToken();
       }
     });
+    getFromAsyncStorage('fullInfo').then((res) => {
+      if (res) {
+        saveFullInfo(JSON.parse(res));
+      }
+    });
   }, []);
 
   useEffect(() => {
     if (params.refresh === 'true') {
-      // refetch user info...
+      setLoginWomanInfo();
     }
   }, [params]);
 
+  useEffect(() => {
+    if (loginWomanInfo.data && loginWomanInfo.data.is_successful) {
+      saveFullInfo(loginWomanInfo.data.data[0]);
+      AsyncStorage.setItem(
+        'fullInfo',
+        JSON.stringify(loginWomanInfo.data.data[0]),
+      );
+    }
+  }, [loginWomanInfo]);
+
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       {!isPeriodDay && (
         <>
           <Header
             navigation={navigation}
-            style={{ marginTop: STATUS_BAR_HEIGHT + 5 }}
+            style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
           />
           <Divider
             color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
-            width="80%"
+            width="90%"
           />
         </>
       )}
@@ -346,7 +375,7 @@ const HomeScreen = ({ navigation, route }) => {
         {!loadingPregnancy ? (
           <View style={styles.pregnancyPercentText}>
             <Text bold xl color={COLORS.white}>
-              {pregnancy}
+              {pregnancy && numberConverter(pregnancy)}
             </Text>
             <Text medium color={COLORS.white}>
               احتمال بارداری

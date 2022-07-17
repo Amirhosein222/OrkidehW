@@ -1,26 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
-import { StatusBar, StyleSheet } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StatusBar, StyleSheet, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 
-import authApi from '../../libs/api/authApi';
+import { Container, Text, TextInput, Snackbar } from '../../components/common';
+
 import getLoginClient from '../../libs/api/loginClientApi';
+import authApi from '../../libs/api/authApi';
 import { validatePhoneNumber, showSnackbar } from '../../libs/helpers';
 
-import {
-  Container,
-  Text,
-  TextInput,
-  Image,
-  Snackbar,
-} from '../../components/common';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const RegisterScreen = ({ navigation, route }) => {
   const params = route.params;
+  const { settings } = useContext(WomanInfoContext);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [regentCode, setRegentCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -123,31 +120,37 @@ const RegisterScreen = ({ navigation, route }) => {
 
   return (
     <Container>
-      <StatusBar translucent backgroundColor="transparent" />
-      <Text dark large color="#fe0294">
-        شماره موبایل
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <Text large color="#fe0294">
+        ایجاد حساب کاربری
       </Text>
       <TextInput
-        placeholder="شماره تماس خود را وارد کنید"
-        textColor={COLORS.pink}
-        phColor={COLORS.pink}
-        style={styles.input}
+        placeholder="لطفا شماره موبایلت رو اینجا وارد کن."
+        textColor={COLORS.white}
+        phColor={COLORS.white}
+        style={{ ...styles.input, marginTop: rh(6) }}
         keyboardType="numeric"
         testID="pinput"
         onChangeText={handleTextInput}
         inputName="phoneNumber"
+        fontWeight="bold"
       />
 
       {params.editNumber === false ? (
         <TextInput
-          placeholder="کد معرف خود را وارد کنید"
+          placeholder="اگه کد معرف داری اینجا بنویس."
           style={styles.input}
-          textColor={COLORS.pink}
-          phColor={COLORS.pink}
+          textColor={COLORS.white}
+          phColor={COLORS.white}
           keyboardType="numeric"
           testID="iinput"
           onChangeText={handleTextInput}
           inputName="regentCode"
+          fontWeight="bold"
         />
       ) : null}
 
@@ -183,10 +186,8 @@ const RegisterScreen = ({ navigation, route }) => {
       </Button>
 
       <Image
-        imageSource={require('../../assets/images/loginImg.png')}
-        width="80%"
-        height="40%"
-        borderRadius="20px"
+        source={{ uri: settings && settings.app_image_register_page.value }}
+        style={{ ...styles.image, backgroundColor: 'rgba(200,200,200, 0.6)' }}
       />
 
       {snackbar.visible === true ? (
@@ -218,6 +219,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 60,
+  },
+  image: {
+    width: rw(73),
+    height: rh(35),
+    borderRadius: 15,
+    marginTop: rh(8),
   },
 });
 

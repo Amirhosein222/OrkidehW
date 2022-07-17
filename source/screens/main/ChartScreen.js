@@ -21,6 +21,7 @@ import {
   Text,
   Snackbar,
   Divider,
+  TabBar,
 } from '../../components/common';
 import {
   ChartTwo,
@@ -31,13 +32,15 @@ import {
 
 import {
   COLORS,
+  rh,
   SCROLL_VIEW_CONTAINER,
   STATUS_BAR_HEIGHT,
 } from '../../configs';
-import { useIsPeriodDay } from '../../libs/hooks';
+import { useIsPeriodDay, useFullInfo } from '../../libs/hooks';
 
 const ChartScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
+  const fullInfo = useFullInfo();
   const [reports, setReports] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
@@ -61,6 +64,7 @@ const ChartScreen = ({ navigation }) => {
     const womanClient = await getWomanClient();
     setIsLoading(true);
     womanClient.get('report').then((response) => {
+      console.log('charts ', response.data.data);
       setIsLoading(false);
       if (response.data.data) {
         setCircleChart(response.data.data.chart1);
@@ -111,13 +115,13 @@ const ChartScreen = ({ navigation }) => {
 
   if (isLoading) {
     return (
-      <Container
-        bgColor={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
-        justifyContent="flex-start">
+      <Container bgColor={COLORS.white} justifyContent="flex-start">
         <StatusBar translucent backgroundColor="white" />
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5 }}
+          style={{
+            marginTop: STATUS_BAR_HEIGHT + rh(2),
+          }}
         />
         <ActivityIndicator
           size="large"
@@ -127,70 +131,85 @@ const ChartScreen = ({ navigation }) => {
     );
   } else {
     return (
-      <Container
-        bgColor={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
-        justifyContent="flex-start">
+      <Container bgColor={COLORS.white} justifyContent="flex-start">
         <StatusBar translucent backgroundColor="white" />
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5 }}
+          style={{
+            marginTop: STATUS_BAR_HEIGHT + rh(2),
+          }}
         />
         <ScrollView
           contentContainerStyle={SCROLL_VIEW_CONTAINER}
           style={{ width: '100%', margin: 10 }}>
           {reports ? (
             <View style={{ width: '100%', flex: 1 }}>
-              <FlatList
-                data={circleChart}
-                renderItem={RenderCircleCharts}
-                numColumns={2}
-                contentContainerStyle={{ alignSelf: 'center' }}
-              />
-              <Divider
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                width="85%"
-                style={{ marginTop: 5, alignSelf: 'center' }}
-              />
+              {fullInfo.accountType !== 'golden' ? (
+                <FlatList
+                  data={circleChart}
+                  renderItem={RenderCircleCharts}
+                  numColumns={2}
+                  contentContainerStyle={{ alignSelf: 'center' }}
+                />
+              ) : (
+                <>
+                  <FlatList
+                    data={circleChart}
+                    renderItem={RenderCircleCharts}
+                    numColumns={2}
+                    contentContainerStyle={{ alignSelf: 'center' }}
+                  />
+                  <Divider
+                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+                    width="85%"
+                    style={{ marginTop: 5, alignSelf: 'center' }}
+                  />
 
-              <ChartTwo chartData={chartTwo} />
-              <Divider
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                width="85%"
-                style={{ marginTop: 5, alignSelf: 'center' }}
-              />
-              <ChartThree />
-              <Divider
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                width="85%"
-                style={{ marginTop: 5, alignSelf: 'center' }}
-              />
-              <ChartFour
-                chartData={{
-                  data: [
-                    { value: 30, label: 'روز 1' },
-                    { value: 40, label: 'روز 2' },
-                    { value: 25, label: 'روز 3' },
-                    { value: 30, label: 'روز 4' },
-                    { value: 18, label: 'روز 5' },
-                  ],
-                }}
-              />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                }}>
-                <Text color={COLORS.dark}>همسالان شما</Text>
-                <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
-                  شما
-                </Text>
-              </View>
-              <Divider
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                width="85%"
-                style={{ marginTop: 5, alignSelf: 'center' }}
-              />
-              <PMSInfoScreen />
+                  <ChartTwo chartData={chartTwo} />
+                  <Divider
+                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+                    width="85%"
+                    style={{ marginTop: 5, alignSelf: 'center' }}
+                  />
+                  <ChartThree />
+                  <Divider
+                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+                    width="85%"
+                    style={{ marginTop: 5, alignSelf: 'center' }}
+                  />
+                  <ChartFour
+                    chartData={{
+                      data: [
+                        { value: 30, label: 'روز 1' },
+                        { value: 40, label: 'روز 2' },
+                        { value: 25, label: 'روز 3' },
+                        { value: 30, label: 'روز 4' },
+                        { value: 18, label: 'روز 5' },
+                      ],
+                    }}
+                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly',
+                    }}>
+                    <Text color={COLORS.dark} bold>
+                      همسالان شما
+                    </Text>
+                    <Text
+                      color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+                      bold>
+                      شما
+                    </Text>
+                  </View>
+                  <Divider
+                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+                    width="85%"
+                    style={{ marginTop: 5, alignSelf: 'center' }}
+                  />
+                  <PMSInfoScreen />
+                </>
+              )}
             </View>
           ) : null}
           {/* <VerticalBars /> */}
@@ -202,6 +221,7 @@ const ChartScreen = ({ navigation }) => {
             handleVisible={handleVisible}
           />
         ) : null}
+        <TabBar seperate={true} navigation={navigation} />
       </Container>
     );
   }

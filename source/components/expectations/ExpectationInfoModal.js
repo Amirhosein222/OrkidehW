@@ -16,7 +16,7 @@ const ExpectationInfoModal = ({ exp, visible, closeModal }) => {
       isVisible={visible}
       coverScreen={false}
       hasBackdrop={true}
-      backdropOpacity={0}
+      backdropOpacity={0.1}
       backdropTransitionOutTiming={1}
       animationOutTiming={0}
       animationInTiming={0}
@@ -27,24 +27,24 @@ const ExpectationInfoModal = ({ exp, visible, closeModal }) => {
       <View
         style={{
           ...styles.modalContent,
-          backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
+          backgroundColor: 'white',
         }}>
         <View style={styles.header}>
           <AntDesign
             onPress={() => closeModal()}
             name="closecircle"
             size={26}
-            color="white"
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
             style={styles.closeIcon}
           />
         </View>
         <ScrollView>
-          <Text color="white" bold large marginTop={rh(2)}>
+          <Text color={COLORS.dark} bold large marginTop={rh(2)}>
             {exp.title}
           </Text>
 
           <Text
-            color="white"
+            color={COLORS.dark}
             medium
             marginTop={rh(2)}
             textAlign="right"
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   closeIcon: {
-    marginRight: rw(4),
+    marginRight: rw(2),
   },
   modalContent: {
     width: '100%',

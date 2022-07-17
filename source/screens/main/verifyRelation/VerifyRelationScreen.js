@@ -53,10 +53,14 @@ const VerifyRelationScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Header
         navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
       />
 
       <View
@@ -71,7 +75,7 @@ const VerifyRelationScreen = ({ navigation }) => {
         <TextInput
           style={{
             ...styles.input,
-            backgroundColor: COLORS.lightGrey,
+            backgroundColor: 'white',
           }}
           onChangeText={setVerificationCode}
           value={verificationCode}

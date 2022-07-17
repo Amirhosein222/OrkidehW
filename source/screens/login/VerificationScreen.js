@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import authApi from '../../libs/api/authApi';
 
 import { Container, Text, Divider, Snackbar } from '../../components/common';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 
 const CELL_COUNT = 4;
 
@@ -59,13 +59,14 @@ const VerificationScreen = ({ navigation, route }) => {
     formData.append('gender', 'woman');
     authApi
       .post('check_activation_code', formData)
-      .then((response) => {
+      .then(async (response) => {
         setCheckingCode(false);
         if (response.data.is_successful) {
-          AsyncStorage.setItem(
+          await AsyncStorage.setItem(
             'userToken',
             JSON.stringify(response.data.data.token),
           );
+          await AsyncStorage.setItem('logedOut', 'false');
           navigation.navigate('EnterInfo');
         } else {
           setSnackbar({
@@ -116,45 +117,60 @@ const VerificationScreen = ({ navigation, route }) => {
   };
   return (
     <Container>
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Text large bold color={COLORS.dark}>
         تایید کد فعالسازی
       </Text>
-      <Text small color={COLORS.grey}>
-        کد فعالسازی به شماره موبایل {params.mobile} ارسال شد
+      <Text color={COLORS.grey} marginTop={rh(0.5)}>
+        عزیزم کد فعالسازی رو به شماره {params.mobile} ارسال کردیم.
       </Text>
 
-      <View style={styles.counterContainer}>
-        <Button
-          color={COLORS.pink}
-          mode="contained"
-          style={[styles.btn, { width: '40%', height: 30, marginTop: 20 }]}
-          disabled={!resendCode ? true : false}
-          loading={resending ? true : false}
-          onPress={() => onPressSendCode()}>
-          <Text color="white"> ارسال مجدد کد</Text>
-        </Button>
-        <CountDown
-          size={20}
-          until={timer}
-          onFinish={() => setResendCode(true)}
-          digitStyle={{
-            backgroundColor: '#FFF',
-          }}
-          digitTxtStyle={{ color: COLORS.dark }}
-          timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
-          separatorStyle={{ color: COLORS.dark }}
-          timeToShow={['M', 'S']}
-          timeLabels={{ m: null, s: null }}
-          showSeparator
-        />
+      <View>
+        <View style={{ paddingHorizontal: rw(4), marginTop: rh(1) }}>
+          <Text color={COLORS.grey}>
+            اگر لازم داری که دوباره کد برات ارسال بشه،باید تا صفر شدن ثانیه شمار
+            صبر کنی.
+          </Text>
+        </View>
+        <View style={styles.counterContainer}>
+          <Button
+            color={COLORS.pink}
+            mode="contained"
+            style={[styles.btn, { width: '40%', height: 30, marginTop: 20 }]}
+            disabled={!resendCode ? true : false}
+            loading={resending ? true : false}
+            onPress={() => onPressSendCode()}>
+            <Text color="white"> ارسال مجدد کد</Text>
+          </Button>
+          <CountDown
+            size={20}
+            until={timer}
+            onFinish={() => setResendCode(true)}
+            digitStyle={{
+              backgroundColor: '#FFF',
+            }}
+            digitTxtStyle={{ color: COLORS.dark }}
+            timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
+            separatorStyle={{ color: COLORS.dark }}
+            timeToShow={['M', 'S']}
+            timeLabels={{ m: null, s: null }}
+            showSeparator
+          />
+        </View>
       </View>
 
       <Divider color={COLORS.pink} width="90%" style={{ marginTop: 20 }} />
 
-      <Text large bold color={COLORS.dark}>
-        کد فعالسازی
-      </Text>
+      <View style={{ paddingHorizontal: rw(1), marginTop: rh(2) }}>
+        <Text bold color={COLORS.dark}>
+          لطفا عدد چهار رقمی که برات پیامک کردیم رو اینجا وارد کن.
+        </Text>
+      </View>
+
       <CodeField
         ref={ref}
         {...props}

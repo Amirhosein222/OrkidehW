@@ -90,7 +90,11 @@ const LearningBankScreen = ({ navigation }) => {
   } else {
     return (
       <Container>
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <View style={styles.header}>
           <View style={styles.headerRow}>
             <View />

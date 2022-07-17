@@ -63,10 +63,14 @@ const TestResultScreen = ({ navigation, route }) => {
           flex: 1,
           backgroundColor: 'white',
         }}>
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
         />
         <View style={{ width: '100%', alignItems: 'center' }}>
           <Text medium bold>

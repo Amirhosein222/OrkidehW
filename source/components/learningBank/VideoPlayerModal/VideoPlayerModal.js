@@ -1,67 +1,79 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import VideoPlayer from 'react-native-video-player';
-import { Modal } from 'react-native-modal';
+import Modal from 'react-native-modal';
+
+import { Text } from '../../common';
 
 import { useIsPeriodDay } from '../../../libs/hooks';
-import { COLORS, rh, rw } from '../../../configs';
+import { baseUrl, COLORS, rh, rw } from '../../../configs';
 
-const VideoPlayerModal = ({ visible, closeModal }) => {
+const VideoPlayerModal = ({ visible, closeModal, video }) => {
   const isPeriodDay = useIsPeriodDay();
   return (
     <Modal
       isVisible={visible}
       coverScreen={false}
       hasBackdrop={true}
-      backdropOpacity={0}
+      backdropOpacity={0.3}
       backdropTransitionOutTiming={1}
       animationOutTiming={0}
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
       animationIn="zoomIn"
-      animationOut="zoomOut"
+      animationOut="slideOutDown"
       style={styles.view}>
       <View
         style={{
           ...styles.modalContent,
-          backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
         }}>
-        <Text>VideoPlayerModal</Text>
         <VideoPlayer
           video={{
-            uri:
-              'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            uri: baseUrl + video,
           }}
           videoWidth={1600}
           videoHeight={900}
-          thumbnail={{ uri: 'https://i.picsum.photos/id/866/1600/900.jpg' }}
+          autoplay
+          customStyles={{
+            wrapper: {
+              width: '95%',
+              height: '100%',
+              justifyContent: 'center',
+            },
+          }}
+          disableFullscreen={false}
         />
       </View>
+      <Pressable style={styles.footer} onPress={closeModal}>
+        <Text color="white" medium>
+          بستن
+        </Text>
+      </Pressable>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   view: {
-    justifyContent: 'center',
+    width: rw(100),
+    height: '100%',
+    alignSelf: 'center',
   },
-  header: {
-    marginTop: rh(3),
+  footer: {
     alignItems: 'center',
     flexDirection: 'row',
-    alignSelf: 'center',
     width: '100%',
-    justifyContent: 'flex-end',
-  },
-  closeIcon: {
-    marginRight: rw(6),
+    height: rh(6),
+    justifyContent: 'center',
+    backgroundColor: COLORS.pink,
   },
   modalContent: {
     width: '100%',
-    borderRadius: 20,
-    height: '50%',
-    elevation: 5,
+    height: '90%',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'black',
+    marginTop: 'auto',
   },
   checkBox: {
     flexDirection: 'row',

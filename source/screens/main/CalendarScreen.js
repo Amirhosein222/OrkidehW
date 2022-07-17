@@ -55,7 +55,6 @@ const CALENDAR_THEME = {
   textDayFontFamily: 'Vazir',
   textMonthFontFamily: 'Vazir',
   textDayHeaderFontFamily: 'Vazir',
-  textMonthFontWeight: 'bold',
   textDayFontSize: 14,
   textMonthFontSize: 14,
   textDayHeaderFontSize: 10,
@@ -108,22 +107,21 @@ const CalendarScreen = ({ navigation, route }) => {
 
   const updateCalendar = async function (newDates) {
     const sortedDates = sortDates(newDates);
+    console.log('update cal ', sortedDates);
     setIsUpdating(true);
     const womanClient = await getWomanClient();
     womanClient
       .post('update/calendar', sortedDates)
       .then((response) => {
-        console.log(response.data);
         setIsUpdating(false);
+        setCurrentMarkedDates([]);
+        setNewMarkedDates([]);
+        setNewDatesForApi([]);
+        setEdit(false);
+        setSelectedOption(null);
+        getCalendar();
         if (response.data.is_successful) {
           if (response.data.data[1].getPeriodInfo === true) {
-            setCurrentMarkedDates([]);
-            setNewMarkedDates([]);
-            setNewDatesForApi([]);
-            getCalendar();
-            setEdit(false);
-            setSelectedOption(null);
-
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
@@ -140,12 +138,6 @@ const CalendarScreen = ({ navigation, route }) => {
               }),
             );
           } else {
-            setCurrentMarkedDates([]);
-            getCalendar();
-            setEdit(false);
-            setSelectedOption(null);
-            setNewMarkedDates([]);
-            setNewDatesForApi([]);
             setSnackbar({
               msg: 'تغییرات با موفقیت اعمال شد.',
               visible: true,
@@ -265,7 +257,6 @@ const CalendarScreen = ({ navigation, route }) => {
       const convertedDate = moment(item.date, 'X')
         .locale('en')
         .format('YYYY-MM-DD');
-      console.log('converted time ', convertedDate);
       currentDates[convertedDate] = {
         selected: true,
         marked: true,
@@ -473,17 +464,21 @@ const CalendarScreen = ({ navigation, route }) => {
 
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <ScrollView
         contentContainerStyle={SCROLL_VIEW_CONTAINER}
         style={{ width: '100%' }}>
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5 }}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
         />
         <Divider
           color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
-          width="80%"
+          width="90%"
         />
 
         {edit === true ? (

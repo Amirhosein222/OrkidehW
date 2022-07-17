@@ -5,6 +5,7 @@ import convertToJalaali from './convertToJalaali';
 import showSnackbar from './showSnackbar';
 import lastIndexOf from './lastIndexOf';
 import getAccessToken from './getAccessToken';
+import numberConverter from './numberConverter';
 
 export {
   getFromAsyncStorage,
@@ -14,4 +15,5 @@ export {
   showSnackbar,
   lastIndexOf,
   getAccessToken,
+  numberConverter,
 };

@@ -25,15 +25,15 @@ const BottomHalfModal = ({ visible, closeModal, text }) => {
         <RowContainer
           borderRadius={40}
           justifyContent="space-between"
-          bgColor={COLORS.pink}>
+          bgColor='white'>
           <Pressable onPress={() => closeModal()}>
-            <Icon name="closecircle" color={COLORS.white} size={28} />
+            <Icon name="closecircle" color={COLORS.dark} size={28} />
           </Pressable>
-          <Text medium bold color={COLORS.white}>
+          <Text medium bold color={COLORS.dark}>
             پیام
           </Text>
         </RowContainer>
-        <Text margin="10" color={COLORS.white}>
+        <Text margin="10" color={COLORS.dark}>
           {text}
         </Text>
       </View>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent: {
-    backgroundColor: COLORS.pink,
+    backgroundColor: 'white',
     height: '40%',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,

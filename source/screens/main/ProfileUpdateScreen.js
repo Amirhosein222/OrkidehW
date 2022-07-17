@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Pressable,
   StatusBar,
@@ -8,15 +8,20 @@ import {
   View,
 } from 'react-native';
 import { Button, Checkbox } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment-jalaali';
 import Share from 'react-native-share';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-import { useIsPeriodDay } from '../../libs/hooks';
+import { useFullInfo, useIsPeriodDay } from '../../libs/hooks';
 import getLoginClient from '../../libs/api/loginClientApi';
-import { getFromAsyncStorage, showSnackbar } from '../../libs/helpers';
+import {
+  getFromAsyncStorage,
+  numberConverter,
+  showSnackbar,
+} from '../../libs/helpers';
 
 import {
   Container,
@@ -37,9 +42,12 @@ import {
   rw,
   rh,
 } from '../../configs';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const ProfileUpdateScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
+  const fullInfo = useFullInfo();
+  const { saveFullInfo } = useContext(WomanInfoContext);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
   const [periodAlarms, setPeriodAlarms] = useState({
@@ -65,7 +73,6 @@ const ProfileUpdateScreen = ({ navigation }) => {
   const [rePassword, setRePassword] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [finger, setFinger] = useState(true);
-  const [info, setInfo] = useState([]);
 
   const handleAlarm = function (type, alarm, value) {
     switch (type) {
@@ -261,16 +268,19 @@ const ProfileUpdateScreen = ({ navigation }) => {
       const loginClient = await getLoginClient();
       setIsUpdating(true);
       const formData = new FormData();
-      formData.append('display_name', info.display_name);
+      formData.append('display_name', fullInfo.display_name);
       formData.append('password', password);
       formData.append('repeat_password', rePassword);
       formData.append(
         'birth_date',
-        moment(info.birth_date).locale('en').format('jYYYY/jM/jD'),
+        moment(fullInfo.birth_date).locale('en').format('jYYYY/jM/jD'),
       );
       formData.append('gender', 'woman');
-      formData.append('is_password_active', Number(info.is_password_active));
-      formData.append('is_finger_active', Number(info.is_finger_active));
+      formData.append(
+        'is_password_active',
+        Number(fullInfo.is_password_active),
+      );
+      formData.append('is_finger_active', Number(fullInfo.is_finger_active));
 
       loginClient
         .post('complete/profile', formData)
@@ -280,6 +290,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
             setPassword('');
             setRePassword('');
             showSnackbar('رمز عبور شما با موفقیت تغییر کرد', 'success');
+            saveFullInfo(JSON.parse(response.data.data));
             AsyncStorage.setItem(
               'fullInfo',
               JSON.stringify(response.data.data),
@@ -306,7 +317,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
   };
 
   const shareCode = function () {
-    Share.open({ message: info.regent_self, title: 'اشتراک گذاری کد شما' })
+    Share.open({ message: fullInfo.regent_self, title: 'اشتراک گذاری کد شما' })
       .then((res) => {})
       .catch((err) => {
         err && console.log(err);
@@ -314,7 +325,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
   };
 
   const copyToClipboard = () => {
-    Clipboard.setString(info.regent_self);
+    Clipboard.setString(fullInfo.regent_self);
     setSnackbar({
       msg: 'کد شما کپی شد.',
       visible: true,
@@ -323,140 +334,159 @@ const ProfileUpdateScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getFromAsyncStorage('fullInfo').then((res) => {
-      if (res) {
-        const parsedInfo = JSON.parse(res);
-        setInfo(JSON.parse(res));
-        setFinger(parsedInfo.is_password_active === '0' ? true : false);
-        setPasswordActive(parsedInfo.is_finger_active === '0' ? true : false);
-      }
-    });
+    setFinger(fullInfo.is_password_active === '0' ? true : false);
+    setPasswordActive(fullInfo.is_finger_active === '0' ? true : false);
     handleDefaultSettings();
   }, []);
 
   return (
-    <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
-      <ScrollView
-        style={{ width: '100%', marginTop: STATUS_BAR_HEIGHT + 5 }}
-        contentContainerStyle={SCROLLVIEWCONTAINER}>
-        <View style={styles.header}>
-          <Pressable onPress={() => shareCode()}>
-            <Image
-              imageSource={require('../../assets/images/share.png')}
-              width="27px"
-              height="27px"
-              margin="5px"
-            />
-          </Pressable>
-
-          <Pressable onPress={() => copyToClipboard()}>
-            <Image
-              imageSource={require('../../assets/images/copy.png')}
-              width="22px"
-              height="27px"
-              margin="5px"
-            />
-          </Pressable>
-
-          <Text bold>{info.regent_self}</Text>
-          <Text small>کد شما برای معرفی به دیگران</Text>
-          <Pressable
-            onPress={() => navigation.openDrawer()}
-            style={{ alignSelf: 'flex-end' }}>
-            <MaterialCommunityIcons
-              name="menu"
-              color={COLORS.grey}
-              size={28}
-              style={{ marginRight: 20 }}
-            />
-          </Pressable>
-        </View>
-
-        <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          width="80%"
-          style={styles.divider}
+    <KeyboardAwareScrollView>
+      <Container justifyContent="flex-start">
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
         />
+        <ScrollView
+          style={{ width: '100%', marginTop: STATUS_BAR_HEIGHT + 5 }}
+          contentContainerStyle={SCROLLVIEWCONTAINER}>
+          <View style={styles.header}>
+            <Pressable onPress={() => shareCode()}>
+              <Image
+                imageSource={require('../../assets/images/share.png')}
+                width="27px"
+                height="27px"
+                marginLeft={rw(3)}
+              />
+            </Pressable>
 
-        <Text small marginTop={rh(1)}>
-          رمز عبور برای ورود به سیستم
-        </Text>
-
-        <Switch active={passwordActive} changeStatus={setPasswordActive} />
-
-        <View style={{ justifyContent: 'center', marginBottom: rh(1) }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: rh(1),
-            }}>
-            <TextInput
-              placeholder="رمز عبور جدید را وارد کنید"
-              style={styles.passInput}
-              phColor={COLORS.grey}
-              onChangeText={handleTextInput}
-              editedText={password}
-              inputName="password"
-            />
-            <Text small>رمز عبور</Text>
+            <Pressable
+              onPress={() => navigation.openDrawer()}
+              style={{ alignSelf: 'flex-end' }}>
+              <MaterialCommunityIcons
+                name="menu"
+                color={COLORS.grey}
+                size={28}
+                style={{ marginRight: rw(2.8) }}
+              />
+            </Pressable>
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <TextInput
-              placeholder="تایید رمز عبور"
-              style={[styles.passInput, { width: '62%' }]}
-              phColor={COLORS.grey}
-              onChangeText={handleTextInput}
-              editedText={rePassword}
-              inputName="rePass"
-            />
-            <Text small>تایید رمز عبور</Text>
+          <Divider
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            width="90%"
+            style={styles.divider}
+          />
+
+          <View style={styles.regentCodeContainer}>
+            <View style={styles.clipboardContainer}>
+              <Pressable onPress={() => copyToClipboard()} hitSlop={7}>
+                <Image
+                  imageSource={require('../../assets/images/copy.png')}
+                  width="18px"
+                  height="22px"
+                  marginRight="10px"
+                />
+              </Pressable>
+              {fullInfo.regent_self && (
+                <Text bold medium>
+                  {numberConverter(fullInfo.regent_self)}
+                </Text>
+              )}
+            </View>
+            <Text medium bold>
+              کد شما برای معرفی به دیگران :{' '}
+            </Text>
           </View>
-        </View>
 
-        <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          mode="contained"
-          style={[styles.btn, { marginTop: 0 }]}
-          loading={isUpdating ? true : false}
-          onPress={() => updatePass()}>
-          <Text color="white">تغییر رمز عبور</Text>
-        </Button>
-        <Text small marginTop={rh(2)}>
-          فعالسازی اثر انگشت برای ورود به سیستم
-        </Text>
+          <Text small marginTop={rh(3)}>
+            رمز عبور برای ورود به سیستم
+          </Text>
 
-        <Switch active={finger} changeStatus={setFinger} />
-        <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          mode="contained"
-          style={{ ...styles.btn, marginTop: rh(4) }}
-          onPress={() => navigation.navigate('Register', { editNumber: true })}>
-          <Text color="white">تغییر شماره تلفن</Text>
-        </Button>
-        <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          mode="contained"
-          style={styles.btn}
-          onPress={() =>
-            navigation.navigate('EnterInfo', {
-              editProfile: true,
-              name: info.display_name,
-              pass: info.password,
-            })
-          }>
-          <Text color="white">ویرایش پروفایل</Text>
-        </Button>
-        <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          mode="contained"
-          style={{ ...styles.btn, marginBottom: rh(2) }}
-          onPress={() => navigation.navigate('ContactSpouse')}>
-          <Text color="white">ارتباط با همسر</Text>
-        </Button>
-        {/* <Button
+          <Switch active={passwordActive} changeStatus={setPasswordActive} />
+
+          <View style={{ justifyContent: 'center', marginBottom: rh(1) }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: rh(1),
+              }}>
+              <TextInput
+                placeholder="رمز عبور جدید را وارد کنید"
+                style={styles.passInput}
+                phColor={COLORS.grey}
+                onChangeText={handleTextInput}
+                editedText={password}
+                inputName="password"
+              />
+              <View style={{ width: '20%', justifyContent: 'center' }}>
+                <Text small alignSelf="flex-end">
+                  رمز عبور
+                </Text>
+              </View>
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <TextInput
+                placeholder="تایید رمز عبور"
+                style={styles.passInput}
+                phColor={COLORS.grey}
+                onChangeText={handleTextInput}
+                editedText={rePassword}
+                inputName="rePass"
+              />
+              <View style={{ width: '20%', justifyContent: 'center' }}>
+                <Text small alignSelf="flex-end">
+                  تایید رمز عبور
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <Button
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            mode="contained"
+            style={[styles.btn, { marginTop: 0 }]}
+            loading={isUpdating ? true : false}
+            onPress={() => updatePass()}>
+            <Text color="white">تغییر رمز عبور</Text>
+          </Button>
+          <Text small marginTop={rh(3)}>
+            فعالسازی اثر انگشت برای ورود به سیستم
+          </Text>
+
+          <Switch active={finger} changeStatus={setFinger} />
+          <Button
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            mode="contained"
+            style={{ ...styles.btn, marginTop: rh(5) }}
+            onPress={() =>
+              navigation.navigate('Register', { editNumber: true })
+            }>
+            <Text color="white">تغییر شماره تلفن</Text>
+          </Button>
+          <Button
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            mode="contained"
+            style={styles.btn}
+            onPress={() =>
+              navigation.navigate('EnterInfo', {
+                editProfile: true,
+                name: fullInfo.display_name,
+                pass: fullInfo.password,
+              })
+            }>
+            <Text color="white">ویرایش پروفایل</Text>
+          </Button>
+          <Button
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            mode="contained"
+            style={{ ...styles.btn, marginBottom: rh(2) }}
+            onPress={() => navigation.navigate('ContactSpouse')}>
+            <Text color="white">ارتباط با همسر</Text>
+          </Button>
+          {/* <Button
           color={COLORS.pink}
           mode="contained"
           style={styles.btn}
@@ -466,66 +496,66 @@ const ProfileUpdateScreen = ({ navigation }) => {
         <Button color={COLORS.pink} mode="contained" style={styles.btn}>
           <Text color="white">انتخاب پس زمینه</Text>
         </Button> */}
-        <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          width="100%"
-          style={[styles.divider]}
-        />
-        <Text bold marginTop={rh(2)}>
-          یادآوری ها
-        </Text>
-
-        <View style={styles.remindersContainer}>
-          <Text marginRight="10" small>
-            پیامک
+          <Divider
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            width="90%"
+            style={styles.divider}
+          />
+          <Text bold marginTop={rh(2)}>
+            یادآوری ها
           </Text>
-          <Text small>یادآوری از طریق ارکیده</Text>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.checkBox}>
-            <Checkbox
-              disabled={isLoading ? true : false}
-              status={periodAlarms.sms ? 'checked' : 'unchecked'}
-              onPress={() => {
-                handleAlarm('period_f', 'sms', !periodAlarms.sms);
-              }}
-            />
-          </View>
 
-          <View style={{ ...styles.checkBox, marginRight: rw(3) }}>
-            <Checkbox
-              disabled={isLoading ? true : false}
-              status={periodAlarms.notif ? 'checked' : 'unchecked'}
-              onPress={() => {
-                handleAlarm('period_f', 'notif', !periodAlarms.notif);
-              }}
-            />
+          <View style={styles.remindersContainer}>
+            <Text marginLeft="10" small>
+              پیامک
+            </Text>
+            <Text small>یادآوری از طریق ارکیده</Text>
           </View>
-          <Text small>یادآوری ها چند روز قبل از قاعدگی</Text>
-        </View>
-        <View style={{ ...styles.row, marginBottom: rh(1) }}>
-          <View style={styles.checkBox}>
-            <Checkbox
-              disabled={isLoading ? true : false}
-              status={pmsAlarms.sms ? 'checked' : 'unchecked'}
-              onPress={() => {
-                handleAlarm('pms_f', 'sms', !pmsAlarms.sms);
-              }}
-            />
-          </View>
+          <View style={styles.row}>
+            <View style={styles.checkBox}>
+              <Checkbox
+                disabled={isLoading ? true : false}
+                status={periodAlarms.sms ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  handleAlarm('period_f', 'sms', !periodAlarms.sms);
+                }}
+              />
+            </View>
 
-          <View style={styles.checkBox}>
-            <Checkbox
-              disabled={isLoading ? true : false}
-              status={pmsAlarms.notif ? 'checked' : 'unchecked'}
-              onPress={() => {
-                handleAlarm('pms_f', 'notif', !pmsAlarms.notif);
-              }}
-            />
+            <View style={{ ...styles.checkBox, marginRight: rw(3) }}>
+              <Checkbox
+                disabled={isLoading ? true : false}
+                status={periodAlarms.notif ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  handleAlarm('period_f', 'notif', !periodAlarms.notif);
+                }}
+              />
+            </View>
+            <Text small>یادآوری ها چند روز قبل از قاعدگی</Text>
           </View>
-          <Text small>یادآوری ها چند روز قبل از پی ام اس</Text>
-        </View>
-        {/* <RowContainer justifyContent="space-between">
+          <View style={{ ...styles.row, marginBottom: rh(1) }}>
+            <View style={styles.checkBox}>
+              <Checkbox
+                disabled={isLoading ? true : false}
+                status={pmsAlarms.sms ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  handleAlarm('pms_f', 'sms', !pmsAlarms.sms);
+                }}
+              />
+            </View>
+
+            <View style={styles.checkBox}>
+              <Checkbox
+                disabled={isLoading ? true : false}
+                status={pmsAlarms.notif ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  handleAlarm('pms_f', 'notif', !pmsAlarms.notif);
+                }}
+              />
+            </View>
+            <Text small>یادآوری ها چند روز قبل از پی ام اس</Text>
+          </View>
+          {/* <RowContainer justifyContent="space-between">
           <View style={styles.checkBox}>
             <Checkbox
               status={ovalAlarms.sms ? 'checked' : 'unchecked'}
@@ -546,7 +576,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           </View>
           <Text small>یادآوری ها چند روز قبل از تخمک گذاری</Text>
         </RowContainer> */}
-        {/* <RowContainer justifyContent="space-between">
+          {/* <RowContainer justifyContent="space-between">
           <Checkbox
             status={drugAlarms.sms ? 'checked' : 'unchecked'}
             onPress={() => {
@@ -561,16 +591,17 @@ const ProfileUpdateScreen = ({ navigation }) => {
           />
           <Text small>یادآوری ها چند روز قبل از قرص</Text>
         </RowContainer> */}
-      </ScrollView>
-      <TabBar seperate={true} navigation={navigation} />
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null}
-    </Container>
+        </ScrollView>
+        <TabBar seperate={true} navigation={navigation} />
+        {snackbar.visible === true ? (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            handleVisible={handleVisible}
+          />
+        ) : null}
+      </Container>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -578,11 +609,12 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     width: rw(95),
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'center',
     paddingBottom: rh(2),
     paddingTop: rh(2),
+    paddingHorizontal: rw(0),
   },
   image: {
     width: WIDTH,
@@ -591,6 +623,7 @@ const styles = StyleSheet.create({
   passInput: {
     borderRadius: 40,
     height: 45,
+    width: rw(62),
     backgroundColor: COLORS.white,
     borderColor: COLORS.grey,
     borderWidth: 1,
@@ -619,11 +652,31 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    width: rw(100),
+    width: rw(95),
+    alignSelf: 'center',
     justifyContent: 'space-between',
     paddingRight: rh(2),
     paddingLeft: rh(2),
     marginTop: rh(1),
+  },
+  regentCodeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    marginTop: rh(2),
+  },
+  clipboardContainer: {
+    borderWidth: 1,
+    borderColor: 'black',
+    paddingVertical: rh(0.5),
+    paddingHorizontal: rh(1),
+    borderRadius: 5,
+    flexDirection: 'row',
+    width: '30%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

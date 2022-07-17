@@ -17,6 +17,7 @@ const COLORS = {
   dark: '#707070',
   yellow: '#ebda21',
   green: '#00c951',
+  welcomeBg: '#12263A',
 };
 
 const SCROLL_VIEW_CONTAINER = {

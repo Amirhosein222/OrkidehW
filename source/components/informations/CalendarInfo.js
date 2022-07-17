@@ -42,7 +42,7 @@ const CalendarInfo = ({
         </RowContainer>
       ) : (
         <View>
-          <View style={styles.topTipsContainer}>
+          <View style={styles.allTipsContainer}>
             <View style={styles.tipContainer}>
               <MaterialCommunityIcons
                 name="circle"
@@ -54,13 +54,9 @@ const CalendarInfo = ({
               </Text>
             </View>
 
-            <View style={styles.tipContainer}>
-              <MaterialCommunityIcons
-                name="circle"
-                color={COLORS.darkRed}
-                style={{ marginRight: 5 }}
-              />
-              <Text color={COLORS.darkRed} small>
+            <View style={{ ...styles.tipContainer }}>
+              <MaterialCommunityIcons name="circle" color={COLORS.darkRed} />
+              <Text color={COLORS.pink} small>
                 پی ام اس
               </Text>
             </View>
@@ -77,14 +73,16 @@ const CalendarInfo = ({
             </View>
           </View>
 
-          <View style={styles.bottomTipsContainer}>
-            <View style={{ ...styles.tipContainer, marginRight: rw(5) }}>
-              <MaterialCommunityIcons
-                name="circle"
-                color={COLORS.red}
-                style={{ marginRight: 5 }}
-              />
-              <Text color={COLORS.red} small marginRight="10">
+          <View style={styles.allTipsContainer}>
+            <View style={{ ...styles.tipContainer }}>
+              <MaterialCommunityIcons name="circle" color="blue" />
+              <Text color="blue" small>
+                دوره ims
+              </Text>
+            </View>
+            <View style={{ ...styles.tipContainer }}>
+              <MaterialCommunityIcons name="circle" color={COLORS.red} />
+              <Text color={COLORS.red} small>
                 رابطه زناشویی
               </Text>
             </View>
@@ -116,15 +114,17 @@ const styles = StyleSheet.create({
   tipContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: rw(25),
   },
   bottomTipsContainer: {
     alignSelf: 'center',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     width: rw(90),
     marginTop: rh(2),
   },
-  topTipsContainer: {
+  allTipsContainer: {
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',

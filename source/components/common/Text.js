@@ -19,7 +19,7 @@ const Text = styled.Text`
       case small:
         return 'font-size: 12px';
       case mini:
-          return 'font-size: 9px';
+          return 'font-size: 11px';
       default:
         break;
     }

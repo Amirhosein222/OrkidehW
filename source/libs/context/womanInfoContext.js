@@ -9,12 +9,13 @@ let saveActiveRel;
 
 const WomanInfoProvider = function ({ children }) {
   const [rels, setRels] = useState([]);
-  const [fullInfo, setFullInfo] = useState([]);
+  const [fullInfo, setFullInfo] = useState(null);
   const [activeRel, setActiveRel] = useState(null);
   const [registerStage, setRegisterStage] = useState(0);
   const [userCalendar, setUserCalendar] = useState(null);
   const [userPeriodDays, setUserPeriodDays] = useState(null);
   const [isPeriodDay, setIsPeriodDay] = useState(false);
+  const [settings, setSettings] = useState(null);
 
   saveWomanRelations = function (relations) {
     setRels(relations);
@@ -26,6 +27,10 @@ const WomanInfoProvider = function ({ children }) {
 
   saveActiveRel = function (rel) {
     setActiveRel(rel);
+  };
+
+  const saveSettings = (sets) => {
+    setSettings(sets);
   };
 
   const handleRegisterStage = (stage) => {
@@ -49,7 +54,8 @@ const WomanInfoProvider = function ({ children }) {
     <WomanInfoContext.Provider
       value={{
         relations: rels,
-        fullInfo: { ...fullInfo },
+        fullInfo: fullInfo,
+        saveFullInfo,
         activeRel: activeRel,
         registerStage,
         handleRegisterStage,
@@ -58,6 +64,8 @@ const WomanInfoProvider = function ({ children }) {
         isPeriodDay,
         userCalendar,
         handleUserCalendar,
+        settings,
+        saveSettings,
       }}>
       {children}
     </WomanInfoContext.Provider>

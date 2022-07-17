@@ -1,19 +1,21 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
-import { StatusBar } from 'react-native';
+import { Image, StatusBar, StyleSheet } from 'react-native';
 
-import { Container, Image, Snackbar } from '../../components/common';
+import { Container, Snackbar } from '../../components/common';
 import {
   EnterName,
   PeriodInfo,
   SetPassword,
 } from '../../components/informations';
-import { rw } from '../../configs';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
+import { rh, rw } from '../../configs';
 
 const EnterInfoScreen = ({ navigation, route }) => {
-  const { registerStage, handleRegisterStage } = useContext(WomanInfoContext);
+  const { registerStage, handleRegisterStage, settings } = useContext(
+    WomanInfoContext,
+  );
   const params = route.params;
   const [informations, setInformations] = useState({});
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
@@ -45,21 +47,26 @@ const EnterInfoScreen = ({ navigation, route }) => {
   };
   return (
     <Container>
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Image
-        imageSource={
-          registerStage === 0
-            ? require('../../assets/images/27031.png')
-            : registerStage === 1
-            ? require('../../assets/images/122.png')
-            : registerStage === 2
-            ? require('../../assets/images/166.png')
-            : registerStage === 3
-            ? require('../../assets/images/144.png')
-            : require('../../assets/images/3237324.png')
-        }
-        width={rw(100)}
-        height="270px"
+        source={{
+          uri:
+            settings && registerStage === 0
+              ? settings.app_image_field_username.value
+              : registerStage === 1
+              ? settings.app_image_field_password.value
+              : registerStage === 2
+              ? settings.app_image_last_period_date.value
+              : registerStage === 3
+              ? settings.app_image_last_period_length.value
+              : settings.app_image_length_between_periods.value,
+        }}
+        style={{ ...styles.image, backgroundColor: 'rgba(200,200,200, 0.6)' }}
+        resizeMode="stretch"
       />
 
       {registerStage === 0 ? (
@@ -92,5 +99,12 @@ const EnterInfoScreen = ({ navigation, route }) => {
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  image: {
+    width: rw(100),
+    height: rh(33),
+  },
+});
 
 export default EnterInfoScreen;

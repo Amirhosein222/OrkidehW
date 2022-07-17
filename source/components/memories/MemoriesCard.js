@@ -7,7 +7,7 @@ import moment from 'moment-jalaali';
 
 import { Text } from '../common';
 import { COLORS } from '../../configs';
-import { getFromAsyncStorage } from '../../libs/helpers';
+import { getFromAsyncStorage, numberConverter } from '../../libs/helpers';
 import ReadMore from '@fawazahmed/react-native-read-more';
 
 const MemoriesCard = ({
@@ -121,7 +121,7 @@ const MemoriesCard = ({
               </Text>
               <Text alignSelf="flex-end" marginRight="10">
                 {moment(memory.created_at, 'X')
-                  .locale('en')
+                  .locale('fa')
                   .format('jYYYY/jM/jD')}
               </Text>
             </View>
@@ -161,7 +161,7 @@ const MemoriesCard = ({
             ellipsis="..."
             style={{ color: COLORS.dark, fontFamily: 'Vazir' }}
             seeLessText="بستن">
-            {memory.text}
+            {numberConverter(memory.text)}
           </ReadMore>
         </View>
       </SafeAreaView>
@@ -184,7 +184,9 @@ const MemoriesCard = ({
                   color={liked.liked ? COLORS.pink : COLORS.dark}
                 />
               </Pressable>
-              <Text style={{ marginLeft: 5 }}>{memory.like}</Text>
+              <Text style={{ marginLeft: 5 }}>
+                {numberConverter(memory.like)}
+              </Text>
             </View>
           ) : (
             <View style={{ flex: 1 }} />

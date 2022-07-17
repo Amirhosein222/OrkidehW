@@ -21,7 +21,11 @@ const SetAlarmScreen = ({}) => {
 
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <IconWithBg
         bgColor={COLORS.pink}
         width="30px"

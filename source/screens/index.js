@@ -35,6 +35,7 @@ import FullPostScreen from './posts/FullPostScreen';
 import AboutUsScreen from './about/AboutUsScreen';
 import AppGuideScreen from './about/AppGuideScreen';
 import DevelopersScreen from './about/DevelopersScreen';
+import WelcomeScreen from './about/WelcomeScreen';
 
 export {
   LoginScreen,
@@ -66,4 +67,5 @@ export {
   RegisterScreen,
   LoveNotificationScreen,
   VerifyRelationScreen,
+  WelcomeScreen,
 };

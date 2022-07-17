@@ -19,7 +19,7 @@ import {
   Snackbar,
 } from '../../components/common';
 import { PsychologyTestDetail } from '../../components/PsychologyTests';
-import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
 import { showSnackbar } from '../../libs/helpers';
 import { useIsPeriodDay } from '../../libs/hooks';
 
@@ -121,7 +121,11 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   if (isFetching === true) {
     return (
       <Container justifyContent="center">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <ActivityIndicator
           size="large"
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
@@ -131,10 +135,14 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   } else {
     return (
       <Container justifyContent="flex-start">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <Header
           navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
         />
         <FlatList
           data={testDetails}

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import LottieView from 'lottie-react-native';
@@ -13,7 +14,7 @@ const LoveNotificationScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Header
         navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + 5, margin: 0 }}
+        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
       />
       <View
         style={{

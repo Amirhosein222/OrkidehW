@@ -5,7 +5,7 @@ import { Button } from 'react-native-paper';
 
 import { Text, Divider } from '../common';
 
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const PsychologyTestDetail = ({
@@ -36,8 +36,18 @@ const PsychologyTestDetail = ({
 
   const RenderQuestions = function ({ item }) {
     return (
-      <View>
-        <Text margin="20" small>
+      <View
+        style={{
+          flexShrink: 1,
+          paddingHorizontal: rw(4),
+          borderWidth: 1,
+          paddingVertical: rh(2),
+          marginVertical: 10,
+          width: '90%',
+          alignSelf: 'center',
+          borderRadius: 5,
+        }}>
+        <Text small textAlign="right" alignSelf="flex-end">
           {item.question}
         </Text>
         {item.options.map((op) => {
@@ -64,23 +74,18 @@ const PsychologyTestDetail = ({
             </Button>
           );
         })}
-        <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          width="80%"
-          style={{ marginTop: 20, alignSelf: 'center' }}
-        />
       </View>
     );
   };
 
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
-      <Text marginTop="40" medium bold>
+      <Text marginTop={rh(4)} medium bold>
         {testDetails.title}
       </Text>
       <Divider
         color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-        width="80%"
+        width="90%"
         style={{ marginTop: 10 }}
       />
       <FlatList

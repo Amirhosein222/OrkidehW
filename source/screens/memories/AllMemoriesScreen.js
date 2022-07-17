@@ -79,7 +79,11 @@ const AllMemoriesScreen = ({ navigation }) => {
   } else {
     return (
       <Container justifyContent="center">
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <Pressable
           onPress={() => navigation.openDrawer()}
           style={{ alignSelf: 'flex-end', marginBottom: 10 }}>

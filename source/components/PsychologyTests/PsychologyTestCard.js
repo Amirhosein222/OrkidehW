@@ -5,7 +5,7 @@ import { Pressable, View, StyleSheet } from 'react-native';
 import { Text, IconWithBg } from '../common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 
 const PsychologyTestCard = ({
   testTitle,
@@ -24,15 +24,19 @@ const PsychologyTestCard = ({
 
   return (
     <Pressable style={styles.container} onPress={() => handleNavigation()}>
-      <View style={{ width: '40%' }}>
+      <View style={{ width: '70%', flexShrink: 1 }}>
         <Text
           marginRight="10"
           alignSelf="flex-end"
-          small
+          bold
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
           {testTitle}
         </Text>
-        <Text marginRight="10" alignSelf="flex-end" marginTop="10" small>
+        <Text
+          marginRight="10"
+          alignSelf="flex-end"
+          marginTop="10"
+          textAlign="right">
           {description ? description.replace(/(<([^>]+)>)/gi, '') : ''}
         </Text>
       </View>
@@ -44,7 +48,7 @@ const PsychologyTestCard = ({
         borderRadius="50px"
         icon="text-box-check-outline"
         iconSize={55}
-        style={{ margin: 10 }}
+        marginRight={rw(3)}
       />
     </Pressable>
   );
@@ -53,10 +57,15 @@ const PsychologyTestCard = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     width: '100%',
     alignItems: 'center',
     margin: 15,
+    backgroundColor: COLORS.lightGrey,
+    elevation: 3,
+    borderRadius: 10,
+    alignSelf: 'center',
+    paddingVertical: rh(2),
   },
 });
 

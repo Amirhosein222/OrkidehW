@@ -65,7 +65,11 @@ const MyMemoriesScreen = ({ navigation }) => {
 
   return (
     <Container justifyContent="flex-start">
-      <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <View style={styles.content}>
         <View />
         <Button

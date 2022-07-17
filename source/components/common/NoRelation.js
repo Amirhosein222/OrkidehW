@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   noRel: {
     width: '100%',
-    marginTop: rh(4),
+    marginTop: rh(2),
   },
 });
 

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   View,
   StatusBar,
@@ -10,6 +10,7 @@ import {
   Animated,
 } from 'react-native';
 import { Button } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -27,9 +28,12 @@ import {
   Switch,
   Snackbar,
 } from '../../components/common';
+
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { WIDTH, COLORS, rh } from '../../configs';
 
 const SetPassword = ({ goToNextStage, nameAndPic }) => {
+  const { settings } = useContext(WomanInfoContext);
   let fullInfo = {};
   const [password, setPassword] = useState('');
   const [repeatPass, setRepeatPass] = useState('');
@@ -56,11 +60,13 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
       finger: finger === false ? 1 : 0,
     };
   };
+
   const handleVisible = () => {
     setSnackbar({
       visible: !snackbar.visible,
     });
   };
+
   const validate = function () {
     if (passwordActive === true && finger === true) {
       setSnackbar({
@@ -127,7 +133,6 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
       formData.append('password', fullInfo.password);
       formData.append('repeat_password', fullInfo.repeatPass);
       formData.append('gender', 'woman');
-      console.log('form DATA ', formData);
 
       loginClient
         .post('complete/profile', formData)
@@ -167,69 +172,81 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
   });
 
   return (
-    <View style={styles.content}>
-      <StatusBar translucent backgroundColor="transparent" />
-      <View style={{ flex: 1, alignItems: 'center', width: '100%' }}>
-        <Text medium>رمز عبور برای ورود به سیستم</Text>
-
-        <Switch active={passwordActive} changeStatus={handeShowPassInput} />
-
-        <Animated.View
-          style={[
-            styles.input,
-            { display: !passwordActive ? 'flex' : 'none', opacity: fadeAnim },
-          ]}>
-          <TextInput
-            placeholder="رمز عبور را وارد کنید"
-            textColor={COLORS.pink}
-            phColor={COLORS.pink}
-            style={styles.textInput}
-            keyboardType="numeric"
-            onChangeText={handleTextInput}
-            inputName="password"
-          />
-          <Text small>رمز عبور جدید</Text>
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.input,
-            { display: !passwordActive ? 'flex' : 'none', opacity: fadeAnim },
-          ]}>
-          <TextInput
-            placeholder="رمز عبور را مجددا وارد کنید"
-            textColor={COLORS.pink}
-            phColor={COLORS.pink}
-            style={styles.textInput}
-            keyboardType="numeric"
-            onChangeText={handleTextInput}
-            inputName="repeatPass"
-          />
-          <Text small>تایید رمز عبور</Text>
-        </Animated.View>
-
-        <Divider color={COLORS.pink} width="90%" style={{ marginTop: 20 }} />
-
-        <Text medium>فعالسازی اثر انگشت برای ورود به سیستم</Text>
-
-        <Switch active={finger} changeStatus={setFinger} />
-        <Button
-          color={COLORS.pink}
-          mode="contained"
-          style={styles.btn}
-          loading={isLoading ? true : false}
-          disabled={isLoading ? true : false}
-          onPress={() => completeRegister()}>
-          <Text color="white">اتمام ثبت نام</Text>
-        </Button>
-      </View>
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
+    <KeyboardAwareScrollView>
+      <View style={styles.content}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
         />
-      ) : null}
-    </View>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            width: '100%',
+            marginTop: rh(1),
+          }}>
+          <Text medium>رمز عبور برای ورود به سیستم</Text>
+
+          <Switch active={passwordActive} changeStatus={handeShowPassInput} />
+
+          <Animated.View
+            style={[
+              styles.input,
+              { display: !passwordActive ? 'flex' : 'none', opacity: fadeAnim },
+            ]}>
+            <TextInput
+              placeholder="رمز عبور را وارد کنید"
+              textColor={COLORS.pink}
+              phColor={COLORS.pink}
+              style={styles.textInput}
+              keyboardType="numeric"
+              onChangeText={handleTextInput}
+              inputName="password"
+            />
+            <Text small>رمز عبور جدید</Text>
+          </Animated.View>
+          <Animated.View
+            style={[
+              styles.input,
+              { display: !passwordActive ? 'flex' : 'none', opacity: fadeAnim },
+            ]}>
+            <TextInput
+              placeholder="رمز عبور را مجددا وارد کنید"
+              textColor={COLORS.pink}
+              phColor={COLORS.pink}
+              style={styles.textInput}
+              keyboardType="numeric"
+              onChangeText={handleTextInput}
+              inputName="repeatPass"
+            />
+            <Text small>تایید رمز عبور</Text>
+          </Animated.View>
+
+          <Divider color={COLORS.pink} width="90%" style={{ marginTop: 20 }} />
+
+          <Text medium>فعالسازی اثر انگشت برای ورود به سیستم</Text>
+
+          <Switch active={finger} changeStatus={setFinger} />
+          <Button
+            color={COLORS.pink}
+            mode="contained"
+            style={styles.btn}
+            loading={isLoading ? true : false}
+            disabled={isLoading ? true : false}
+            onPress={() => completeRegister()}>
+            <Text color="white">اتمام ثبت نام</Text>
+          </Button>
+        </View>
+        {snackbar.visible === true ? (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            handleVisible={handleVisible}
+          />
+        ) : null}
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -263,7 +280,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 30,
     justifyContent: 'center',
-    marginTop: 'auto',
+    marginTop: rh(4),
     marginBottom: rh(4),
   },
 });

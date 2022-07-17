@@ -117,13 +117,12 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
     if (sign.is_multiple === 0) {
       return (
         <View style={styles.checkBox}>
-          <Text color={COLORS.white}>{item.title}</Text>
+          <Text color={COLORS.dark}>{item.title}</Text>
           <RadioButton
             value={item.id}
             status={checkedRadio === item.id ? 'checked' : 'unchecked'}
-            uncheckedColor={COLORS.dark}
+            uncheckedColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
             onPress={() => handleSelectedMood(item)}
-            color={COLORS.white}
             disabled={choosedRadio ? true : false}
           />
         </View>
@@ -131,10 +130,10 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
     } else {
       return (
         <View style={styles.checkBox}>
-          <Text color={COLORS.white}>{item.title}</Text>
+          <Text color={COLORS.dark}>{item.title}</Text>
           <Checkbox
             status={checkbox.has(item.id) ? 'checked' : 'unchecked'}
-            color={COLORS.white}
+            color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
             onPress={() => handleSelectedMood(item)}
             disabled={choosedRadio ? true : false}
           />
@@ -154,21 +153,24 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
       isVisible={visible}
       coverScreen={false}
       hasBackdrop={true}
-      backdropOpacity={0}
+      backdropOpacity={0.1}
       backdropTransitionOutTiming={1}
       animationOutTiming={0}
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
-      animationIn="fadeIn"
-      animationOut="fadeOut"
+      animationIn="zoomIn"
+      animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
           ...styles.modalContent,
-          backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
+          backgroundColor: 'white',
         }}>
         {isLoading || fetchingMyMood ? (
-          <ActivityIndicator size="large" color={COLORS.white} />
+          <ActivityIndicator
+            size="large"
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          />
         ) : (
           <View style={{ width: '100%' }}>
             <View style={styles.header}>
@@ -176,11 +178,11 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
                 onPress={() => closeModal()}
                 name="closecircle"
                 size={26}
-                color="white"
+                color={COLORS.pink}
                 style={styles.closeIcon}
               />
             </View>
-            <Text color="white" medium>
+            <Text color={COLORS.dark} large bold>
               لطفا انتخاب کنید
             </Text>
             <FlatList

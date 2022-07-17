@@ -3,39 +3,52 @@
 import React, { useContext } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import { Text } from './index';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
-import { IconWithBg } from './index';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 
 const Header = ({ navigation, style }) => {
   const { isPeriodDay } = useContext(WomanInfoContext);
   return (
     <View style={[styles.container, { ...style }]}>
-      <View style={styles.heartIcon}>
-        <Pressable onPress={() => navigation.navigate('Symptoms')}>
-          <IconWithBg
-            bgColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-            width="40px"
-            height="40px"
-            borderRadius="30px"
-            icon="heart"
-            iconSize={25}
-            alignSelf="center"
-            marginLeft="20px"
-          />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Pressable
+          onPress={() => alert('hello')}
+          style={{
+            ...styles.sendLoveContainer,
+            backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
+          }}>
+          <MaterialCommunityIcons name="heart" size={28} color={COLORS.white} />
+          <Text textAlign="center" color="white" mini marginRight={rw(1)}>
+            ارسال علاقه مندی به همسر
+          </Text>
         </Pressable>
-
-        <Pressable onPress={() => navigation.navigate('ContactCounselor')}>
-          <Feather
-            name="phone"
-            color={COLORS.grey}
-            size={25}
-            style={{ marginLeft: 5 }}
+        <Pressable
+          onPress={() => navigation.navigate('Symptoms')}
+          style={{
+            ...styles.sendLoveContainer,
+            backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
+          }}>
+          <Ionicons
+            name="ios-person-add"
+            size={28}
+            color={COLORS.white}
+            style={{ marginLeft: rw(1) }}
           />
+          <Text textAlign="center" color="white" mini marginRight={rw(1)}>
+            مشاهده انتظارات همسر
+          </Text>
         </Pressable>
       </View>
+
       <Pressable onPress={() => navigation.openDrawer()}>
         <MaterialCommunityIcons
           name="menu"
@@ -58,15 +71,26 @@ const styles = StyleSheet.create({
     margin: 20,
     height: 50,
   },
-  heartIcon: {
+  leftSide: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '20%',
   },
   btn: {
     width: '45%',
     height: 40,
     borderRadius: 20,
+  },
+  sendLoveContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexShrink: 1,
+    width: rw(35),
+    paddingHorizontal: rw(2),
+    paddingVertical: rh(0.5),
+    borderRadius: 35,
+    marginLeft: rw(4),
+    elevation: 3,
   },
 });
 

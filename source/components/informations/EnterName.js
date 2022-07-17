@@ -1,6 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Pressable, Image, BackHandler } from 'react-native';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Image,
+  LayoutAnimation,
+  BackHandler,
+  Keyboard,
+} from 'react-native';
 import { Button } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -26,9 +34,11 @@ const EnterName = ({
 }) => {
   const { registerStep, handleRegisterStep } = useContext(WomanInfoContext);
 
-  const [name, setName] = useState('');
+  const name = useRef();
+  const [testName, setTestName] = useState('');
   const [picture, setPicture] = useState('');
   const [showBirthday, setShowBirthday] = useState(false);
+  const [isNameEntered, setIsNameEntered] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [info, setInfo] = useState(null);
   const [day, setDay] = useState(null);
@@ -39,7 +49,8 @@ const EnterName = ({
   const years = getYears();
 
   const handleTextInput = function (text) {
-    setName(text);
+    name.current = text;
+    setTestName(text);
   };
   const handleVisible = () => {
     setSnackbar({
@@ -55,7 +66,7 @@ const EnterName = ({
       });
     } else {
       setNameAndPicAndBirth({
-        name: name,
+        name: testName,
         picture: picture,
         birthday: year + '/' + month + '/' + day,
       });
@@ -64,7 +75,8 @@ const EnterName = ({
   };
 
   const handleBirthdayShow = function () {
-    if (!name) {
+    console.log('testName ', testName);
+    if (!testName) {
       setSnackbar({
         msg: 'لطفا نام خود را وارد کنید',
         visible: true,
@@ -80,7 +92,7 @@ const EnterName = ({
       return;
     }
     ImagePicker.openPicker({
-      width: 300,
+      width: 400,
       height: 400,
       cropping: true,
     }).then((image) => {
@@ -94,11 +106,11 @@ const EnterName = ({
   };
 
   const updateName = async function () {
-    if (name) {
+    if (testName) {
       const loginClient = await getLoginClient();
       setIsUpdating(true);
       const formData = new FormData();
-      formData.append('display_name', name);
+      formData.append('display_name', testName);
       formData.append(
         'birth_date',
         moment(info.birth_date).locale('en').format('jYYYY/jM/jD'),
@@ -113,7 +125,6 @@ const EnterName = ({
         type: `image/${picture.type}`,
         name: 'profileImg.' + picture.type,
       });
-      console.log('form Data ', formData);
       loginClient
         .post('complete/profile', formData)
         .then((response) => {
@@ -159,8 +170,25 @@ const EnterName = ({
     }
   };
 
+  const handleSubmitEditing = () => {
+    if (name.current) {
+      handleLayoutAnimation();
+      setIsNameEntered(true);
+    }
+  };
+
+  const handleLayoutAnimation = () => {
+    LayoutAnimation.configureNext({
+      duration: 500,
+      create: { type: 'easeIn', property: 'scaleY' },
+      update: { type: 'spring', springDamping: 0.9 },
+      delete: { type: 'easeOut', property: 'scaleY' },
+    });
+  };
+
   useEffect(() => {
-    setName(editName);
+    name.current = editName;
+    setTestName(editName);
     getFromAsyncStorage('fullInfo').then((res) => {
       if (res) {
         setInfo(JSON.parse(res));
@@ -172,12 +200,12 @@ const EnterName = ({
     const backAction = () => {
       if (showBirthday === true) {
         setShowBirthday(false);
-        setName('');
         return true;
       }
       if (editProfile === true) {
         navigation.goBack();
       }
+      Keyboard.scheduleLayoutAnimation('keyboardDidHide');
       return true;
     };
 
@@ -188,6 +216,19 @@ const EnterName = ({
 
     return () => backHandler.remove();
   });
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        handleSubmitEditing();
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   if (showBirthday === true) {
     return (
@@ -237,17 +278,24 @@ const EnterName = ({
   return (
     <View style={styles.content}>
       <View style={styles.nameInputContainer}>
-        <Text large bold>
-          نام نمایشی شما
+        <Text medium bold>
+          اسم قشنگت رو به ما میگی؟
         </Text>
         <TextInput
           onChangeText={handleTextInput}
+          onSubmitEditing={handleSubmitEditing}
+          multiline={false}
           style={{ marginTop: rh(3) }}
-          placeholder="نام نمایشی شما"
-          editedText={name}
+          placeholder="اسم"
+          editedText={testName}
           textColor={COLORS.pink}
           phColor={COLORS.pink}
         />
+        {isNameEntered && (
+          <Text medium bold marginTop={rh(0.8)}>
+            چه اسم قشنگی!
+          </Text>
+        )}
       </View>
 
       {picture ? (
@@ -268,16 +316,25 @@ const EnterName = ({
           </View>
         </Pressable>
       ) : (
-        <Pressable
-          onPress={() => selectPicture()}
-          style={{ marginTop: 20, alignItems: 'center' }}>
-          <Text color={COLORS.dark} medium>
-            انتخاب تصویر پروفایل
+        <View
+          style={{
+            marginTop: 20,
+            alignItems: 'center',
+            paddingHorizontal: rw(0),
+          }}>
+          <Text medium color={COLORS.dark} bold>
+            مطمئنم عکست هم مثل اسمت قشنگه!
           </Text>
-          <View style={styles.userIcon}>
-            <Icon name="user-alt" size={40} color={COLORS.white} />
+          <View style={{ paddingHorizontal: rw(15) }}>
+            <Text medium color={COLORS.dark} bold>
+              یه دونه از عکس های قشنگت رو اینجا برای پروفایل قرار بده.
+            </Text>
           </View>
-        </Pressable>
+
+          <Pressable style={styles.userIcon} onPress={() => selectPicture()}>
+            <Icon name="user-alt" size={40} color={COLORS.white} />
+          </Pressable>
+        </View>
       )}
 
       <Button

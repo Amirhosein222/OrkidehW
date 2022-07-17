@@ -24,7 +24,7 @@ const PeriodInfo = ({
   displayName,
   firstDay,
 }) => {
-  const { handleRegisterStage } = useContext(WomanInfoContext);
+  const { handleRegisterStage, settings } = useContext(WomanInfoContext);
   const dates = getDates(firstDay);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingDontKnow, setIsLoadingDontKnow] = useState(false);
@@ -41,21 +41,22 @@ const PeriodInfo = ({
       setIsLoadingDontKnow(true);
       const formData = new FormData();
       formData.append('last_period_date', dates[lastPeriodDate]);
-      formData.append('period_length', 7);
-      formData.append('cycle_length', 30);
+      formData.append('period_length', periodLength);
+      formData.append('cycle_length', dayNumbers[cycleLength]);
       womanClient.post('store/period_info', formData).then((response) => {
         setDisableBtn(false);
         setIsLoadingDontKnow(false);
         if (response.data.is_successful) {
+          handleRegisterStage(0);
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: 'HomeDrawer' }],
+              routes: [{ name: 'Welcome', params: { name: displayName } }],
             }),
           );
         } else {
           setSnackbar({
-            msg: response.data.message.last_period_date[0],
+            msg: response.data.message,
             visible: true,
           });
         }
@@ -71,10 +72,15 @@ const PeriodInfo = ({
         setIsLoading(false);
         if (response.data.is_successful) {
           handleRegisterStage(0);
-          navigation.navigate('HomeDrawer');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Welcome', params: { name: displayName } }],
+            }),
+          );
         } else {
           setSnackbar({
-            msg: response.data.message.last_period_date[0],
+            msg: response.data.message,
             visible: true,
           });
         }
@@ -116,13 +122,37 @@ const PeriodInfo = ({
 
   return (
     <View style={styles.content}>
-      <Text medium color={COLORS.red} marginTop={rh(4)}>
-        {registerStage === 2
-          ? `تاریخ آخرین شروع پریودت کی بود ${displayName} ؟`
-          : registerStage === 3
-          ? 'طول دوره پریودتون چند روزه'
-          : 'فاصله بین هر دوره پریودتون چند روزه'}
-      </Text>
+      <View
+        style={{
+          marginTop: rh(1.5),
+          flexDirection: 'row',
+          flexShrink: 1,
+          width: rw(100),
+          justifyContent: 'center',
+        }}>
+        <Text medium color={COLORS.red} marginRight={5} bold>
+          {registerStage === 2 ? 'قشنگم،' : 'جونم،'}
+        </Text>
+        <Text medium color={COLORS.red} bold>
+          {displayName}
+        </Text>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: rw(4),
+          flexDirection: 'row',
+          flexShrink: 1,
+          width: rw(100),
+          justifyContent: 'center',
+        }}>
+        <Text medium color={COLORS.red} marginTop={rh(0)} bold>
+          {registerStage === 2
+            ? 'برای اینکه بتونیم همراه بهتری برات باشیم، نیاز داریم که تاریخ شروع آخرین پریودت رو بدونیم'
+            : registerStage === 3
+            ? 'لطفا به ما بگو طول هر دوره ی پریودت حدودا چند روزه؟'
+            : 'لطفا به ما بگو فاصله ی بین هر دوره ی پریودت حدودا چند روزه؟'}
+        </Text>
+      </View>
 
       {registerStage === 1 ? (
         <Icon

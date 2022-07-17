@@ -1,4 +1,5 @@
 import useIsPeriodDay from './useIsPeriodDay';
 import useApi from './useApi';
+import useFullInfo from './useFullInfo';
 
-export { useApi, useIsPeriodDay };
+export { useApi, useIsPeriodDay, useFullInfo };

@@ -44,9 +44,8 @@ const TabBar = ({
           style={{
             ...styles.container,
             backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.lightPink,
-            width: isPeriodDay ? rw(100) : rw(79),
-            paddingHorizontal: isPeriodDay ? rw(6) : rw(0),
-            borderRadius: isPeriodDay ? 0 : 30,
+            width: rw(100),
+            paddingHorizontal: isPeriodDay ? rw(6) : rw(2),
           }}>
           <TouchableWithoutFeedback
             onPress={() =>
@@ -93,7 +92,7 @@ const TabBar = ({
               source={require('../../assets/images/tabIcon3.png')}
               style={{
                 right: isPeriodDay ? rw(0) : 0,
-                left: !isPeriodDay ?  rw(3) : 0,
+                left: !isPeriodDay ? rw(3) : 0,
               }}
             />
           </TouchableWithoutFeedback>
@@ -113,9 +112,8 @@ const TabBar = ({
           style={{
             ...styles.container,
             backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.lightPink,
-            width: isPeriodDay ? rw(100) : rw(79),
-            paddingHorizontal: isPeriodDay ? rw(2) : 0,
-            borderRadius: isPeriodDay ? 0 : 30,
+            width: rw(100),
+            paddingHorizontal: rw(2),
           }}>
           {routes.map((route, index) => {
             const { options } = descriptors[route.key];

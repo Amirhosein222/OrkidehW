@@ -85,7 +85,7 @@ const ChartFour = ({ chartData, route }) => {
             color={COLORS.dark}
           />
         </View>
-        <Text>{item.item.label}</Text>
+        <Text bold>{item.item.label}</Text>
       </View>
     );
   };
