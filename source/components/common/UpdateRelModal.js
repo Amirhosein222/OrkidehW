@@ -44,7 +44,7 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
       return;
     }
     ImagePicker.openPicker({
-      width: 300,
+      width: 400,
       height: 400,
       cropping: true,
     }).then((image) => {
@@ -88,7 +88,13 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
       formData.append('relation_id', relation.id);
       formData.append('gender', 'woman');
       formData.append('man_name', spouseName);
-      formData.append('man_image', spousePicture);
+      if (spousePicture) {
+        formData.append('man_image', {
+          uri: spousePicture,
+          name: 'spouseImg.png',
+          type: 'image/png',
+        });
+      }
 
       loginClient.post('update/relation', formData).then((response) => {
         setIsUpdating(false);

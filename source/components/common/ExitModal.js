@@ -47,7 +47,7 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
   return (
     <Modal
       isVisible={visible}
-      coverScreen={false}
+      coverScreen={true}
       hasBackdrop={true}
       backdropOpacity={0.2}
       backdropTransitionOutTiming={1}

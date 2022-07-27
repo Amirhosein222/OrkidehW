@@ -9,7 +9,6 @@ import getLoginClient from '../../libs/api/loginClientApi';
 import { validatePhoneNumber, showSnackbar } from '../../libs/helpers';
 
 import {
-  Container,
   Text,
   Divider,
   TextInput,
@@ -122,7 +121,11 @@ const ContactCounselorScreen = ({ navigation }) => {
         <Text medium bold color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
           تماس با کارشناس
         </Text>
-        <Divider color={COLORS.pink} width="85%" style={{ marginTop: 20 }} />
+        <Divider
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          width="85%"
+          style={{ marginTop: 20 }}
+        />
         <Text
           marginTop="20"
           medium
@@ -174,7 +177,10 @@ const ContactCounselorScreen = ({ navigation }) => {
         <Button
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
           mode="contained"
-          style={[styles.btn, { width: '38%', height: 40, margin: 20 }]}
+          style={[
+            styles.btn,
+            { width: '38%', height: 40, margin: 20, marginTop: rh(5) },
+          ]}
           loading={isSending ? true : false}
           disabled={isSending ? true : false}
           onPress={() => sendMessageToCounselor()}>

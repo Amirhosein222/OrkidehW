@@ -70,7 +70,7 @@ const SymptomsScreen = ({ navigation }) => {
           setSpouseMoods(response.data.data.signs);
         } else {
           setSnackbar({
-            msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+            msg: response.data.message,
             visible: true,
           });
         }
@@ -84,6 +84,9 @@ const SymptomsScreen = ({ navigation }) => {
   };
 
   const setActiveSpouse = async function (value) {
+    if (typeof value === 'object') {
+      return true;
+    }
     resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
@@ -96,10 +99,10 @@ const SymptomsScreen = ({ navigation }) => {
           JSON.stringify(response.data.data.id),
         );
         saveActiveRel({
-          relId: response.data.data.id,
+          relId: response.data.data.man.id,
           label: response.data.data.man_name,
           image: response.data.data.man_image,
-          mobile: response.data.data.mobile,
+          mobile: response.data.data.man.mobile,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',

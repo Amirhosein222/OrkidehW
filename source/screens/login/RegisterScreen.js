@@ -17,7 +17,7 @@ import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const RegisterScreen = ({ navigation, route }) => {
   const params = route.params;
-  const { settings } = useContext(WomanInfoContext);
+  const { settings, saveFullInfo } = useContext(WomanInfoContext);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [regentCode, setRegentCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -97,11 +97,8 @@ const RegisterScreen = ({ navigation, route }) => {
       loginClient.post('change/mobile', formData).then((response) => {
         setIsSendingEdit(false);
         if (response.data.is_successful) {
+          saveFullInfo(response.data.data);
           showSnackbar('شماره موبایل شما با موفقیت تغییر یافت', 'success');
-          AsyncStorage.setItem(
-            'userToken',
-            JSON.stringify(response.data.data.token),
-          );
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -110,7 +107,9 @@ const RegisterScreen = ({ navigation, route }) => {
           );
         } else {
           setSnackbar({
-            msg: response.data.message.mobile[0],
+            msg: response.data.message.hasOwnProperty('mobile')
+              ? response.data.message.mobile
+              : response.data.message,
             visible: true,
           });
         }
@@ -126,7 +125,7 @@ const RegisterScreen = ({ navigation, route }) => {
         barStyle="dark-content"
       />
       <Text large color="#fe0294">
-        ایجاد حساب کاربری
+        {params.editNumber ? 'تغییر شماره تلفن' : 'ایجاد حساب کاربری'}
       </Text>
       <TextInput
         placeholder="لطفا شماره موبایلت رو اینجا وارد کن."

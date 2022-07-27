@@ -49,7 +49,6 @@ const ProfileUpdateScreen = ({ navigation }) => {
   const fullInfo = useFullInfo();
   const { saveFullInfo } = useContext(WomanInfoContext);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-
   const [periodAlarms, setPeriodAlarms] = useState({
     notif: 0,
     sms: 0,
@@ -419,6 +418,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
                 onChangeText={handleTextInput}
                 editedText={password}
                 inputName="password"
+                secureTextEntry={true}
               />
               <View style={{ width: '20%', justifyContent: 'center' }}>
                 <Text small alignSelf="flex-end">
@@ -435,6 +435,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
                 onChangeText={handleTextInput}
                 editedText={rePassword}
                 inputName="rePass"
+                secureTextEntry={true}
               />
               <View style={{ width: '20%', justifyContent: 'center' }}>
                 <Text small alignSelf="flex-end">

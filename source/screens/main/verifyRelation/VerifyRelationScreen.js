@@ -40,10 +40,10 @@ const VerifyRelationScreen = ({ navigation }) => {
         type: 'success',
       });
     }
-    if (verifyCode.error) {
+    if (verifyCode.data && !verifyCode.data.is_successful) {
       setSnackbar({
         msg:
-          verifyCode.errorCode === 404
+          verifyCode.data.status === 404
             ? 'رابطه ای با این کد تایید ثبت نشده است.'
             : 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
         visible: true,

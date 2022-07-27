@@ -17,7 +17,6 @@ import {
   Container,
   IconWithBg,
   Text,
-  BottomHalfModal,
   Snackbar,
   NoRelation,
   Picker,
@@ -56,7 +55,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           setExpectations(response.data.data);
         } else {
           setSnackbar({
-            msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+            msg: response.data.message,
             visible: true,
           });
         }
@@ -95,6 +94,9 @@ const HusbandExpectationsScreen = ({ navigation }) => {
   };
 
   const setActiveSpouse = async function (value) {
+    if (typeof value === 'object') {
+      return true;
+    }
     resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
@@ -107,10 +109,10 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           JSON.stringify(response.data.data.id),
         );
         saveActiveRel({
-          relId: response.data.data.id,
+          relId: response.data.data.man.id,
           label: response.data.data.man_name,
           image: response.data.data.man_image,
-          mobile: response.data.data.mobile,
+          mobile: response.data.data.man.mobile,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -211,13 +213,8 @@ const HusbandExpectationsScreen = ({ navigation }) => {
       />
       <Pressable
         onPress={() => navigation.openDrawer()}
-        style={{ alignSelf: 'flex-end' }}>
-        <MaterialCommunityIcons
-          name="menu"
-          color={COLORS.grey}
-          size={28}
-          style={{ marginRight: 20 }}
-        />
+        style={{ marginRight: rh(2), alignSelf: 'flex-end', marginTop: rh(1) }}>
+        <MaterialCommunityIcons name="menu" color={COLORS.grey} size={28} />
       </Pressable>
       {womanInfo.relations.length && womanInfo.activeRel ? (
         <FlatList

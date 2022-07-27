@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Pressable,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HorizontalDatePicker from '@logisticinfotech/react-native-horizontal-date-picker';
@@ -15,13 +16,10 @@ import moment from 'moment-jalaali';
 import FormData from 'form-data';
 import Pushe from 'pushe-react-native';
 import messaging from '@react-native-firebase/messaging';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { RedTheme } from '../../components/homescreen';
 import getWomanClient from '../../libs/api/womanApi';
-import { getWomanInfo } from '../../libs/apiCalls';
+import { getSettings, getWomanInfo } from '../../libs/apiCalls';
 import { useIsPeriodDay, useApi } from '../../libs/hooks';
 import {
   saveWomanRelations,
@@ -51,8 +49,16 @@ import { TabActions } from '@react-navigation/native';
 const HomeScreen = ({ navigation, route }) => {
   const params = route.params || {};
   const isPeriodDay = useIsPeriodDay();
-  const { saveFullInfo, handleUserPeriodDays, handleUserCalendar } = useContext(
-    WomanInfoContext,
+  const {
+    saveFullInfo,
+    handleUserPeriodDays,
+    handleUserCalendar,
+    settings,
+    saveSettings,
+  } = useContext(WomanInfoContext);
+  const [setts, setSetts] = useApi(() => getSettings(''));
+  const [adsSettings, setAdsSetting] = useState(
+    settings ? settings.app_text_ads : null,
   );
   const [loginWomanInfo, setLoginWomanInfo] = useApi(() => getWomanInfo());
   const [pregnancy, setPregnancy] = useState(null);
@@ -70,7 +76,6 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const getPregnancyPercent = async function (activeRel) {
-    console.log('getPregnancyPercent');
     setLoadingPregnancy(true);
     const loginClient = await getLoginClient();
     const formData = new FormData();
@@ -111,11 +116,9 @@ const HomeScreen = ({ navigation, route }) => {
     if (fetching) {
       return 1;
     }
-
     date === 'today' && setFetching(true);
     const selectedDate =
       date === 'today' ? moment().locale('en').format('jYYYY/jMM/jDD') : date;
-    console.log(selectedDate);
     const womanClient = await getWomanClient();
     const formData = new FormData();
     formData.append('date', selectedDate);
@@ -168,7 +171,6 @@ const HomeScreen = ({ navigation, route }) => {
             }
           });
           if (activeRel) {
-            console.log('activeRel ', activeRel);
             saveActiveRel({
               relId: activeRel.id,
               label: activeRel.man_name,
@@ -245,6 +247,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, [womanInfo.activeRel]);
 
   useEffect(() => {
+    !settings && setSetts();
     getFromAsyncStorage('fcmTokenSent').then((res) => {
       if (!res) {
         sendFcmToken();
@@ -256,6 +259,18 @@ const HomeScreen = ({ navigation, route }) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (setts.data && setts.data.is_successful) {
+      const result = setts.data.data.find((e) => e.key === 'app_text_ads');
+      result && setAdsSetting(result);
+      const settingsObj = setts.data.data.reduce(
+        (acc, cur) => ({ ...acc, [cur.key]: cur }),
+        {},
+      );
+      saveSettings(settingsObj);
+    }
+  }, [setts]);
 
   useEffect(() => {
     if (params.refresh === 'true') {
@@ -273,6 +288,20 @@ const HomeScreen = ({ navigation, route }) => {
     }
   }, [loginWomanInfo]);
 
+  if (isPeriodDay) {
+    return (
+      <RedTheme
+        route={route}
+        navigation={navigation}
+        data={{
+          pregnancy: pregnancy,
+          loadingPregnancy: loadingPregnancy,
+          adsSettings: adsSettings,
+          periodStart: periodStart,
+        }}
+      />
+    );
+  }
   return (
     <Container justifyContent="flex-start">
       <StatusBar
@@ -280,39 +309,36 @@ const HomeScreen = ({ navigation, route }) => {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      {!isPeriodDay && (
-        <>
-          <Header
-            navigation={navigation}
-            style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
-          />
-          <Divider
-            color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
-            width="90%"
-          />
-        </>
-      )}
+
       <>
-        {!isPeriodDay && (
+        <Header
+          navigation={navigation}
+          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+        />
+        <Divider color={COLORS.lightPink} width="90%" />
+      </>
+
+      <View style={{ alignItems: 'center' }}>
+        <View
+          style={{
+            paddingHorizontal: rw(6),
+          }}>
           <Text
             small
-            marginBottom={rh(2)}
+            marginBottom={rh(1)}
+            textAlign="right"
             marginTop={rh(1)}
+            marginRight={rw(1)}
             color={COLORS.grey}>
-            به یک عدد نیروی پشتیبانی نیازمندیم(تبلیغات)
+            {/* {adsSettings && adsSettings.value} */}
+            متن تست تبلیغات متن تست تبلیغات متن تست تبلیغات
           </Text>
-        )}
+        </View>
+
         <View
           style={{
             ...styles.pickerHeartContainer,
-            marginTop: isPeriodDay ? STATUS_BAR_HEIGHT + rh(2) : 0,
           }}>
-          {isPeriodDay && (
-            <View style={styles.heartIconContainer}>
-              <FontAwesome5 name="heart" size={30} color="white" />
-            </View>
-          )}
-
           <View>
             {periodStart ? (
               <HorizontalDatePicker
@@ -326,7 +352,7 @@ const HomeScreen = ({ navigation, route }) => {
                 returnDateFormat={'jYYYY/jMM/jDD'}
                 datePickerContainerStyle={{
                   backgroundColor: 'white',
-                  width: isPeriodDay ? rw(88) : rw(100),
+                  width: rw(100),
                 }}
                 selectedTextStyle={styles.selectedDate}
                 unSelectedTextStyle={styles.unselectedDate}
@@ -340,35 +366,13 @@ const HomeScreen = ({ navigation, route }) => {
             ) : (
               <ActivityIndicator size="large" color="red" />
             )}
-            {isPeriodDay && (
-              <>
-                <Text medium color={COLORS.grey} marginRight={rw(0)}>
-                  به یک عدد نیروی پشتیبانی نیازمندیم(تبلیغات)
-                </Text>
-              </>
-            )}
           </View>
         </View>
-      </>
-      {isPeriodDay && (
-        <Pressable
-          style={{
-            alignSelf: 'flex-end',
-            marginRight: rw(4),
-            marginTop: rh(1),
-          }}
-          onPress={() => navigation.openDrawer()}>
-          <MaterialCommunityIcons name="menu" color={COLORS.grey} size={28} />
-        </Pressable>
-      )}
+      </View>
 
       <View style={styles.pregnancyContainer}>
         <Image
-          imageSource={
-            isPeriodDay
-              ? require('../../assets/images/600.png')
-              : require('../../assets/images/500.png')
-          }
+          imageSource={require('../../assets/images/500.png')}
           width={rw(90)}
           height={rh(46)}
         />
@@ -388,47 +392,17 @@ const HomeScreen = ({ navigation, route }) => {
         )}
       </View>
 
-      {isPeriodDay ? (
-        <View style={styles.pDayIcon}>
-          <Ionicons
-            name="md-play-circle-outline"
-            size={28}
-            color={COLORS.white}
+      <Pressable onPress={() => onDateSelected('today')} disabled={fetching}>
+        {fetching ? (
+          <ActivityIndicator size="large" color={COLORS.pink} />
+        ) : (
+          <Image
+            imageSource={require('../../assets/images/611.png')}
+            width="95px"
+            height="70px"
           />
-          <Fontisto name="blood-drop" size={25} color={COLORS.white} />
-        </View>
-      ) : (
-        <Pressable onPress={() => onDateSelected('today')} disabled={fetching}>
-          {fetching ? (
-            <ActivityIndicator size="large" color={COLORS.pink} />
-          ) : (
-            <Image
-              imageSource={require('../../assets/images/611.png')}
-              width="95px"
-              height="70px"
-            />
-          )}
-        </Pressable>
-      )}
-
-      {isPeriodDay && (
-        <Pressable
-          onPress={() => navigation.navigate('ContactCounselor')}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignSelf: 'flex-end',
-            marginTop: rh(4),
-            marginRight: rw(4),
-          }}>
-          <Text medium bold color={COLORS.grey} marginRight={rw(1)}>
-            تماس با کارشناس
-          </Text>
-          <View style={styles.counselorIcon}>
-            <FontAwesome5 name="comments" size={30} color={COLORS.white} />
-          </View>
-        </Pressable>
-      )}
+        )}
+      </Pressable>
 
       {snackbar.visible === true ? (
         <Snackbar
@@ -478,32 +452,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,
-  },
-  pDayIcon: {
-    width: rw(24),
-    backgroundColor: COLORS.rossoCorsa,
-    height: rh(4.5),
-    borderRadius: 40,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-  },
-  heartIconContainer: {
-    backgroundColor: COLORS.rossoCorsa,
-    height: rh(10),
-    width: rw(15),
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: rw(0),
-  },
-  counselorIcon: {
-    backgroundColor: COLORS.grey,
-    width: rw(15),
-    height: rh(7),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 45,
-    alignSelf: 'flex-end',
   },
 });
 

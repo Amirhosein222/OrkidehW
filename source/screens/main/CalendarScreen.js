@@ -30,6 +30,7 @@ import {
   convertToJalaali,
   getFromAsyncStorage,
   lastIndexOf,
+  numberConverter,
 } from '../../libs/helpers';
 
 import {
@@ -107,7 +108,6 @@ const CalendarScreen = ({ navigation, route }) => {
 
   const updateCalendar = async function (newDates) {
     const sortedDates = sortDates(newDates);
-    console.log('update cal ', sortedDates);
     setIsUpdating(true);
     const womanClient = await getWomanClient();
     womanClient
@@ -146,8 +146,9 @@ const CalendarScreen = ({ navigation, route }) => {
           }
         } else {
           setSnackbar({
-            msg: response.data.message,
+            msg: numberConverter(response.data.message),
             visible: true,
+            delay: 7000,
           });
         }
       })
@@ -298,8 +299,11 @@ const CalendarScreen = ({ navigation, route }) => {
         return;
       }
       let removed = [...newDatesForApi];
-      removed.push({ date: jalaaliDate, type: 'delete' });
-      removed = removed.filter((d) => d.type !== 'period');
+      removed.push({
+        date: jalaaliDate,
+        type: selectedOption === 'sex' ? 'sexDelete' : 'delete',
+      });
+      removed = removed.filter((d) => d.type !== 'period' && d.type !== 'sex');
       delete newDates[selectedDate];
       setNewMarkedDates(newDates);
       setNewDatesForApi(removed);
@@ -569,6 +573,7 @@ const CalendarScreen = ({ navigation, route }) => {
         <Snackbar
           message={snackbar.msg}
           type={snackbar.type}
+          delay={snackbar?.delay}
           handleVisible={handleVisible}
         />
       ) : null}

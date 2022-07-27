@@ -64,7 +64,6 @@ const ChartScreen = ({ navigation }) => {
     const womanClient = await getWomanClient();
     setIsLoading(true);
     womanClient.get('report').then((response) => {
-      console.log('charts ', response.data.data);
       setIsLoading(false);
       if (response.data.data) {
         setCircleChart(response.data.data.chart1);

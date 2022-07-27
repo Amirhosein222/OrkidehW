@@ -5,7 +5,7 @@ import { Animated, View, StyleSheet } from 'react-native';
 import { Text } from './index';
 import { COLORS } from '../../configs';
 
-const Snackbar = ({ message, type = 'error', handleVisible }) => {
+const Snackbar = ({ message, type = 'error', handleVisible, delay = 1500 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   const styles = StyleSheet.create({
@@ -14,6 +14,7 @@ const Snackbar = ({ message, type = 'error', handleVisible }) => {
       top: 45,
       left: 0,
       right: 0,
+      // zIndex: 1000,
     },
   });
 
@@ -24,7 +25,7 @@ const Snackbar = ({ message, type = 'error', handleVisible }) => {
         duration: 500,
         useNativeDriver: true,
       }),
-      Animated.delay(1500),
+      Animated.delay(delay),
       Animated.timing(opacity, {
         toValue: 0,
         duration: 500,

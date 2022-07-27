@@ -1,4 +1,6 @@
 import axios from 'axios';
+import FormData from 'form-data';
+
 import { getAccessToken } from '../helpers';
 import getLoginClient from '../api/loginClientApi';
 import getWomanClient from '../api/womanApi';
@@ -6,8 +8,12 @@ import getWomanClient from '../api/womanApi';
 export const verifyRelation = async function (code) {
   try {
     const token = await getAccessToken();
-    const res = await axios.get(
-      `https://orkidehapp.ir/verify/relation?code=${code}`,
+    const formData = new FormData();
+    formData.append('gender', 'woman');
+    formData.append('code', code);
+    const res = await axios.post(
+      'https://orkidehapp.ir/api/user/verify/relation',
+      formData,
       {
         headers: {
           Authorization: `${token}`,
@@ -16,7 +22,7 @@ export const verifyRelation = async function (code) {
     );
     return res.data;
   } catch (error) {
-    // console.log('e ', error.response.status);
+    // console.log('e ', error.response);
     throw error;
   }
 };
@@ -35,7 +41,6 @@ export const buyGoldenAccount = async function () {
 };
 
 export const getSettings = async function (key) {
-  console.log('getting settings');
   try {
     const res = await axios.get('https://orkidehapp.ir/api/setting');
     return res.data;
@@ -49,7 +54,6 @@ export const getWomanInfo = async function () {
   try {
     const womanClient = await getWomanClient();
     const res = await womanClient.get('login_woman');
-    console.log('login woman ', res.data);
     return res.data;
   } catch (error) {
     // console.log('e ', error.response.status);

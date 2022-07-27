@@ -110,7 +110,6 @@ const PeriodDayTabBar = ({
     );
   } else {
     const { routes, index } = state;
-    console.log('isPeriodDay ', isPeriodDay);
     return (
       <View
         style={{

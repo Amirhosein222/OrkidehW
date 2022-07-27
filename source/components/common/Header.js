@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,9 +9,28 @@ import { Text } from './index';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../configs';
+import { Snackbar } from '../../components/common';
+import { showSnackbar } from '../../libs/helpers';
 
 const Header = ({ navigation, style }) => {
   const { isPeriodDay } = useContext(WomanInfoContext);
+  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+
+  const onSendLove = () => {
+    // setSnackbar({
+    //   msg: 'با موفقیت ارسال شد',
+    //   visible: true,
+    //   type: 'success',
+    // });
+    showSnackbar('با موفقیت ارسال شد', 'success');
+  };
+
+  // const handleVisible = () => {
+  //   setSnackbar({
+  //     visible: !snackbar.visible,
+  //   });
+  // };
+
   return (
     <View style={[styles.container, { ...style }]}>
       <View
@@ -21,7 +40,7 @@ const Header = ({ navigation, style }) => {
           alignItems: 'center',
         }}>
         <Pressable
-          onPress={() => alert('hello')}
+          onPress={onSendLove}
           style={{
             ...styles.sendLoveContainer,
             backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,

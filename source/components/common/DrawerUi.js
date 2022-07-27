@@ -47,6 +47,9 @@ const DrawerUi = ({ navigation }) => {
   const emergency = 115;
 
   const setActiveSpouse = async function (value) {
+    if (typeof value === 'object') {
+      return true;
+    }
     resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
@@ -54,16 +57,15 @@ const DrawerUi = ({ navigation }) => {
     formData.append('gender', 'woman');
     loginClient.post('active/relation', formData).then((response) => {
       if (response.data.is_successful) {
-        console.log('active spouse ', response.data.data);
         AsyncStorage.setItem(
           'lastActiveRelId',
           JSON.stringify(response.data.data.id),
         );
         saveActiveRel({
-          relId: response.data.data.id,
+          relId: response.data.data.man.id,
           label: response.data.data.man_name,
           image: response.data.data.man_image,
-          mobile: response.data.data.mobile,
+          mobile: response.data.data.man.mobile,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',

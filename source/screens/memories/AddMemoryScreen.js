@@ -175,7 +175,9 @@ const AddMemoryScreen = ({ navigation, route }) => {
   }, [isFocused]);
 
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: '#ffffff' }}
+      contentContainerStyle={{ backgroundColor: '#ffffff', flex: 1 }}>
       <View
         style={{
           justifyContent: 'space-between',

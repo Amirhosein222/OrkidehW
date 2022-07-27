@@ -17,6 +17,7 @@ const Input = ({
   textColor,
   editedText = null,
   fontWeight = 'normal',
+  secureTextEntry = false,
 }) => {
   const styles = StyleSheet.create({
     input: {
@@ -40,6 +41,7 @@ const Input = ({
       testId="textInput"
       onChangeText={(value) => onChangeText(value, inputName)}
       onSubmitEditing={onSubmitEditing ? () => onSubmitEditing() : () => {}}
+      // secureTextEntry={secureTextEntry}
     />
   );
 };

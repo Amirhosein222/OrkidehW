@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import FormData from 'form-data';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import getLoginClient from '../../libs/api/loginClientApi';
@@ -93,6 +94,7 @@ const ContactSpouseScreen = ({ navigation }) => {
       setSnackbar({
         msg: 'تصویر پروفایل با موفقیت انتخاب شد.',
         visible: true,
+        type: 'success',
       });
     });
   };
@@ -132,7 +134,6 @@ const ContactSpouseScreen = ({ navigation }) => {
       formData.append('include_man', 1);
       formData.append('include_woman', 1);
       formData.append('gender', 'woman');
-      console.log('formData ', formData);
       loginClient
         .post('store/relation', formData)
         .then((response) => {
@@ -241,7 +242,6 @@ const ContactSpouseScreen = ({ navigation }) => {
       .get('index/relation?include_man=1&include_woman=1&gender=woman')
       .then((response) => {
         setLoadingRelations(false);
-        console.log('my rels ', response.data.data);
         if (response.data.is_successful) {
           let rels = [];
           let activeRel = null;
@@ -276,11 +276,20 @@ const ContactSpouseScreen = ({ navigation }) => {
       });
   };
 
+  const copyToClipboard = (code) => {
+    Clipboard.setString(code);
+    setSnackbar({
+      msg: 'کد تایید کپی شد.',
+      visible: true,
+      type: 'success',
+    });
+  };
+
   const renderRelations = function ({ item }) {
     return (
       <Card
         width="80%"
-        height="125"
+        height="150"
         bgColor={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
         borderRadius="10">
         <View style={styles.cardContent}>
@@ -316,20 +325,27 @@ const ContactSpouseScreen = ({ navigation }) => {
           </Button>
           <Text marginRight="10">{numberConverter(item.man.mobile)}</Text>
         </View>
-        {item.is_verified === 0 && item.applicant === 'man' ? (
-          <Button
-            color={COLORS.blue}
-            mode="contained"
-            style={[styles.cardBtn, { alignSelf: 'flex-start', margin: 5 }]}
-            loading={
-              isVerifying.verifying && isVerifying.id === item.id ? true : false
-            }
-            onPress={() => handleRelation('verify', item.id)}>
+
+        <Pressable
+          style={[
+            styles.cardBtn,
+            {
+              // alignSelf: 'flex-start',
+              margin: 5,
+              height: 50,
+              width: '90%',
+              alignSelf: 'center',
+              backgroundColor: COLORS.dark,
+            },
+          ]}
+          onPress={() => copyToClipboard(item.verification_code)}>
+          <View>
             <Text small color="white">
-              تایید
+              کپی کد تایید (تست)
             </Text>
-          </Button>
-        ) : null}
+            <Text color="white">{item.verification_code}</Text>
+          </View>
+        </Pressable>
       </Card>
     );
   };
@@ -447,7 +463,7 @@ const ContactSpouseScreen = ({ navigation }) => {
         {loadingRelations === false ? (
           <FlatList
             data={relations}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={renderRelations}
             style={{ width: '100%' }}
           />

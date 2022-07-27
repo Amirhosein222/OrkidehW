@@ -16,7 +16,6 @@ import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
 
 const DevelopersScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
-  const [title, setTitle] = useState('');
 
   return (
     <Container justifyContent="flex-start">
@@ -55,7 +54,7 @@ const DevelopersScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginTop: 30,
+    marginTop: rh(3),
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

@@ -63,14 +63,14 @@ export function PeriodTabs() {
       }}>
       <Tab.Screen
         options={{
-          tabBarLabel: 'علائم',
+          tabBarLabel: 'حال و احوالت توی این روز چطوره؟',
         }}
         name="PeriodSymptomsTab"
         component={PeriodSymptomsTabScreen}
       />
       <Tab.Screen
         options={{
-          tabBarLabel: 'انتظارات از همسر',
+          tabBarLabel: 'همسرت چیکار کنه خوشحال بشی؟',
         }}
         name="SpouseExpectationsTab"
         component={SpouseExpectationsTabScreen}

@@ -1,13 +1,19 @@
+import React, { useContext, useEffect } from 'react';
 import { CommonActions } from '@react-navigation/native';
-import React from 'react';
 import { Pressable, StatusBar, StyleSheet, View } from 'react-native';
 
 import { Text } from '../../components/common';
 import { rh, rw } from '../../configs';
 import { COLORS } from '../../configs/styles';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const WelcomeScreen = ({ navigation, route }) => {
   const params = route.params || {};
+  const { handleRegisterStage } = useContext(WomanInfoContext);
+
+  useEffect(() => {
+    handleRegisterStage(0);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -35,7 +41,11 @@ const WelcomeScreen = ({ navigation, route }) => {
         </Text>
       </View>
       <View
-        style={{ width: rw(100), paddingHorizontal: rw(3), marginTop: rh(3) }}>
+        style={{
+          width: rw(100),
+          paddingHorizontal: rw(3),
+          marginTop: rh(3),
+        }}>
         <Text large color="white" textAlign="right" marginRight={rw(3)}>
           ما تمام تلاشمون رو کردیم که تا حد امکان کار با این نرم افزار رو برات
           ساده و جذاب کنیم.

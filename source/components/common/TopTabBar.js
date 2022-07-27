@@ -5,7 +5,7 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import { Text } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 
 const TopTabBar = ({ state, descriptors, navigation, periodTabs = false }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -20,7 +20,7 @@ const TopTabBar = ({ state, descriptors, navigation, periodTabs = false }) => {
   };
 
   return (
-    <View style={{ marginTop: STATUS_BAR_HEIGHT }}>
+    <View style={{ marginTop: STATUS_BAR_HEIGHT + rh(1) }}>
       <View style={styles.container}>
         {routes.map((route, index) => {
           const { options } = descriptors[route.key];
@@ -41,6 +41,8 @@ const TopTabBar = ({ state, descriptors, navigation, periodTabs = false }) => {
                 borderBottomWidth: 2,
                 borderBottomColor: handleTabColors(focused),
                 width: '45%',
+                paddingHorizontal: rw(4),
+                // paddingVertical: rh(1),
               }}
               key={route.key}
               onPress={() => onPress()}>

@@ -225,37 +225,27 @@ const FullPostScreen = ({ navigation, route }) => {
           contentContainerStyle={[SCROLL_VIEW_CONTAINER]}>
           {medias.length ? (
             <View style={styles.mediaContainer}>
-              <Swiper width={WIDTH} height={200} showsButtons={true}>
+              <Swiper width={WIDTH} height={rh(40)} showsButtons={true}>
                 {medias.map((item) => {
                   return item.hasOwnProperty('image') ? (
                     <Image
                       source={{ uri: baseUrl + item.image }}
                       style={{ width: rw(100), height: '100%' }}
-                      resizeMode="contain"
                     />
                   ) : (
-                    <View>
-                      <Image
-                        source={{
-                          uri:
-                            baseUrl +
-                            '/uploads/videos/1/07303aeaf362082fbace7d775980190f35134338-144p.mp4',
-                        }}
-                        style={styles.videoThumbnail}
-                        resizeMode="contain"
+                    <Pressable
+                      style={styles.playVideo}
+                      onPress={() => onPlayVideo(item.video)}>
+                      <FontAwesome5
+                        name="play-circle"
+                        size={80}
+                        color="white"
+                        style={{ marginTop: rh(1) }}
                       />
-                      <Pressable
-                        style={styles.playVideo}
-                        onPress={() => onPlayVideo(item.video)}>
-                        <Text color="white">مشاهده ویدیو</Text>
-                        <FontAwesome5
-                          name="play-circle"
-                          size={28}
-                          color="white"
-                          style={{ marginTop: rh(1) }}
-                        />
-                      </Pressable>
-                    </View>
+                      <Text color="white" large>
+                        مشاهده ویدیو
+                      </Text>
+                    </Pressable>
                   );
                 })}
               </Swiper>
@@ -418,7 +408,6 @@ const styles = StyleSheet.create({
   mediaContainer: {
     width: '100%',
     flex: 1,
-    backgroundColor: 'yellow',
   },
   textContainer: {
     width: '100%',
@@ -466,18 +455,13 @@ const styles = StyleSheet.create({
   playVideo: {
     alignItems: 'center',
     justifyContent: 'center',
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: COLORS.pink,
-    width: rw(20),
-    height: rh(11),
-    left: rw(78),
-    top: rh(1),
-    borderRadius: 7,
+    backgroundColor: COLORS.grey,
+    width: rw(100),
+    height: '100%',
   },
   videoThumbnail: {
     width: rw(100),
     height: '100%',
-    backgroundColor: 'yellow',
   },
 });
 

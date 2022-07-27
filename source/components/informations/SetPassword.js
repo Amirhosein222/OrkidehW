@@ -30,7 +30,7 @@ import {
 } from '../../components/common';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
-import { WIDTH, COLORS, rh } from '../../configs';
+import { WIDTH, COLORS, rh, rw } from '../../configs';
 
 const SetPassword = ({ goToNextStage, nameAndPic }) => {
   const { settings } = useContext(WomanInfoContext);
@@ -200,9 +200,9 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
               textColor={COLORS.pink}
               phColor={COLORS.pink}
               style={styles.textInput}
-              keyboardType="numeric"
               onChangeText={handleTextInput}
               inputName="password"
+              // secureTextEntry={true}
             />
             <Text small>رمز عبور جدید</Text>
           </Animated.View>
@@ -216,9 +216,9 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
               textColor={COLORS.pink}
               phColor={COLORS.pink}
               style={styles.textInput}
-              keyboardType="numeric"
               onChangeText={handleTextInput}
               inputName="repeatPass"
+              // secureTextEntry={true}
             />
             <Text small>تایید رمز عبور</Text>
           </Animated.View>
@@ -270,10 +270,10 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '65%',
-    borderRadius: 50,
+    borderRadius: 40,
     height: 45,
     marginRight: 10,
-    paddingRight: 10,
+    paddingRight: rw(2),
   },
   btn: {
     width: '40%',

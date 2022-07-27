@@ -32,7 +32,9 @@ const EnterName = ({
   editPass,
   navigation,
 }) => {
-  const { registerStep, handleRegisterStep } = useContext(WomanInfoContext);
+  const { registerStep, handleRegisterStep, saveFullInfo } = useContext(
+    WomanInfoContext,
+  );
 
   const name = useRef();
   const [testName, setTestName] = useState('');
@@ -75,7 +77,6 @@ const EnterName = ({
   };
 
   const handleBirthdayShow = function () {
-    console.log('testName ', testName);
     if (!testName) {
       setSnackbar({
         msg: 'لطفا نام خود را وارد کنید',
@@ -120,21 +121,24 @@ const EnterName = ({
       formData.append('is_finger_active', Number(info.is_finger_active));
       formData.append('password', editPass);
       formData.append('repeat_password', editPass);
-      formData.append('image', {
-        uri: picture.path,
-        type: `image/${picture.type}`,
-        name: 'profileImg.' + picture.type,
-      });
+      if (picture) {
+        formData.append('image', {
+          uri: picture.path,
+          name: 'profileImg.png',
+          type: 'image/png',
+        });
+      }
       loginClient
         .post('complete/profile', formData)
         .then((response) => {
           setIsUpdating(false);
           if (response.data.is_successful) {
-            showSnackbar('نام شما با موفقیت تغییر کرد', 'success');
+            saveFullInfo(response.data.data);
             AsyncStorage.setItem(
               'fullInfo',
               JSON.stringify(response.data.data),
             );
+            showSnackbar('اطلاعات شما با موفقیت ویرایش شد', 'success');
             navigation.goBack();
           } else {
             setSnackbar({

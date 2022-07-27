@@ -132,12 +132,12 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
         />
         <Pressable
           onPress={() => navigation.openDrawer()}
-          style={{ alignSelf: 'flex-end' }}>
+          style={{ alignSelf: 'flex-end', marginTop: rh(1) }}>
           <MaterialCommunityIcons
             name="menu"
             color={COLORS.grey}
             size={28}
-            style={{ marginRight: 20 }}
+            style={{ marginRight: rh(2) }}
           />
         </Pressable>
         <HorizontalDatePicker

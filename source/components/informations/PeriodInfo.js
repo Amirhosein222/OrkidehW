@@ -24,7 +24,6 @@ const PeriodInfo = ({
   displayName,
   firstDay,
 }) => {
-  const { handleRegisterStage, settings } = useContext(WomanInfoContext);
   const dates = getDates(firstDay);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingDontKnow, setIsLoadingDontKnow] = useState(false);
@@ -47,7 +46,6 @@ const PeriodInfo = ({
         setDisableBtn(false);
         setIsLoadingDontKnow(false);
         if (response.data.is_successful) {
-          handleRegisterStage(0);
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -71,7 +69,6 @@ const PeriodInfo = ({
         setDisableBtn(false);
         setIsLoading(false);
         if (response.data.is_successful) {
-          handleRegisterStage(0);
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -182,7 +179,7 @@ const PeriodInfo = ({
         </Picker>
       ) : registerStage === 3 ? (
         <WheelPicker
-          options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']}
+          options={['3', '4', '5', '6', '7', '8', '9', '10']}
           onChange={(pLength) => setPeriodLength(pLength)}
           itemHeight={50}
           itemTextStyle={{

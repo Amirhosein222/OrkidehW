@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -12,13 +12,14 @@ import {
 } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { STATUS_BAR_HEIGHT, COLORS, rh } from '../../configs';
+import { STATUS_BAR_HEIGHT, COLORS, rh, rw } from '../../configs';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const AboutUsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
-  const [title, setTitle] = useState('');
+  const { settings } = useContext(WomanInfoContext);
   return (
-    <Container justifyContent="center">
+    <Container>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -42,11 +43,15 @@ const AboutUsScreen = ({ navigation }) => {
           width="85%"
           style={{ marginTop: 20 }}
         />
-        <Text margin="10" medium color={COLORS.dark}>
-          متن تست درباره اپلیکیشن متن تست درباره اپلیکیشن متن تست درباره متن تست
-          درباره اپلیکیشن متن تست درباره اپلیکیشن اپلیکیشن متن تست درباره
-          اپلیکیشن
-        </Text>
+        <View style={{ paddingHorizontal: rw(3), marginTop: rh(1) }}>
+          <Text
+            marginRight={rw(3)}
+            medium
+            color={COLORS.dark}
+            textAlign="right">
+            {settings.app_text_about_us_page.value}
+          </Text>
+        </View>
       </View>
       <TabBar seperate={true} navigation={navigation} />
     </Container>
@@ -56,7 +61,7 @@ const AboutUsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginTop: 30,
+    marginTop: rh(3),
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

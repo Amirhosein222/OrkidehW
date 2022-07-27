@@ -66,6 +66,8 @@ const VerificationScreen = ({ navigation, route }) => {
             'userToken',
             JSON.stringify(response.data.data.token),
           );
+          const periodStart = await AsyncStorage.getItem('periodStart');
+          periodStart && (await AsyncStorage.removeItem('periodStart'));
           await AsyncStorage.setItem('logedOut', 'false');
           navigation.navigate('EnterInfo');
         } else {
