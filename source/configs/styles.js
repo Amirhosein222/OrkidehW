@@ -18,6 +18,10 @@ const COLORS = {
   yellow: '#ebda21',
   green: '#00c951',
   welcomeBg: '#12263A',
+  expSympTitle: '#8F7879',
+  expSympReadMore: '#B7AFB9',
+  tabBarBg: '#F4EDED',
+  plusIconBg: '#E27FB4',
 };
 
 const SCROLL_VIEW_CONTAINER = {

@@ -196,16 +196,9 @@ const ProfileUpdateScreen = ({ navigation }) => {
     loginClient.post('alarm/setting/update', formData).then((response) => {
       setIsLoading(false);
       if (response.data.is_successful) {
-        setSnackbar({
-          msg: 'تغییرات با موفقیت اعمال شد.',
-          visible: true,
-          type: 'success',
-        });
+        showSnackbar('تغییرات با موفقیت اعمال شد.', 'success');
       } else {
-        setSnackbar({
-          msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
-          visible: true,
-        });
+        showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید', 'error');
       }
     });
   };

@@ -62,7 +62,7 @@ const DrawerUi = ({ navigation }) => {
           JSON.stringify(response.data.data.id),
         );
         saveActiveRel({
-          relId: response.data.data.man.id,
+          relId: response.data.data.id,
           label: response.data.data.man_name,
           image: response.data.data.man_image,
           mobile: response.data.data.man.mobile,

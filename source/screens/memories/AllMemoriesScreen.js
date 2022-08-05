@@ -84,16 +84,6 @@ const AllMemoriesScreen = ({ navigation }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <Pressable
-          onPress={() => navigation.openDrawer()}
-          style={{ alignSelf: 'flex-end', marginBottom: 10 }}>
-          <MaterialCommunityIcons
-            name="menu"
-            color={COLORS.grey}
-            size={28}
-            style={{ marginRight: 20 }}
-          />
-        </Pressable>
         {allMemories.length ? (
           <FlatList
             data={allMemories}

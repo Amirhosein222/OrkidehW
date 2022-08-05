@@ -130,8 +130,8 @@ const LoginScreen = ({ navigation, route }) => {
       FingerprintScanner.authenticate({
         description: getMessage(),
       })
-        .then(async () => {
-          await AsyncStorage.setItem('logedOut', 'false');
+        .then(() => {
+          AsyncStorage.setItem('logedOut', 'false');
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -179,6 +179,12 @@ const LoginScreen = ({ navigation, route }) => {
       saveSettings(settingsObj);
     }
   }, [settings]);
+
+  useEffect(() => {
+    return () => {
+      FingerprintScanner.release();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>

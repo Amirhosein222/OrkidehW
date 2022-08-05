@@ -83,7 +83,7 @@ const RedTheme = ({ navigation, route, data }) => {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={{ alignItems: 'center' }}>
         <View
           style={{
             ...styles.pickerHeartContainer,
@@ -254,11 +254,11 @@ const styles = StyleSheet.create({
   },
   heartIconContainer: {
     backgroundColor: COLORS.rossoCorsa,
-    height: rh(10),
+    height: rh(11.5),
     width: rw(15),
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: rw(0),
+    marginLeft: rw(2),
   },
   counselorIcon: {
     backgroundColor: COLORS.grey,

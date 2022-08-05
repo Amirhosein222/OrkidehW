@@ -12,7 +12,6 @@ import Switch from './Switch';
 import ImageText from './ImageText';
 import Header from './Header';
 import TabBar from './TabBar';
-import SignsMoodModal from './SignsMoodModal';
 import CommentModal from './CommentModal';
 import ExitModal from './ExitModal';
 import UpdateModal from './UpdateRelModal';
@@ -37,7 +36,6 @@ export {
   ImageText,
   Header,
   TabBar,
-  SignsMoodModal,
   CommentModal,
   ExitModal,
   TopTabBar,

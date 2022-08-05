@@ -29,7 +29,12 @@ const TabBar = ({
         onPress={() => navigation.navigate('PeriodTabs')}>
         <View
           style={
-            atPeriod ? styles.peridoTabPDayStyle : styles.plusIconContainer
+            isPeriodDay
+              ? {
+                  ...styles.plusIconContainer,
+                  backgroundColor: COLORS.rossoCorsa,
+                }
+              : { ...styles.plusIconContainer }
           }>
           <FontAwesome5 name="plus" size={25} color={COLORS.white} />
         </View>
@@ -43,9 +48,11 @@ const TabBar = ({
         <View
           style={{
             ...styles.container,
-            backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.lightPink,
-            width: rw(100),
-            paddingHorizontal: isPeriodDay ? rw(6) : rw(2),
+            backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.tabBarBg,
+            paddingHorizontal: rw(2),
+            width: rw(86),
+            height: rh(8.2),
+            borderRadius: 40,
           }}>
           <TouchableWithoutFeedback
             onPress={() =>
@@ -57,7 +64,7 @@ const TabBar = ({
               )
             }>
             <Image
-              style={{ left: !isPeriodDay ? rw(4) : 0 }}
+              style={{ left: rw(4) }}
               source={require('../../assets/images/tabIcon1.png')}
             />
           </TouchableWithoutFeedback>
@@ -66,8 +73,7 @@ const TabBar = ({
             onPress={() => navigation.navigate('Calendar')}>
             <AntDesign
               style={{
-                right: isPeriodDay ? rw(3) : 0,
-                left: !isPeriodDay ? rw(3) : 0,
+                left: rw(3),
               }}
               name="calendar"
               color={COLORS.grey}
@@ -75,7 +81,7 @@ const TabBar = ({
             />
           </TouchableWithoutFeedback>
 
-          {isPeriodDay && renderPriodTabIcon(true, true)}
+          {/* {isPeriodDay && renderPriodTabIcon(true, true)} */}
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('MemoriesTab')}>
             <Image
@@ -91,28 +97,31 @@ const TabBar = ({
             <Image
               source={require('../../assets/images/tabIcon3.png')}
               style={{
-                right: isPeriodDay ? rw(0) : 0,
-                left: !isPeriodDay ? rw(3) : 0,
+                left: rw(3),
               }}
             />
           </TouchableWithoutFeedback>
 
-          {!isPeriodDay && renderPriodTabIcon()}
+          {renderPriodTabIcon()}
         </View>
       </View>
     );
   } else {
     const { routes, index } = state;
     const handlePeriodTabStyles = () => {
-      return isPeriodDay ? styles.peridoTabPDayStyle : styles.plusIconContainer;
+      return isPeriodDay
+        ? { ...styles.plusIconContainer, backgroundColor: COLORS.rossoCorsa }
+        : styles.plusIconContainer;
     };
     return (
       <View style={{ backgroundColor: 'white' }}>
         <View
           style={{
             ...styles.container,
-            backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.lightPink,
-            width: rw(100),
+            backgroundColor: COLORS.tabBarBg,
+            width: rw(86),
+            height: rh(8.2),
+            borderRadius: 40,
             paddingHorizontal: rw(2),
           }}>
           {routes.map((route, index) => {
@@ -165,20 +174,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 35,
-    ...StyleSheet.absoluteFillObject,
-    top: rh(-4),
-    left: rw(44),
-    width: rw(16),
+    // ...StyleSheet.absoluteFillObject,
+    // top: rh(-4),
+    // left: rw(44),
+    width: rw(18),
     height: rh(8),
   },
   plusIconContainer: {
-    width: 35,
-    height: 35,
+    width: rw(13.5),
+    height: rh(6.5),
     borderRadius: 30,
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.plusIconBg,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 5,
+    marginRight: 3,
   },
 });
 

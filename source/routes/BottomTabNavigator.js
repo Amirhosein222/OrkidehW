@@ -18,11 +18,7 @@ const Tab = createBottomTabNavigator();
 export function BottomTabs() {
   const { isPeriodDay } = useContext(WomanInfoContext);
   const periodDayStyle = {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 30,
-    width: rw(9.5),
-    height: rh(4.5),
+    marginLeft: rw(3),
   };
   const handleIconsColor = (icon, focused) => {
     if (isPeriodDay) {
@@ -41,46 +37,32 @@ export function BottomTabs() {
     } else {
       switch (icon) {
         case 'home':
-          return focused
-            ? require('../assets/images/tabIcon1p.png')
-            : require('../assets/images/tabIcon1.png');
+          return require('../assets/images/tabIcon1.png');
         case 'calendar':
-          return focused ? COLORS.pink : COLORS.grey;
+          return COLORS.grey;
         case 'memories':
-          return focused
-            ? require('../assets/images/tabIcon2p.png')
-            : require('../assets/images/tabIcon2.png');
+          return require('../assets/images/tabIcon2.png');
         case 'bank':
-          return focused
-            ? require('../assets/images/tabIcon3p.png')
-            : require('../assets/images/tabIcon3.png');
+          return require('../assets/images/tabIcon3.png');
         default:
           break;
       }
     }
   };
 
-  const renderPeriodTabIcon = (atPeriod = false) => (
-    <Tab.Screen
-      name="PeriodTabs"
-      options={{
-        tabBarIcon: ({ tintColor, focused }) => (
-          <FontAwesome5 name="plus" size={25} color={COLORS.white} />
-        ),
-      }}
-      component={PeriodTabs}
-    />
-  );
-
   const handleTabsStyle = (focused) => {
-    if (isPeriodDay) {
-      return {
-        ...periodDayStyle,
-        backgroundColor: focused ? COLORS.rossoCorsa : COLORS.lightGrey,
-      };
-    } else {
-      return { marginLeft: rw(3) };
-    }
+    return {
+      marginLeft: rw(3),
+      backgroundColor: isPeriodDay && COLORS.lightGrey,
+    };
+  };
+
+  const iconsBorderStyle = (focused) => {
+    return {
+      borderBottomWidth: focused ? 2 : 0,
+      paddingBottom: focused ? 5 : 0,
+      borderBottomColor: COLORS.expSympReadMore,
+    };
   };
 
   return (
@@ -102,7 +84,10 @@ export function BottomTabs() {
             <View
               style={[
                 handleTabsStyle(focused),
-                { left: isPeriodDay ? rw(3) : rw(1) },
+                iconsBorderStyle(focused),
+                {
+                  left: rw(1),
+                },
               ]}>
               <Image source={handleIconsColor('home', focused)} />
             </View>
@@ -115,11 +100,7 @@ export function BottomTabs() {
         initialParams={{ updateCal: false }}
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
-            <View
-              style={[
-                handleTabsStyle(focused),
-                { right: isPeriodDay ? rw(1.1) : 0 },
-              ]}>
+            <View style={[handleTabsStyle(focused), iconsBorderStyle(focused)]}>
               <AntDesign
                 name="calendar"
                 color={handleIconsColor('calendar', focused)}
@@ -130,17 +111,13 @@ export function BottomTabs() {
         }}
         component={CalendarScreen}
       />
-      {isPeriodDay && renderPeriodTabIcon(true)}
+      {/* {isPeriodDay && renderPeriodTabIcon(true)} */}
 
       <Tab.Screen
         name="MemoriesTab"
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
-            <View
-              style={[
-                handleTabsStyle(focused),
-                { left: isPeriodDay ? rw(3) : 0 },
-              ]}>
+            <View style={[handleTabsStyle(focused), iconsBorderStyle(focused)]}>
               <Image source={handleIconsColor('memories', focused)} />
             </View>
           ),
@@ -151,20 +128,22 @@ export function BottomTabs() {
         name="LearningBank"
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
-            <View
-              style={[
-                handleTabsStyle(focused),
-                {
-                  right: isPeriodDay ? rw(2) : 0,
-                },
-              ]}>
+            <View style={[handleTabsStyle(focused), iconsBorderStyle(focused)]}>
               <Image source={handleIconsColor('bank', focused)} />
             </View>
           ),
         }}
         component={LearningBankScreen}
       />
-      {!isPeriodDay && renderPeriodTabIcon()}
+      <Tab.Screen
+        name="PeriodTabs"
+        options={{
+          tabBarIcon: ({ tintColor, focused }) => (
+            <FontAwesome5 name="plus" size={25} color={COLORS.white} />
+          ),
+        }}
+        component={PeriodTabs}
+      />
     </Tab.Navigator>
   );
 }

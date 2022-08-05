@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, StatusBar, StyleSheet, Keyboard } from 'react-native';
 import { Button } from 'react-native-paper';
 import {
@@ -13,6 +13,11 @@ import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import authApi from '../../libs/api/authApi';
+import {
+  saveWomanRelations,
+  saveActiveRel,
+  WomanInfoContext,
+} from '../../libs/context/womanInfoContext';
 
 import { Container, Text, Divider, Snackbar } from '../../components/common';
 import { COLORS, rh, rw } from '../../configs';
@@ -20,6 +25,7 @@ import { COLORS, rh, rw } from '../../configs';
 const CELL_COUNT = 4;
 
 const VerificationScreen = ({ navigation, route }) => {
+  const { saveFullInfo } = useContext(WomanInfoContext);
   const params = route.params;
   const [code, setCode] = useState('');
   const [checkingCode, setCheckingCode] = useState(false);
@@ -62,6 +68,9 @@ const VerificationScreen = ({ navigation, route }) => {
       .then(async (response) => {
         setCheckingCode(false);
         if (response.data.is_successful) {
+          saveFullInfo(null);
+          saveWomanRelations([]);
+          saveActiveRel(null);
           await AsyncStorage.setItem(
             'userToken',
             JSON.stringify(response.data.data.token),

@@ -3,14 +3,17 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import { Text } from '../../components/common';
-import { COLORS } from '../../configs';
+import { COLORS, rw } from '../../configs';
+import { useIsPeriodDay } from '../../libs/hooks';
 
 const ExpectationCard = ({ exp, onRight = false }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   const styles = StyleSheet.create({
     container: {
       alignSelf: 'center',
       flexDirection: 'row',
-      width: '75%',
+      width: rw(75),
       justifyContent: 'space-between',
       alignItems: 'center',
       backgroundColor: '#fff',
@@ -30,7 +33,7 @@ const ExpectationCard = ({ exp, onRight = false }) => {
     titleContainer: {
       flexShrink: 1,
       marginRight: 5,
-      width: '40%',
+      width: '60%',
     },
     title: {
       fontSize: 18,
@@ -43,7 +46,7 @@ const ExpectationCard = ({ exp, onRight = false }) => {
       <TouchableOpacity style={styles.container}>
         {/* <View style={styles.overlay} /> */}
         <View style={styles.titleContainer}>
-          <Text color={COLORS.pink} medium>
+          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink} medium>
             {exp.expectation.title}
           </Text>
           <Text small>{exp.expectation.title}</Text>
@@ -76,10 +79,14 @@ const ExpectationCard = ({ exp, onRight = false }) => {
         </View>
 
         <View style={styles.titleContainer}>
-          <Text color={COLORS.pink} medium alignSelf="flex-end">
+          <Text
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            medium
+            textAlign="right"
+            alignSelf="flex-end">
             {exp.expectation.title}
           </Text>
-          <Text small textAlign="right">
+          <Text small textAlign="right" alignSelf="flex-end">
             {exp.expectation.title}
           </Text>
         </View>

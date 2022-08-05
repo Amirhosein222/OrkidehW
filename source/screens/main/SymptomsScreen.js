@@ -31,7 +31,7 @@ import {
 } from '../../components/common';
 import ExpectationCard from '../../components/common/ExpectationCard';
 
-import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const SymptomsScreen = ({ navigation }) => {
@@ -70,7 +70,9 @@ const SymptomsScreen = ({ navigation }) => {
           setSpouseMoods(response.data.data.signs);
         } else {
           setSnackbar({
-            msg: response.data.message,
+            msg: response.data.message.hasOwnProperty('relation_id')
+              ? response.data.message.relation_id
+              : response.data.message,
             visible: true,
           });
         }
@@ -99,7 +101,7 @@ const SymptomsScreen = ({ navigation }) => {
           JSON.stringify(response.data.data.id),
         );
         saveActiveRel({
-          relId: response.data.data.man.id,
+          relId: response.data.data.id,
           label: response.data.data.man_name,
           image: response.data.data.man_image,
           mobile: response.data.data.man.mobile,
@@ -125,14 +127,26 @@ const SymptomsScreen = ({ navigation }) => {
 
   const renderSpouseMoods = function ({ item }) {
     return (
-      <View style={{ margin: 10 }}>
-        <Text color={COLORS.pink}>
-          {item.sign.title} {item.mood.title}
-        </Text>
+      <View
+        style={{
+          marginHorizontal: rw(1),
+          width: rw(30),
+          // backgroundColor: 'cyan',
+          flexShrink: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View style={{ marginBottom: 'auto' }}>
+          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+            {item.sign.title} {item.mood.title}
+          </Text>
+        </View>
+
         <Image
           imageSource={require('../../assets/images/pa.png')}
           width="75px"
           height="75px"
+          marginTop={rh(0.6)}
         />
       </View>
     );
@@ -165,7 +179,7 @@ const SymptomsScreen = ({ navigation }) => {
               justifyContent: 'center',
               alignItems: 'center',
               width: '100%',
-              flex: 1,
+              // flex: 1,
             }}>
             <HorizontalDatePicker
               pickerType={'date'}
@@ -188,13 +202,17 @@ const SymptomsScreen = ({ navigation }) => {
                 keyExtractor={(item) => String(item.id)}
                 horizontal
                 renderItem={renderSpouseMoods}
+                contentContainerStyle={{
+                  marginVertical: rh(3),
+                  paddingHorizontal: rw(2),
+                }}
               />
             ) : (
               <View
                 style={{
                   width: '100%',
                   alignSelf: 'center',
-                  marginTop: rh(2),
+                  marginVertical: rh(3),
                 }}>
                 {isLoading ? (
                   <ActivityIndicator size="large" color={COLORS.pink} />
@@ -207,7 +225,7 @@ const SymptomsScreen = ({ navigation }) => {
             )}
 
             <Divider width="90%" color={COLORS.pink} style={{ marginTop: 5 }} />
-            <Text color={COLORS.grey} medium>
+            <Text color={COLORS.grey} medium marginTop={rh(1)}>
               انتظارات همسر
             </Text>
 
@@ -225,11 +243,11 @@ const SymptomsScreen = ({ navigation }) => {
                 }}
               />
             ) : isLoading ? (
-              <View style={{ flex: 1 }}>
+              <View style={{ marginTop: rh(2) }}>
                 <ActivityIndicator size="large" color={COLORS.pink} />
               </View>
             ) : (
-              <View style={{ flex: 1 }}>
+              <View>
                 <Text color={COLORS.red}>انتظاری برای امروز وجود ندارد</Text>
               </View>
             )}

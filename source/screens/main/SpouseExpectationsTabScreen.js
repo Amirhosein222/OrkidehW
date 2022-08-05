@@ -1,27 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import {
-  View,
-  StatusBar,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  Image,
-} from 'react-native';
+import { View, StatusBar, StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import {
   Container,
-  IconWithBg,
   Text,
   Snackbar,
   NoRelation,
   Picker,
 } from '../../components/common';
-import ExpectationInfoModal from '../../components/expectations';
+import {
+  ExpSympInfoModal,
+  ExpSympCard,
+} from '../../components/expectationsAndSymptoms';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 import {
@@ -29,7 +22,7 @@ import {
   WomanInfoContext,
 } from '../../libs/context/womanInfoContext';
 
-import { baseUrl, COLORS, rh, rw } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 
 const HusbandExpectationsScreen = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
@@ -68,11 +61,11 @@ const HusbandExpectationsScreen = ({ navigation }) => {
     });
   };
 
-  const storeExpectation = async function (id) {
+  const storeExpectation = async function (exp) {
     const loginClient = await getLoginClient();
-    setIsStoring({ storing: true, exId: id });
+    setIsStoring({ storing: true, exId: exp.id });
     const formData = new FormData();
-    formData.append('expectation_id', id);
+    formData.append('expectation_id', exp.id);
     formData.append('relation_id', womanInfo.activeRel.relId);
     formData.append('gender', 'woman');
     loginClient.post('store/expectation', formData).then((response) => {
@@ -109,7 +102,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           JSON.stringify(response.data.data.id),
         );
         saveActiveRel({
-          relId: response.data.data.man.id,
+          relId: response.data.data.id,
           label: response.data.data.man_name,
           image: response.data.data.man_image,
           mobile: response.data.data.man.mobile,
@@ -144,59 +137,12 @@ const HusbandExpectationsScreen = ({ navigation }) => {
 
   const RenderExpectations = ({ item }) => {
     return (
-      <Pressable
-        style={styles.expItem}
-        disabled={isStoring.storing}
-        onPress={() => storeExpectation(item.id)}>
-        {isStoring.storing && isStoring.exId === item.id ? (
-          <IconWithBg
-            bgColor={COLORS.white}
-            width="89px"
-            height="89px"
-            borderRadius="50px"
-            borderColor="red"
-            borderWidth="2px"
-            loading
-          />
-        ) : (
-          <>
-            {item.image ? (
-              <View style={styles.expImageContainer}>
-                <Image
-                  source={{ uri: baseUrl + item.image }}
-                  style={styles.expImage}
-                  resizeMode="contain"
-                />
-              </View>
-            ) : (
-              <IconWithBg
-                bgColor={COLORS.white}
-                width="89px"
-                height="89px"
-                borderRadius="50px"
-                icon="account-heart"
-                iconColor={COLORS.red}
-                iconSize={50}
-                borderColor="red"
-                borderWidth="2px"
-              />
-            )}
-          </>
-        )}
-
-        <View style={styles.expTitleContainer}>
-          <Text color={COLORS.red} small textAlign="right">
-            {item.title}
-          </Text>
-          <Pressable hitSlop={7} onPress={() => openInfoModal(item)}>
-            <FontAwesome5
-              name="exclamation-circle"
-              size={20}
-              style={styles.expIcon}
-            />
-          </Pressable>
-        </View>
-      </Pressable>
+      <ExpSympCard
+        item={item}
+        onPress={storeExpectation}
+        onReadMore={openInfoModal}
+        isExp={isStoring}
+      />
     );
   };
 
@@ -211,22 +157,14 @@ const HusbandExpectationsScreen = ({ navigation }) => {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <Pressable
-        onPress={() => navigation.openDrawer()}
-        style={{ marginRight: rh(2), alignSelf: 'flex-end', marginTop: rh(1) }}>
-        <MaterialCommunityIcons name="menu" color={COLORS.grey} size={28} />
-      </Pressable>
+
       {womanInfo.relations.length && womanInfo.activeRel ? (
         <FlatList
           data={expectations}
           keyExtractor={(item) => item.id}
           renderItem={RenderExpectations}
-          numColumns={3}
-          style={{ marginTop: 30, width: '100%' }}
-          contentContainerStyle={{
-            alignSelf: 'center',
-            width: '100%',
-          }}
+          numColumns={2}
+          style={{ marginTop: rh(2) }}
         />
       ) : womanInfo.relations.length && !womanInfo.activeRel ? (
         <View style={styles.noRel}>
@@ -241,16 +179,11 @@ const HusbandExpectationsScreen = ({ navigation }) => {
       ) : (
         <NoRelation navigation={navigation} />
       )}
-      {/* <BottomHalfModal
-        visible={showModal}
-        closeModal={handleModal}
-        text="با موفقیت ثبت شد"
-      /> */}
       {selectedExp.current && (
-        <ExpectationInfoModal
+        <ExpSympInfoModal
           visible={showInfoModal}
           closeModal={() => setShowInfoModal(false)}
-          exp={selectedExp.current}
+          item={selectedExp.current}
         />
       )}
 

@@ -94,11 +94,14 @@ const RegisterScreen = ({ navigation, route }) => {
       const formData = new FormData();
       formData.append('mobile', phoneNumber);
       formData.append('gender', 'woman');
-      loginClient.post('change/mobile', formData).then((response) => {
+      loginClient.post('change/mobile', formData).then(async (response) => {
         setIsSendingEdit(false);
         if (response.data.is_successful) {
-          saveFullInfo(response.data.data);
           showSnackbar('شماره موبایل شما با موفقیت تغییر یافت', 'success');
+          await AsyncStorage.setItem(
+            'fullInfo',
+            JSON.stringify(response.data.data),
+          );
           navigation.dispatch(
             CommonActions.reset({
               index: 0,

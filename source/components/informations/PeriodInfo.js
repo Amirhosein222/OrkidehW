@@ -40,8 +40,8 @@ const PeriodInfo = ({
       setIsLoadingDontKnow(true);
       const formData = new FormData();
       formData.append('last_period_date', dates[lastPeriodDate]);
-      formData.append('period_length', periodLength);
-      formData.append('cycle_length', dayNumbers[cycleLength]);
+      formData.append('period_length', 3);
+      formData.append('cycle_length', 21);
       womanClient.post('store/period_info', formData).then((response) => {
         setDisableBtn(false);
         setIsLoadingDontKnow(false);
@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
   btnCotainer: {
     alignItems: 'center',
     alignSelf: 'center',
-    // backgroundColor: 'red',
     width: rw(40),
     marginTop: 'auto',
     marginBottom: rh(6),
