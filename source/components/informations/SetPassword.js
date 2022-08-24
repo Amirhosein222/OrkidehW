@@ -197,8 +197,8 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
             ]}>
             <TextInput
               placeholder="رمز عبور را وارد کنید"
-              textColor={COLORS.pink}
-              phColor={COLORS.pink}
+              textColor={COLORS.primary}
+              phColor={COLORS.primary}
               style={styles.textInput}
               onChangeText={handleTextInput}
               inputName="password"
@@ -213,8 +213,8 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
             ]}>
             <TextInput
               placeholder="رمز عبور را مجددا وارد کنید"
-              textColor={COLORS.pink}
-              phColor={COLORS.pink}
+              textColor={COLORS.primary}
+              phColor={COLORS.primary}
               style={styles.textInput}
               onChangeText={handleTextInput}
               inputName="repeatPass"
@@ -223,13 +223,17 @@ const SetPassword = ({ goToNextStage, nameAndPic }) => {
             <Text small>تایید رمز عبور</Text>
           </Animated.View>
 
-          <Divider color={COLORS.pink} width="90%" style={{ marginTop: 20 }} />
+          <Divider
+            color={COLORS.primary}
+            width="90%"
+            style={{ marginTop: 20 }}
+          />
 
           <Text medium>فعالسازی اثر انگشت برای ورود به سیستم</Text>
 
           <Switch active={finger} changeStatus={setFinger} />
           <Button
-            color={COLORS.pink}
+            color={COLORS.primary}
             mode="contained"
             style={styles.btn}
             loading={isLoading ? true : false}

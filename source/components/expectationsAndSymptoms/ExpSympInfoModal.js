@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -22,7 +22,7 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
       animationIn="zoomIn"
-      animationOut="zoomOut"
+      // animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
@@ -38,14 +38,17 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
             style={styles.closeIcon}
           />
         </View>
-        <Image
-          source={
-            item.image
-              ? { uri: baseUrl + item.image }
-              : require('../../assets/images/icons8-heart-100.png')
-          }
-          style={styles.icon}
-        />
+        <View style={styles.imageContainer}>
+          <Image
+            source={
+              item.image
+                ? { uri: baseUrl + item.image }
+                : require('../../assets/images/icons8-heart-100.png')
+            }
+            style={styles.icon}
+          />
+        </View>
+
         <ScrollView>
           <Text color={COLORS.expSympTitle} bold large marginTop={rh(2)}>
             {item.title}
@@ -53,7 +56,6 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
           {item.description ? (
             <Text
               color={COLORS.dark}
-              medium
               marginTop={rh(2)}
               textAlign="right"
               alignSelf="center">
@@ -74,7 +76,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   header: {
-    marginTop: rh(1),
     alignItems: 'center',
     flexDirection: 'row',
     alignSelf: 'center',
@@ -106,6 +107,13 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   btn: { width: '40%', height: 40, margin: 20, alignSelf: 'center' },
+  imageContainer: {
+    alignItems: 'center',
+    width: rw(71),
+    borderRightWidth: 3,
+    borderRightColor: COLORS.icon,
+    marginTop: rh(4),
+  },
 });
 
 export default ExpSympInfoModal;

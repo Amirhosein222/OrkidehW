@@ -19,13 +19,17 @@ export function MemoryTabs() {
       initialRouteName="AllMemories"
       tabBar={(props) => <TopTabBar {...props} />}
       tabBarOptions={{
-        activeTintColor: COLORS.pink,
+        contentContainerStyle: {
+          backgroundColor: 'red',
+          width: '100%',
+        },
+        activeTintColor: COLORS.primary,
         inactiveTintColor: COLORS.grey,
         indicatorStyle: {
-          backgroundColor: COLORS.pink,
+          backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'Vazir-Bold',
+          fontFamily: 'Qs_Iranyekan_bold',
         },
       }}>
       <Tab.Screen
@@ -52,13 +56,13 @@ export function PeriodTabs() {
       initialRouteName="PeriodSymptomsTab"
       tabBar={(props) => <TopTabBar {...props} />}
       tabBarOptions={{
-        activeTintColor: COLORS.pink,
-        inactiveTintColor: COLORS.grey,
+        activeTintColor: COLORS.primary,
+        inactiveTintColor: COLORS.textLight,
         indicatorStyle: {
-          backgroundColor: COLORS.pink,
+          backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'Vazir-Bold',
+          fontFamily: 'Qs_Iranyekan_bold',
         },
       }}>
       <Tab.Screen

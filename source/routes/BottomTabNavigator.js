@@ -1,12 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { Image, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 
 import { TabBar } from '../components/common';
-import { HomeScreen, CalendarScreen, LearningBankScreen } from '../screens';
+import { HomeScreen, LearningBankScreen, SymptomsScreen } from '../screens';
 
 import { MemoryTabs, PeriodTabs } from './TobTabNavigator';
 
@@ -17,42 +19,9 @@ const Tab = createBottomTabNavigator();
 
 export function BottomTabs() {
   const { isPeriodDay } = useContext(WomanInfoContext);
-  const periodDayStyle = {
-    marginLeft: rw(3),
-  };
-  const handleIconsColor = (icon, focused) => {
-    if (isPeriodDay) {
-      switch (icon) {
-        case 'home':
-          return require('../assets/images/tabIcon1.png');
-        case 'calendar':
-          return COLORS.grey;
-        case 'memories':
-          return require('../assets/images/tabIcon2.png');
-        case 'bank':
-          return require('../assets/images/tabIcon3.png');
-        default:
-          break;
-      }
-    } else {
-      switch (icon) {
-        case 'home':
-          return require('../assets/images/tabIcon1.png');
-        case 'calendar':
-          return COLORS.grey;
-        case 'memories':
-          return require('../assets/images/tabIcon2.png');
-        case 'bank':
-          return require('../assets/images/tabIcon3.png');
-        default:
-          break;
-      }
-    }
-  };
 
   const handleTabsStyle = (focused) => {
     return {
-      marginLeft: rw(3),
       backgroundColor: isPeriodDay && COLORS.lightGrey,
     };
   };
@@ -61,7 +30,7 @@ export function BottomTabs() {
     return {
       borderBottomWidth: focused ? 2 : 0,
       paddingBottom: focused ? 5 : 0,
-      borderBottomColor: COLORS.expSympReadMore,
+      borderBottomColor: COLORS.textLight,
     };
   };
 
@@ -78,71 +47,94 @@ export function BottomTabs() {
         upperCaseLabel: false,
       }}>
       <Tab.Screen
-        name="HomeScreen"
+        name="PeriodTabs"
         options={{
+          title: 'دلبر',
           tabBarIcon: ({ tintColor, focused }) => (
             <View
               style={[
                 handleTabsStyle(focused),
                 iconsBorderStyle(focused),
-                {
-                  left: rw(1),
-                },
+                { marginLeft: rw(4) },
+                { marginTop: rw(1) },
               ]}>
-              <Image source={handleIconsColor('home', focused)} />
-            </View>
-          ),
-        }}
-        component={HomeScreen}
-      />
-      <Tab.Screen
-        name="Calendar"
-        initialParams={{ updateCal: false }}
-        options={{
-          tabBarIcon: ({ tintColor, focused }) => (
-            <View style={[handleTabsStyle(focused), iconsBorderStyle(focused)]}>
-              <AntDesign
-                name="calendar"
-                color={handleIconsColor('calendar', focused)}
-                size={28}
+              <Image
+                source={
+                  focused
+                    ? require('../assets/icons/home/big-sweetheart.png')
+                    : require('../assets/icons/home/small-sweetheart.png')
+                }
+                style={{ width: 28, height: 28 }}
               />
             </View>
           ),
         }}
-        component={CalendarScreen}
+        component={PeriodTabs}
       />
-      {/* {isPeriodDay && renderPeriodTabIcon(true)} */}
-
       <Tab.Screen
         name="MemoriesTab"
         options={{
+          title: 'خاطرات',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View style={[handleTabsStyle(focused), iconsBorderStyle(focused)]}>
-              <Image source={handleIconsColor('memories', focused)} />
+            <View
+              style={[
+                handleTabsStyle(focused),
+                iconsBorderStyle(focused),
+                { marginTop: rw(1) },
+              ]}>
+              <Image
+                source={
+                  focused
+                    ? require('../assets/icons/home/big-memories.png')
+                    : require('../assets/icons/home/small-memories.png')
+                }
+                style={{ width: 28, height: 28 }}
+              />
             </View>
           ),
         }}
         component={MemoryTabs}
       />
       <Tab.Screen
-        name="LearningBank"
+        name="HomeScreen"
         options={{
+          title: 'خانه',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View style={[handleTabsStyle(focused), iconsBorderStyle(focused)]}>
-              <Image source={handleIconsColor('bank', focused)} />
+            <View
+              style={[
+                handleTabsStyle(focused),
+                iconsBorderStyle(focused),
+                { marginTop: rw(1) },
+              ]}>
+              <Image
+                source={
+                  focused
+                    ? require('../assets/icons/home/big-home.png')
+                    : require('../assets/icons/home/small-home.png')
+                }
+                style={{ width: 28, height: 28 }}
+              />
             </View>
           ),
         }}
-        component={LearningBankScreen}
+        component={HomeScreen}
       />
       <Tab.Screen
-        name="PeriodTabs"
+        name="Symptoms"
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
-            <FontAwesome5 name="plus" size={25} color={COLORS.white} />
+            <Image
+              source={require('../assets/icons/home/symptoms.png')}
+              style={{
+                width: 28,
+                height: 28,
+                marginTop: rh(1),
+                marginLeft: rw(1),
+              }}
+            />
           ),
         }}
-        component={PeriodTabs}
+        component={SymptomsScreen}
       />
     </Tab.Navigator>
   );

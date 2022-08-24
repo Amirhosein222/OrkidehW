@@ -198,7 +198,7 @@ const AddMemoryScreen = ({ navigation, route }) => {
           marginTop="10"
           large
           bold
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
           ثبت و ویرایش خاطره
         </Text>
 
@@ -217,7 +217,7 @@ const AddMemoryScreen = ({ navigation, route }) => {
             isMemory={true}
           />
         ) : (
-          <ActivityIndicator size="large" color={COLORS.pink} />
+          <ActivityIndicator size="large" color={COLORS.primary} />
         )}
 
         <Text marginTop="10" medium>
@@ -234,7 +234,7 @@ const AddMemoryScreen = ({ navigation, route }) => {
           }
         />
         <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           mode="contained"
           style={styles.btn}
           loading={isSending ? true : false}

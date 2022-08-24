@@ -21,7 +21,7 @@
 
 //   return (
 //     <View>
-//       <Text marginTop="20" bold color={COLORS.pink}>
+//       <Text marginTop="20" bold color={COLORS.primary}>
 //         مقایسه خون ریزی دوره قاعدگی شما با همسالان شما
 //       </Text>
 //       <View style={{ height: 300, flexDirection: 'row' }}>
@@ -77,7 +77,7 @@ const ChartFour = ({ chartData, route }) => {
           <VerticalBar
             data={item.item.value}
             text={false}
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           />
           <VerticalBar
             data={item.item.value}
@@ -94,7 +94,7 @@ const ChartFour = ({ chartData, route }) => {
       <Text
         marginTop="20"
         bold
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
         مقایسه خون ریزی دوره قاعدگی شما با همسالان شما
       </Text>
       <FlatList data={chartData.data} horizontal renderItem={RenderBars} />

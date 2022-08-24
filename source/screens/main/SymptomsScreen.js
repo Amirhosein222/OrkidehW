@@ -19,12 +19,10 @@ import {
 } from '../../libs/context/womanInfoContext';
 
 import {
-  Container,
-  Image,
+  BackgroundView,
   Text,
   Header,
   Divider,
-  TabBar,
   Snackbar,
   NoRelation,
   Picker,
@@ -105,6 +103,7 @@ const SymptomsScreen = ({ navigation }) => {
           label: response.data.data.man_name,
           image: response.data.data.man_image,
           mobile: response.data.data.man.mobile,
+          birthday: response.data.data.man.birth_date,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -137,17 +136,17 @@ const SymptomsScreen = ({ navigation }) => {
           alignItems: 'center',
         }}>
         <View style={{ marginBottom: 'auto' }}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
             {item.sign.title} {item.mood.title}
           </Text>
         </View>
 
-        <Image
+        {/* <Image
           imageSource={require('../../assets/images/pa.png')}
           width="75px"
           height="75px"
           marginTop={rh(0.6)}
-        />
+        /> */}
       </View>
     );
   };
@@ -160,7 +159,7 @@ const SymptomsScreen = ({ navigation }) => {
   }, [womanInfo.activeRel]);
 
   return (
-    <Container justifyContent="flex-start">
+    <BackgroundView>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -171,7 +170,6 @@ const SymptomsScreen = ({ navigation }) => {
           navigation={navigation}
           style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
         />
-        <Divider width="90%" color={COLORS.grey} style={{ marginBottom: 5 }} />
 
         {womanInfo.relations.length && womanInfo.activeRel ? (
           <View
@@ -179,7 +177,6 @@ const SymptomsScreen = ({ navigation }) => {
               justifyContent: 'center',
               alignItems: 'center',
               width: '100%',
-              // flex: 1,
             }}>
             <HorizontalDatePicker
               pickerType={'date'}
@@ -190,12 +187,17 @@ const SymptomsScreen = ({ navigation }) => {
               monthFormat="jMMMM"
               isShowYear={false}
               returnDateFormat={'jYYYY/jMM/jDD'}
-              datePickerContainerStyle={{ backgroundColor: 'white' }}
+              datePickerContainerStyle={{
+                backgroundColor: 'transparent',
+                marginTop: rh(2),
+              }}
               selectedTextStyle={styles.selectedDate}
               unSelectedTextStyle={styles.unselectedDate}
               isPeriodDay={isPeriodDay}
             />
-
+            <Text color={COLORS.grey} medium marginTop={rh(2)}>
+              علائم همسر
+            </Text>
             {spouseMoods.length ? (
               <FlatList
                 data={spouseMoods}
@@ -212,20 +214,24 @@ const SymptomsScreen = ({ navigation }) => {
                 style={{
                   width: '100%',
                   alignSelf: 'center',
-                  marginVertical: rh(3),
+                  marginVertical: rh(1),
                 }}>
                 {isLoading ? (
-                  <ActivityIndicator size="large" color={COLORS.pink} />
+                  <ActivityIndicator size="small" color={COLORS.primary} />
                 ) : (
-                  <Text marginBottom="10" color={COLORS.red}>
+                  <Text color={COLORS.red}>
                     علائمی برای این تاریخ ثبت نشده است.
                   </Text>
                 )}
               </View>
             )}
 
-            <Divider width="90%" color={COLORS.pink} style={{ marginTop: 5 }} />
-            <Text color={COLORS.grey} medium marginTop={rh(1)}>
+            <Divider
+              width={rw(80)}
+              color={COLORS.primary}
+              style={{ marginTop: 5 }}
+            />
+            <Text color={COLORS.grey} medium marginTop={rh(2)}>
               انتظارات همسر
             </Text>
 
@@ -244,7 +250,7 @@ const SymptomsScreen = ({ navigation }) => {
               />
             ) : isLoading ? (
               <View style={{ marginTop: rh(2) }}>
-                <ActivityIndicator size="large" color={COLORS.pink} />
+                <ActivityIndicator size="small" color={COLORS.primary} />
               </View>
             ) : (
               <View>
@@ -267,7 +273,6 @@ const SymptomsScreen = ({ navigation }) => {
         )}
       </View>
 
-      <TabBar seperate={true} navigation={navigation} />
       {snackbar.visible === true ? (
         <Snackbar
           message={snackbar.msg}
@@ -275,7 +280,7 @@ const SymptomsScreen = ({ navigation }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
@@ -288,7 +293,8 @@ const styles = StyleSheet.create({
   },
   noRel: {
     width: '100%',
-    marginTop: 20,
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
   topContent: {
     flex: 1,
@@ -297,13 +303,13 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   selectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     color: COLORS.white,
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,

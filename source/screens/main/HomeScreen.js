@@ -8,18 +8,20 @@ import {
   StyleSheet,
   ActivityIndicator,
   Pressable,
-  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HorizontalDatePicker from '@logisticinfotech/react-native-horizontal-date-picker';
 import moment from 'moment-jalaali';
 import FormData from 'form-data';
-import Pushe from 'pushe-react-native';
-import messaging from '@react-native-firebase/messaging';
 
 import { RedTheme } from '../../components/homescreen';
+import { initPusher } from '../../libs/helpers';
 import getWomanClient from '../../libs/api/womanApi';
-import { getSettings, getWomanInfo } from '../../libs/apiCalls';
+import {
+  getSettings,
+  getWomanInfo,
+  getPusherUserId,
+} from '../../libs/apiCalls';
 import { useIsPeriodDay, useApi } from '../../libs/hooks';
 import {
   saveWomanRelations,
@@ -31,12 +33,11 @@ import {
   getFromAsyncStorage,
   showSnackbar,
   numberConverter,
-  getDeviceId,
 } from '../../libs/helpers';
 
 import {
+  BackgroundView,
   Container,
-  Divider,
   Text,
   Image,
   Header,
@@ -51,12 +52,15 @@ const HomeScreen = ({ navigation, route }) => {
   const isPeriodDay = useIsPeriodDay();
   const {
     saveFullInfo,
+    fullInfo,
     handleUserPeriodDays,
     handleUserCalendar,
     settings,
     saveSettings,
   } = useContext(WomanInfoContext);
   const [setts, setSetts] = useApi(() => getSettings(''));
+  const [pusher, setPusher] = useApi(() => getPusherUserId(''));
+
   const [adsSettings, setAdsSetting] = useState(
     settings ? settings.app_text_ads : null,
   );
@@ -67,7 +71,6 @@ const HomeScreen = ({ navigation, route }) => {
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [fetching, setFetching] = useState(false);
   const womanInfo = useContext(WomanInfoContext);
-  const [deviceId, setDeviceId] = useState(null);
 
   const handleVisible = () => {
     setSnackbar({
@@ -176,6 +179,7 @@ const HomeScreen = ({ navigation, route }) => {
               label: activeRel.man_name,
               image: activeRel.man_image,
               mobile: activeRel.man.mobile,
+              birthday: activeRel.man.birth_date,
             });
           }
           AsyncStorage.setItem('rels', JSON.stringify(rels));
@@ -184,33 +188,6 @@ const HomeScreen = ({ navigation, route }) => {
           showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید');
         }
       });
-  };
-
-  const sendFcmToken = async function () {
-    Pushe.getDeviceId().then((dId) => {
-      messaging()
-        .getToken()
-        .then(async (token) => {
-          const formData = new FormData();
-          formData.append('device_id', 'c9ea70d723ba8302');
-          formData.append(
-            'token',
-            'fhduacvqeWfGP45TAUQIXq:APA91bHKPI1lTIfj5TNcZ_nnrkEaX_BOksnNNz9Ak3bHjBtViimnsarOw9GR7Nm2urt7VqGurVNczdXbV5NmDBJVS5zKiXY7IoYSDG37k-sJWO-o-zuwdlnRfHaJWTP2Td5eGJIqHKEr',
-          );
-          formData.append('gender', 'woman');
-          const loginClient = await getLoginClient();
-          loginClient
-            .post('fcm/token/store', formData)
-            .then((response) => {
-              if (response.data.is_successful) {
-                AsyncStorage.setItem('fcmTokenSent', 'true');
-              }
-            })
-            .catch((e) => {
-              console.log(e.response.data);
-            });
-        });
-    });
   };
 
   useEffect(() => {
@@ -229,13 +206,6 @@ const HomeScreen = ({ navigation, route }) => {
         setPeriodStart('notSelected');
       }
     });
-    getFromAsyncStorage('fcmTokenSent').then((res) => {
-      if (res) {
-        // already sent
-      } else {
-        sendFcmToken();
-      }
-    });
   }, []);
 
   useEffect(() => {
@@ -248,17 +218,20 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     !settings && setSetts();
-    getFromAsyncStorage('fcmTokenSent').then((res) => {
-      if (!res) {
-        sendFcmToken();
-      }
-    });
     getFromAsyncStorage('fullInfo').then((res) => {
       if (res) {
         saveFullInfo(JSON.parse(res));
       }
     });
+    setPusher();
   }, []);
+
+  useEffect(() => {
+    if (pusher.data && pusher.data.is_successful && fullInfo) {
+      // Set user token
+      initPusher(pusher.data.pusher_user_id, pusher.data.token);
+    }
+  }, [pusher]);
 
   useEffect(() => {
     if (setts.data && setts.data.is_successful) {
@@ -303,20 +276,16 @@ const HomeScreen = ({ navigation, route }) => {
     );
   }
   return (
-    <Container justifyContent="flex-start">
+    <BackgroundView>
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-
-      <>
-        <Header
-          navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
-        />
-        <Divider color={COLORS.lightPink} width="90%" />
-      </>
+      <Header
+        navigation={navigation}
+        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+      />
 
       <View style={{ alignItems: 'center' }}>
         <View
@@ -324,14 +293,11 @@ const HomeScreen = ({ navigation, route }) => {
             paddingHorizontal: rw(6),
           }}>
           <Text
-            small
-            marginBottom={rh(1)}
+            marginBottom={rh(1.5)}
             textAlign="right"
-            marginTop={rh(1)}
-            marginRight={rw(1)}
-            color={COLORS.grey}>
+            color={COLORS.textLight}>
             {/* {adsSettings && adsSettings.value} */}
-            متن تست تبلیغات متن تست تبلیغات متن تست تبلیغات
+            متن تست تبلیغات متن تست تبلیغات
           </Text>
         </View>
 
@@ -351,7 +317,7 @@ const HomeScreen = ({ navigation, route }) => {
                 isShowYear={false}
                 returnDateFormat={'jYYYY/jMM/jDD'}
                 datePickerContainerStyle={{
-                  backgroundColor: 'white',
+                  backgroundColor: 'transparent',
                   width: rw(100),
                 }}
                 selectedTextStyle={styles.selectedDate}
@@ -381,7 +347,7 @@ const HomeScreen = ({ navigation, route }) => {
             <Text bold xl color={COLORS.white}>
               {pregnancy && numberConverter(pregnancy)}
             </Text>
-            <Text medium color={COLORS.white}>
+            <Text large color={COLORS.white}>
               احتمال بارداری
             </Text>
           </View>
@@ -394,10 +360,14 @@ const HomeScreen = ({ navigation, route }) => {
 
       <Pressable onPress={() => onDateSelected('today')} disabled={fetching}>
         {fetching ? (
-          <ActivityIndicator size="large" color={COLORS.pink} />
+          <ActivityIndicator size="large" color={COLORS.primary} />
         ) : (
           <Image
-            imageSource={require('../../assets/images/611.png')}
+            imageSource={
+              isPeriodDay
+                ? require('../../assets/icons/home/period.png')
+                : require('../../assets/icons/home/not-period.png')
+            }
             width="95px"
             height="70px"
           />
@@ -411,7 +381,7 @@ const HomeScreen = ({ navigation, route }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
@@ -442,16 +412,16 @@ const styles = StyleSheet.create({
     bottom: rh(5),
   },
   selectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
-    color: COLORS.white,
+    color: 'white',
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     textAlign: 'center',
-    color: COLORS.dark,
+    color: COLORS.textLight,
   },
 });
 

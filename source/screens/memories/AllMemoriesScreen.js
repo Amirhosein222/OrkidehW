@@ -1,24 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import {
-  StatusBar,
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StatusBar, ActivityIndicator, FlatList } from 'react-native';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
-import { Container, CommentModal, Snackbar } from '../../components/common';
+import {
+  BackgroundView,
+  Container,
+  ReportModal,
+  Snackbar,
+} from '../../components/common';
 import { MemoriesCard } from '../../components/memories';
-import { COLORS, rh } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const AllMemoriesScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [allMemories, setAllMemories] = useState([]);
   const [selectedMemory, setSelectedMemory] = useState();
+  const [showReportModal, setShowReportModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
@@ -58,6 +58,7 @@ const AllMemoriesScreen = ({ navigation }) => {
         memory={item}
         handleCommentModal={handleModal}
         myMemory={false}
+        handleReportModal={() => setShowReportModal(true)}
       />
     );
   };
@@ -68,17 +69,17 @@ const AllMemoriesScreen = ({ navigation }) => {
 
   if (isLoading) {
     return (
-      <Container>
+      <BackgroundView style={{ width: rw(100), height: rh(100) }}>
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           style={{ marginTop: rh(3) }}
         />
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container justifyContent="center">
+      <BackgroundView style={{ width: rw(100), height: rh(100) }}>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -91,11 +92,14 @@ const AllMemoriesScreen = ({ navigation }) => {
             renderItem={RenderMemory}
           />
         ) : null}
-        <CommentModal
-          visible={showModal}
-          closeModal={handleModal}
-          memoryDetail={selectedMemory}
-        />
+        {showReportModal && (
+          <ReportModal
+            type="memory"
+            title="خاطره"
+            visible={showReportModal}
+            closeModal={() => setShowReportModal(false)}
+          />
+        )}
         {snackbar.visible === true ? (
           <Snackbar
             message={snackbar.msg}
@@ -103,7 +107,7 @@ const AllMemoriesScreen = ({ navigation }) => {
             handleVisible={handleVisible}
           />
         ) : null}
-      </Container>
+      </BackgroundView>
     );
   }
 };

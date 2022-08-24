@@ -16,7 +16,10 @@ const CalendarInfo = ({
   return (
     <View style={styles.container}>
       {showBtns ? (
-        <RowContainer justifyContent="space-evenly">
+        <RowContainer
+          justifyContent="space-evenly"
+          marginTop={rh(2)}
+          marginBottom={rh(6)}>
           <Button
             color={selectedOption === 'sex' ? COLORS.red : COLORS.white}
             mode="contained"
@@ -29,12 +32,14 @@ const CalendarInfo = ({
             </Text>
           </Button>
           <Button
-            color={selectedOption === 'period' ? COLORS.pink : COLORS.white}
+            color={selectedOption === 'period' ? COLORS.primary : COLORS.white}
             mode="contained"
             style={styles.btn}
             onPress={() => handleSelectedOption('period')}>
             <Text
-              color={selectedOption === 'period' ? COLORS.white : COLORS.pink}
+              color={
+                selectedOption === 'period' ? COLORS.white : COLORS.primary
+              }
               small>
               دوره پریودی
             </Text>
@@ -44,58 +49,46 @@ const CalendarInfo = ({
         <View>
           <View style={styles.allTipsContainer}>
             <View style={styles.tipContainer}>
-              <MaterialCommunityIcons
-                name="circle"
-                color={COLORS.darkYellow}
-                style={{ marginRight: 5 }}
-              />
-              <Text color={COLORS.darkYellow} small>
+              <Text color={COLORS.textDark} small marginRight={rw(2)}>
                 تخمک گذاری
               </Text>
+              <MaterialCommunityIcons name="circle" color={COLORS.darkYellow} />
             </View>
 
             <View style={{ ...styles.tipContainer }}>
-              <MaterialCommunityIcons name="circle" color={COLORS.darkRed} />
-              <Text color={COLORS.pink} small>
+              <Text color={COLORS.textDark} small marginRight={rw(2)}>
                 پی ام اس
               </Text>
+              <MaterialCommunityIcons name="circle" color={COLORS.darkRed} />
             </View>
 
             <View style={styles.tipContainer}>
-              <MaterialCommunityIcons
-                name="circle"
-                color={COLORS.pink}
-                style={{ marginRight: 5 }}
-              />
-              <Text color={COLORS.pink} small>
+              <Text color={COLORS.textDark} small marginRight={rw(2)}>
                 دوره پریودی
               </Text>
+              <MaterialCommunityIcons name="circle" color={COLORS.primary} />
             </View>
           </View>
 
           <View style={styles.allTipsContainer}>
             <View style={{ ...styles.tipContainer }}>
-              <MaterialCommunityIcons name="circle" color="blue" />
-              <Text color="blue" small>
+              <Text color={COLORS.textDark} small marginRight={rw(2)}>
                 دوره ims
               </Text>
+              <MaterialCommunityIcons name="circle" color="blue" />
             </View>
             <View style={{ ...styles.tipContainer }}>
-              <MaterialCommunityIcons name="circle" color={COLORS.red} />
-              <Text color={COLORS.red} small>
+              <Text color={COLORS.textDark} small marginRight={rw(2)}>
                 رابطه زناشویی
               </Text>
+              <MaterialCommunityIcons name="circle" color={COLORS.red} />
             </View>
 
             <View style={styles.tipContainer}>
-              <MaterialCommunityIcons
-                name="circle"
-                color={COLORS.orange}
-                style={{ marginRight: 5 }}
-              />
-              <Text textAlign="right" color={COLORS.orange} small>
+              <Text color={COLORS.textDark} small marginRight={rw(2)}>
                 پیش بینی پریود
               </Text>
+              <MaterialCommunityIcons name="circle" color={COLORS.orange} />
             </View>
           </View>
         </View>
@@ -114,8 +107,9 @@ const styles = StyleSheet.create({
   tipContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    width: rw(25),
+    justifyContent: 'flex-end',
+    width: rw(28),
+    marginHorizontal: rw(1),
   },
   bottomTipsContainer: {
     alignSelf: 'center',
@@ -125,10 +119,9 @@ const styles = StyleSheet.create({
     marginTop: rh(2),
   },
   allTipsContainer: {
-    alignSelf: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: rw(90),
+    width: rw(100),
+    justifyContent: 'center',
     marginTop: rh(2),
   },
 });

@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: rh(6),
     justifyContent: 'center',
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.primary,
   },
   modalContent: {
     width: '100%',

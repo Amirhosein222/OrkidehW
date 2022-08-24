@@ -10,7 +10,7 @@ const Input = ({
   keyboardType,
   style,
   phColor,
-  multiline = true,
+  multiline = false,
   lineNums = 2,
   testId,
   inputName,
@@ -18,15 +18,16 @@ const Input = ({
   editedText = null,
   fontWeight = 'normal',
   secureTextEntry = false,
+  returnKeyType = 'done',
 }) => {
   const styles = StyleSheet.create({
     input: {
       textAlign: 'right',
-      width: '70%',
-      backgroundColor: COLORS.lightPink,
       color: textColor ? textColor : 'white',
       borderRadius: 5,
-      fontFamily: fontWeight === 'normal' ? 'Vazir' : 'Vazir-Bold',
+      fontFamily:
+        fontWeight === 'normal' ? 'Qs_Iranyekan_bold' : 'Qs_Iranyekan_bold',
+      fontSize: 13,
     },
   });
   return (
@@ -38,9 +39,9 @@ const Input = ({
       placeholderTextColor={phColor ? phColor : '#fff'}
       style={[styles.input, style]}
       keyboardType={keyboardType}
-      testId="textInput"
       onChangeText={(value) => onChangeText(value, inputName)}
       onSubmitEditing={onSubmitEditing ? () => onSubmitEditing() : () => {}}
+      returnKeyType="done"
       // secureTextEntry={secureTextEntry}
     />
   );

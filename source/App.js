@@ -26,12 +26,12 @@ const App = () => {
               setCheckingIsLoggedin(false);
             })
             .catch((e) => {
-              console.log(e);
+              // console.log(e);
             });
         }
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
       });
   }, []);
 

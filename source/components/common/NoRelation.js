@@ -6,20 +6,18 @@ import { Button } from 'react-native-paper';
 
 import { Text } from '../../components/common';
 
-import { COLORS, rh } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
-const NoRelation = ({ navigation }) => {
+const NoRelation = ({ navigation, containerStyle }) => {
   const { isPeriodDay } = useContext(WomanInfoContext);
 
   return (
-    <View style={styles.noRel}>
-      <Text color={COLORS.rossoCorsa}>
-        شما تاکنون هیچ رابطه ای ثبت نکرده اید
-      </Text>
+    <View style={{ ...styles.noRel, ...containerStyle }}>
+      <Text color={COLORS.textDark}>شما تاکنون هیچ رابطه ای ثبت نکرده اید</Text>
       <Button
-        onPress={() => navigation.navigate('ContactSpouse')}
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+        onPress={() => navigation.navigate('Relations')}
+        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
         mode="contained"
         style={styles.btn}>
         <Text color="white">ثبت رابطه</Text>
@@ -30,14 +28,15 @@ const NoRelation = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   btn: {
-    width: '70%',
+    width: rw(61),
     height: 40,
     marginTop: 10,
     alignSelf: 'center',
   },
   noRel: {
     width: '100%',
-    marginTop: rh(2),
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
 });
 

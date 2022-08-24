@@ -365,7 +365,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           </View>
 
           <Divider
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             width="90%"
             style={styles.divider}
           />
@@ -439,7 +439,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           </View>
 
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={[styles.btn, { marginTop: 0 }]}
             loading={isUpdating ? true : false}
@@ -452,7 +452,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
           <Switch active={finger} changeStatus={setFinger} />
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={{ ...styles.btn, marginTop: rh(5) }}
             onPress={() =>
@@ -461,7 +461,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
             <Text color="white">تغییر شماره تلفن</Text>
           </Button>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() =>
@@ -474,24 +474,24 @@ const ProfileUpdateScreen = ({ navigation }) => {
             <Text color="white">ویرایش پروفایل</Text>
           </Button>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={{ ...styles.btn, marginBottom: rh(2) }}
             onPress={() => navigation.navigate('ContactSpouse')}>
             <Text color="white">ارتباط با همسر</Text>
           </Button>
           {/* <Button
-          color={COLORS.pink}
+          color={COLORS.primary}
           mode="contained"
           style={styles.btn}
           onPress={() => navigation.navigate('SetAlarm')}>
           <Text color="white">تنظیم هشدار</Text>
         </Button>
-        <Button color={COLORS.pink} mode="contained" style={styles.btn}>
+        <Button color={COLORS.primary} mode="contained" style={styles.btn}>
           <Text color="white">انتخاب پس زمینه</Text>
         </Button> */}
           <Divider
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             width="90%"
             style={styles.divider}
           />

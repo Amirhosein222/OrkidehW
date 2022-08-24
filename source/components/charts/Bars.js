@@ -7,7 +7,7 @@ import { View, StyleSheet } from 'react-native';
 import { Text } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 
 const Bars = ({ data }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -16,26 +16,55 @@ const Bars = ({ data }) => {
 
   return (
     <View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: rh(0.5),
+          justifyContent: 'center',
+        }}>
+        <View style={{ flexDirection: 'row', marginRight: rw(4) }}>
+          <Text small color={COLORS.textLight} marginRight={rw(1)}>
+            بار
+          </Text>
+          <Text small color={COLORS.textDark}>
+            {data.count}
+          </Text>
+        </View>
+        <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textLight}>
+          شما :
+        </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: rh(0.5),
+          justifyContent: 'center',
+        }}>
+        <View style={{ flexDirection: 'row', marginRight: rw(2) }}>
+          <Text small color={COLORS.textLight} marginRight={rw(1)}>
+            بار
+          </Text>
+          <Text small color={COLORS.textDark}>
+            1/4
+          </Text>
+        </View>
+        <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textLight}>
+          همسالان :
+        </Text>
+      </View>
+
+      <View style={{ marginTop: rh(2) }}>
         <View
           style={[
             styles.bar,
             styles.points,
             {
               width: pts,
-              backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
+              backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.primary,
             },
           ]}
         />
-        <Text
-          alignSelf="flex-end"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          bold>
-          شما 6 روز
-        </Text>
-      </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View
           style={[
             styles.bar,
@@ -43,13 +72,10 @@ const Bars = ({ data }) => {
             {
               width: ast,
               marginTop: 5,
-              backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.lightPink,
+              backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.textLight,
             },
           ]}
         />
-        <Text alignSelf="flex-end" color={COLORS.dark} bold>
-          همسالان 2/3
-        </Text>
       </View>
     </View>
   );
@@ -57,17 +83,17 @@ const Bars = ({ data }) => {
 
 const styles = StyleSheet.create({
   points: {
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.primary,
   },
   assists: {
     backgroundColor: COLORS.lightPink,
   },
   bar: {
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     borderRadius: 5,
-    height: 8,
+    height: rh(0.5),
     marginRight: 5,
-    marginBottom: 10,
+    // marginBottom: 5,
   },
 });
 

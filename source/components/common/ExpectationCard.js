@@ -37,7 +37,7 @@ const ExpectationCard = ({ exp, onRight = false }) => {
     },
     title: {
       fontSize: 18,
-      color: COLORS.pink,
+      color: COLORS.primary,
     },
   });
 
@@ -46,12 +46,12 @@ const ExpectationCard = ({ exp, onRight = false }) => {
       <TouchableOpacity style={styles.container}>
         {/* <View style={styles.overlay} /> */}
         <View style={styles.titleContainer}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink} medium>
+          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary} medium>
             {exp.expectation.title}
           </Text>
           <Text small>{exp.expectation.title}</Text>
         </View>
-
+        {/*
         <View>
           <Image
             source={
@@ -61,26 +61,26 @@ const ExpectationCard = ({ exp, onRight = false }) => {
             }
             style={styles.img}
           />
-        </View>
+        </View> */}
       </TouchableOpacity>
     );
   } else {
     return (
       <TouchableOpacity style={styles.container}>
         <View>
-          <Image
+          {/* <Image
             source={
               exp.expectation.image
                 ? { uri: exp.expectation.image }
                 : require('../../assets/images/de.png')
             }
             style={styles.img}
-          />
+          /> */}
         </View>
 
         <View style={styles.titleContainer}>
           <Text
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             medium
             textAlign="right"
             alignSelf="flex-end">

@@ -16,26 +16,21 @@ import getWomanClient from '../../libs/api/womanApi';
 
 import { PMSInfoScreen } from '../index';
 import {
-  Container,
-  Header,
+  BackgroundView,
+  ScreenHeader,
   Text,
   Snackbar,
   Divider,
-  TabBar,
 } from '../../components/common';
 import {
   ChartTwo,
   ChartThree,
   ChartFour,
   VerticalBars,
+  ChartCard,
 } from '../../components/charts';
 
-import {
-  COLORS,
-  rh,
-  SCROLL_VIEW_CONTAINER,
-  STATUS_BAR_HEIGHT,
-} from '../../configs';
+import { COLORS, rh, rw, SCROLL_VIEW_CONTAINER } from '../../configs';
 import { useIsPeriodDay, useFullInfo } from '../../libs/hooks';
 
 const ChartScreen = ({ navigation }) => {
@@ -86,25 +81,27 @@ const ChartScreen = ({ navigation }) => {
 
   const RenderCircleCharts = function ({ item }) {
     return (
-      <View style={styles.pieContainer}>
-        <CountdownCircleTimer
-          isPlaying={false}
-          size={120}
-          duration={50}
-          initialRemainingTime={item}
-          colors={[
-            ['#004777', 0.4],
-            ['#F7B801', 0.4],
-            ['#A30000', 0.2],
-          ]}>
-          {({ remainingTime, animatedColor }) => (
-            <Animated.Text style={{ color: animatedColor }}>
-              {item.total}
-            </Animated.Text>
-          )}
-        </CountdownCircleTimer>
-        <Text>{item.type}</Text>
-      </View>
+      <ChartCard title="نمودار روزها در شش دوره اخیر شما">
+        <View style={styles.pieContainer}>
+          <CountdownCircleTimer
+            isPlaying={false}
+            size={120}
+            duration={50}
+            initialRemainingTime={item}
+            colors={[
+              ['#004777', 0.4],
+              ['#F7B801', 0.4],
+              ['#A30000', 0.2],
+            ]}>
+            {({ remainingTime, animatedColor }) => (
+              <Animated.Text style={{ color: animatedColor }}>
+                {item.total}
+              </Animated.Text>
+            )}
+          </CountdownCircleTimer>
+          <Text color={COLORS.textLight}>{item.type}</Text>
+        </View>
+      </ChartCard>
     );
   };
 
@@ -114,101 +111,95 @@ const ChartScreen = ({ navigation }) => {
 
   if (isLoading) {
     return (
-      <Container bgColor={COLORS.white} justifyContent="flex-start">
-        <StatusBar translucent backgroundColor="white" />
-        <Header
-          navigation={navigation}
-          style={{
-            marginTop: STATUS_BAR_HEIGHT + rh(2),
-          }}
-        />
+      <BackgroundView bgColor={COLORS.white} justifyContent="flex-start">
+        <StatusBar translucent backgroundColor="transparent" />
+        <ScreenHeader title="نمودار وضعیت من" />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container bgColor={COLORS.white} justifyContent="flex-start">
+      <BackgroundView>
         <StatusBar translucent backgroundColor="white" />
-        <Header
-          navigation={navigation}
-          style={{
-            marginTop: STATUS_BAR_HEIGHT + rh(2),
-          }}
-        />
+        <ScreenHeader title="نمودار وضعیت من" />
         <ScrollView
           contentContainerStyle={SCROLL_VIEW_CONTAINER}
           style={{ width: '100%', margin: 10 }}>
           {reports ? (
             <View style={{ width: '100%', flex: 1 }}>
-              {fullInfo.accountType !== 'golden' ? (
+              {/* {fullInfo.accountType !== 'golden' ? (
                 <FlatList
                   data={circleChart}
                   renderItem={RenderCircleCharts}
                   numColumns={2}
-                  contentContainerStyle={{ alignSelf: 'center' }}
+                  contentContainerStyle={{
+                    width: rw(100),
+                    alignSelf: 'center',
+                    paddingVertical: rh(2),
+                    alignItems: 'center',
+                  }}
                 />
-              ) : (
-                <>
-                  <FlatList
-                    data={circleChart}
-                    renderItem={RenderCircleCharts}
-                    numColumns={2}
-                    contentContainerStyle={{ alignSelf: 'center' }}
-                  />
-                  <Divider
-                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                    width="85%"
-                    style={{ marginTop: 5, alignSelf: 'center' }}
-                  />
-
-                  <ChartTwo chartData={chartTwo} />
-                  <Divider
-                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                    width="85%"
-                    style={{ marginTop: 5, alignSelf: 'center' }}
-                  />
+              ) : ( */}
+              <>
+                <ChartCard title="نمودار روزها در شش دوره اخیر شما">
                   <ChartThree />
-                  <Divider
-                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                    width="85%"
-                    style={{ marginTop: 5, alignSelf: 'center' }}
-                  />
-                  <ChartFour
-                    chartData={{
-                      data: [
-                        { value: 30, label: 'روز 1' },
-                        { value: 40, label: 'روز 2' },
-                        { value: 25, label: 'روز 3' },
-                        { value: 30, label: 'روز 4' },
-                        { value: 18, label: 'روز 5' },
-                      ],
-                    }}
-                  />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-evenly',
-                    }}>
-                    <Text color={COLORS.dark} bold>
-                      همسالان شما
-                    </Text>
-                    <Text
-                      color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                      bold>
-                      شما
-                    </Text>
-                  </View>
-                  <Divider
-                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-                    width="85%"
-                    style={{ marginTop: 5, alignSelf: 'center' }}
-                  />
-                  <PMSInfoScreen />
-                </>
-              )}
+                </ChartCard>
+
+                <FlatList
+                  data={circleChart}
+                  renderItem={RenderCircleCharts}
+                  numColumns={2}
+                  contentContainerStyle={{
+                    width: rw(100),
+                    alignSelf: 'center',
+                    paddingVertical: rh(2),
+                    alignItems: 'center',
+                  }}
+                />
+
+                {/* <ChartTwo chartData={chartTwo} /> */}
+
+                {/* <ChartFour
+                  chartData={{
+                    data: [
+                      { value: 30, label: 'روز 1' },
+                      { value: 40, label: 'روز 2' },
+                      { value: 25, label: 'روز 3' },
+                      { value: 30, label: 'روز 4' },
+                      { value: 18, label: 'روز 5' },
+                    ],
+                  }}
+                /> */}
+                {/* <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Text color={COLORS.dark} bold>
+                    همسالان شما
+                  </Text>
+                  <Text
+                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+                    bold>
+                    شما
+                  </Text>
+                </View> */}
+                <Divider
+                  color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}
+                  width={rw(82)}
+                  style={{
+                    marginTop: 5,
+                    alignSelf: 'center',
+                    borderBottomWidth: 0.7,
+                  }}
+                />
+                <PMSInfoScreen />
+              </>
+              {/* )} */}
             </View>
           ) : null}
           {/* <VerticalBars /> */}
@@ -220,8 +211,7 @@ const ChartScreen = ({ navigation }) => {
             handleVisible={handleVisible}
           />
         ) : null}
-        <TabBar seperate={true} navigation={navigation} />
-      </Container>
+      </BackgroundView>
     );
   }
 };

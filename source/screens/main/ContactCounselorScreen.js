@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { StatusBar, StyleSheet, ScrollView, Keyboard } from 'react-native';
-import { Button } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormData from 'form-data';
 
@@ -10,21 +9,17 @@ import { validatePhoneNumber, showSnackbar } from '../../libs/helpers';
 
 import {
   Text,
-  Divider,
+  Button,
   TextInput,
-  TabBar,
-  Header,
+  ScreenHeader,
   Snackbar,
+  BackgroundView,
 } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import {
-  WIDTH,
-  COLORS,
-  SCROLL_VIEW_CONTAINER,
-  STATUS_BAR_HEIGHT,
-  rh,
-} from '../../configs';
+import { WIDTH, COLORS, SCROLL_VIEW_CONTAINER, rh, rw } from '../../configs';
+
+import sendIcon from '../../assets/icons/btns/enabled-send.png';
 
 const ContactCounselorScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -84,7 +79,6 @@ const ContactCounselorScreen = ({ navigation }) => {
       formData.append('title', title);
       formData.append('message', message);
       formData.append('mobile', phoneNumber);
-      formData.append('parent_id', 1);
       formData.append('gender', 'woman');
       loginClient.post('call/to/admin', formData).then((response) => {
         setIsSending(false);
@@ -105,99 +99,93 @@ const ContactCounselorScreen = ({ navigation }) => {
     <KeyboardAwareScrollView
       style={{ backgroundColor: '#ffffff' }}
       contentContainerStyle={{ backgroundColor: '#ffffff', flex: 1 }}>
-      {/* <Container> */}
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
-      <Header
-        navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
-      />
-      <ScrollView
-        style={{ flex: 1, width: '100%', marginTop: 30 }}
-        contentContainerStyle={SCROLL_VIEW_CONTAINER}>
-        <Text medium bold color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
-          تماس با کارشناس
-        </Text>
-        <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          width="85%"
-          style={{ marginTop: 20 }}
+      <BackgroundView>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
         />
-        <Text
-          marginTop="20"
-          medium
-          bold
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
-          موضوع
-        </Text>
-        <TextInput
-          style={{
-            ...styles.input,
-            backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.lightPink,
-          }}
-          onChangeText={handleTextInput}
-          inputName="title"
-        />
-        <Text
-          marginTop="20"
-          medium
-          bold
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
-          شماره تماس
-        </Text>
-        <TextInput
-          style={{
-            ...styles.input,
-            backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.lightPink,
-          }}
-          keyboardType="numeric"
-          onChangeText={handleTextInput}
-          inputName="phoneNumber"
-        />
-        <Text
-          marginTop="20"
-          medium
-          bold
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
-          متن پیام
-        </Text>
-        <TextInput
-          style={{
-            ...styles.input,
-            backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.lightPink,
-          }}
-          multiline={true}
-          lineNums={10}
-          onChangeText={handleTextInput}
-          inputName="message"
-        />
-        <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          mode="contained"
-          style={[
-            styles.btn,
-            { width: '38%', height: 40, margin: 20, marginTop: rh(5) },
-          ]}
-          loading={isSending ? true : false}
-          disabled={isSending ? true : false}
-          onPress={() => sendMessageToCounselor()}>
-          <Text color="white">ارسال پیام</Text>
-        </Button>
-      </ScrollView>
+        <ScreenHeader title="تماس با کارشناس" />
+        <ScrollView
+          style={{ flex: 1, width: '100%', marginTop: rh(4) }}
+          contentContainerStyle={{ ...SCROLL_VIEW_CONTAINER, flex: 1 }}>
+          <Text
+            marginTop="20"
+            marginBottom={rh(1)}
+            medium
+            bold
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            موضوع
+          </Text>
+          <TextInput
+            style={{
+              ...styles.input,
+              backgroundColor: isPeriodDay
+                ? COLORS.lightRed
+                : COLORS.inputTabBarBg,
+            }}
+            onChangeText={handleTextInput}
+            inputName="title"
+          />
+          <Text
+            marginTop={rh(4)}
+            marginBottom={rh(1)}
+            medium
+            bold
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            شماره تماس
+          </Text>
+          <TextInput
+            style={{
+              ...styles.input,
+              backgroundColor: isPeriodDay
+                ? COLORS.lightRed
+                : COLORS.inputTabBarBg,
+            }}
+            keyboardType="numeric"
+            onChangeText={handleTextInput}
+            inputName="phoneNumber"
+          />
+          <Text
+            marginTop={rh(4)}
+            marginBottom={rh(1)}
+            medium
+            bold
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            متن پیام
+          </Text>
+          <TextInput
+            style={{
+              ...styles.input,
+              backgroundColor: isPeriodDay
+                ? COLORS.lightRed
+                : COLORS.inputTabBarBg,
+            }}
+            multiline={true}
+            lineNums={10}
+            onChangeText={handleTextInput}
+            inputName="message"
+          />
+          <Button
+            title="ارسال پیام"
+            icons={[sendIcon, sendIcon]}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            loading={isSending ? true : false}
+            disabled={isSending ? true : false}
+            onPress={() => sendMessageToCounselor()}
+            style={{ marginTop: 'auto', marginBottom: rh(4) }}
+          />
+        </ScrollView>
 
-      <TabBar seperate={true} navigation={navigation} />
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          visible={snackbar.visible}
-          handleVisible={handleVisible}
-        />
-      ) : null}
-      {/* </Container> */}
+        {snackbar.visible === true ? (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            visible={snackbar.visible}
+            handleVisible={handleVisible}
+          />
+        ) : null}
+      </BackgroundView>
     </KeyboardAwareScrollView>
   );
 };
@@ -214,15 +202,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   input: {
-    width: '75%',
+    width: rw(82),
     marginTop: 0,
+    color: COLORS.textLight,
   },
   btn: {
     width: '40%',
     height: 40,
     borderRadius: 30,
     justifyContent: 'center',
-    marginTop: 20,
   },
 });
 

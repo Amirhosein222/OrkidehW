@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import * as shape from 'd3-shape';
 import { Grid, LineChart, XAxis, YAxis } from 'react-native-svg-charts';
@@ -5,7 +6,7 @@ import { Circle, G, Line, Rect, Text as SvgText } from 'react-native-svg';
 import { View, Dimensions } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { Text } from '../common';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useIsPeriodDay } from '../../libs/hooks';
@@ -24,24 +25,19 @@ const chartConfig = {
 };
 const pieData = [
   {
-    name: 'سسس',
-    population: 60,
-    color: COLORS.green,
-  },
-  {
     name: 'Toronto',
-    population: 50,
-    color: COLORS.orange,
+    population: 20,
+    color: 'purple',
   },
   {
     name: 'Beijing',
     population: 40,
-    color: COLORS.red,
+    color: COLORS.darkYellow,
   },
   {
     name: 'New York',
-    population: 20,
-    color: COLORS.yellow,
+    population: 50,
+    color: COLORS.primary,
   },
 ];
 
@@ -66,7 +62,7 @@ const pieData = [
 
 //   return (
 //     <View style={{ height: 200, padding: 20 }}>
-//       <Text marginBottom="20" bold color={COLORS.pink}>
+//       <Text marginBottom="20" bold color={COLORS.primary}>
 //         طول دوره پریود خانم های هم سن شما
 //       </Text>
 //       <View style={{ flex: 1, marginLeft: 10 }}>
@@ -168,7 +164,7 @@ const pieData = [
 //         style={{
 //           alignItems: 'center',
 //         }}>
-//         <Text marginBottom="20" bold color={COLORS.pink}>
+//         <Text marginBottom="20" bold color={COLORS.primary}>
 //           طول دوره پریود خانم های هم سن شما
 //         </Text>
 //       </View>
@@ -222,7 +218,7 @@ const pieData = [
 //             marginRight: 10,
 //           }}
 //         />
-//         <Text color={COLORS.pink} bold>
+//         <Text color={COLORS.primary} bold>
 //           شما
 //         </Text>
 //       </View>
@@ -235,68 +231,103 @@ const pieData = [
 const ChartThree = ({ chartData, route }) => {
   const isPeriodDay = useIsPeriodDay();
   return (
-    <View>
-      <Text
-        marginBottom="20"
-        bold
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
-        طول دوره پریود خانم های هم سن شما
-      </Text>
-      <View style={{ flexDirection: 'row', width: '100%' }}>
-        <PieChart
-          data={pieData}
-          width={width - 135}
-          height={250}
-          chartConfig={chartConfig}
-          accessor={'population'}
-          backgroundColor={'transparent'}
-          paddingLeft={'15'}
-          center={[40, 10]}
-          absolute
-          hasLegend={false}
-        />
-        <View style={{ alignSelf: 'center' }}>
-          <Text color={COLORS.pink} bold>
-            میانگین شما - 37 روز
+    <View style={{ width: '100%', alignItems: 'center' }}>
+      <PieChart
+        data={pieData}
+        width="100%"
+        style={{ justifyContent: 'center' }}
+        height={250}
+        chartConfig={chartConfig}
+        accessor={'population'}
+        backgroundColor={'transparent'}
+        paddingLeft={'15'}
+        center={[rw(40), 0]}
+        absolute
+        hasLegend={false}
+      />
+
+      <View
+        style={{
+          alignSelf: 'center',
+          width: '100%',
+          paddingHorizontal: rw(3),
+        }}>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <Text small color={COLORS.primary} bold marginLeft={rw(1)}>
+            5 دفعه
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text color={COLORS.red} bold>
-              24 روز - 20 نفر
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text small color={COLORS.textLight} bold>
+              تعداد کل دفعات پریود شما :
             </Text>
             <MaterialCommunityIcons
               name="circle"
-              color={COLORS.red}
-              style={{ marginLeft: 5 }}
+              color={COLORS.primary}
+              style={{ marginLeft: rh(1) }}
+              size={20}
             />
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text color={COLORS.green} bold>
-              37 روز - 40 نفر
+        </View>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <Text small color={COLORS.darkYellow} bold marginLeft={rw(1)}>
+            5 روز
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginVertical: rh(1),
+            }}>
+            <Text small color={COLORS.textLight} bold>
+              تعداد روزهای تخمک گذاری شما :
             </Text>
             <MaterialCommunityIcons
               name="circle"
-              color={COLORS.green}
-              style={{ marginLeft: 5 }}
+              color={COLORS.darkYellow}
+              style={{ marginLeft: rh(1) }}
+              size={20}
             />
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text color={COLORS.orange} bold>
-              30 روز - 30 نفر
+        </View>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <Text small color="purple" bold marginLeft={rw(1)}>
+            3 روز
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text small color={COLORS.textLight} bold>
+              تعداد روز های PMS (سندروم پیش از قائدگی):
             </Text>
             <MaterialCommunityIcons
               name="circle"
-              color={COLORS.orange}
-              style={{ marginLeft: 5 }}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text color={COLORS.yellow} bold>
-              20 روز - 15 نفر
-            </Text>
-            <MaterialCommunityIcons
-              name="circle"
-              color={COLORS.yellow}
-              style={{ marginLeft: 5 }}
+              color="purple"
+              style={{ marginLeft: rh(1) }}
+              size={20}
             />
           </View>
         </View>

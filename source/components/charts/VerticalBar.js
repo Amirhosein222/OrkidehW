@@ -30,7 +30,7 @@ const VerticalBar = ({
         ]}
       />
       {text ? (
-        <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink} small>
+        <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary} small>
           {label}
         </Text>
       ) : null}
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   points: {
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.primary,
   },
   assists: {
     backgroundColor: COLORS.lightPink,

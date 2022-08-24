@@ -217,7 +217,7 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
         )}
 
         <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           mode="contained"
           style={[styles.btn, { width: '25%', height: 40, marginTop: 'auto' }]}
           loading={isUpdating ? true : false}

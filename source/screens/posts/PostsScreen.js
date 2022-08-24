@@ -20,7 +20,6 @@ import {
   Text,
   Image,
   CommentModal,
-  TabBar,
   Snackbar,
 } from '../../components/common';
 
@@ -69,25 +68,26 @@ const PostsScreen = ({ navigation, route }) => {
   const RenderPosts = function ({ item }) {
     return (
       <View style={styles.postContainer}>
-        {item.images ? (
-          <Swiper style={styles.wrapper} showsButtons={true}>
-            {item.images.map((img) => {
-              <Image
-                imageSource={{ uri: baseUrl + img.image }}
-                width="100%"
-                height="180px"
-                borderRadius="5px"
-              />;
-            })}
-          </Swiper>
-        ) : (
-          <Image
-            imageSource={require('../../assets/images/01.png')}
-            width="100%"
-            height="180px"
-            borderRadius="5px"
-          />
-        )}
+        {
+          item.images ? (
+            <Swiper style={styles.wrapper} showsButtons={true}>
+              {item.images.map((img) => {
+                <Image
+                  imageSource={{ uri: baseUrl + img.image }}
+                  width="100%"
+                  height="180px"
+                  borderRadius="5px"
+                />;
+              })}
+            </Swiper>
+          ) : null
+          // <Image
+          //   imageSource={require('../../assets/images/01.png')}
+          //   width="100%"
+          //   height="180px"
+          //   borderRadius="5px"
+          // />
+        }
 
         <View
           style={{
@@ -99,7 +99,7 @@ const PostsScreen = ({ navigation, route }) => {
             marginBottom: rh(2),
           }}>
           <Text
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             medium
             alignSelf="flex-end"
             marginRight="0"
@@ -118,7 +118,7 @@ const PostsScreen = ({ navigation, route }) => {
             <Text
               marginRight="5"
               alignSelf="flex-start"
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
               بیشتر...
             </Text>
           </Pressable>
@@ -173,7 +173,7 @@ const PostsScreen = ({ navigation, route }) => {
             marginTop: STATUS_BAR_HEIGHT + rh(2.2),
           }}>
           <Text
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             large
             bold>
             بانک آموزشی
@@ -187,7 +187,7 @@ const PostsScreen = ({ navigation, route }) => {
         <View style={{ flex: 1 }}>
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           />
         </View>
       </Container>
@@ -203,7 +203,7 @@ const PostsScreen = ({ navigation, route }) => {
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()}>
             <IconWithBg
-              bgColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+              bgColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
               width="40px"
               height="40px"
               borderRadius="20px"
@@ -218,7 +218,7 @@ const PostsScreen = ({ navigation, route }) => {
 
           <View style={{ flex: 1 }}>
             <Text
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
               large
               marginRight={rh(2)}
               bold>
@@ -246,7 +246,6 @@ const PostsScreen = ({ navigation, route }) => {
           renderItem={RenderPosts}
           style={{ width: '100%', marginTop: 10 }}
         />
-        <TabBar seperate={true} navigation={navigation} />
         <CommentModal
           visible={showModal}
           closeModal={handleModal}

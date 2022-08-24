@@ -6,7 +6,7 @@ import { Button } from 'react-native-paper';
 import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 import { verifyRelation } from '../../../libs/apiCalls';
 
-import { Text, Header, TabBar, Snackbar } from '../../../components/common';
+import { Text, Header, Snackbar } from '../../../components/common';
 import { COLORS, STATUS_BAR_HEIGHT, rh, rw } from '../../../configs';
 
 const VerifyRelationScreen = ({ navigation }) => {
@@ -82,7 +82,7 @@ const VerifyRelationScreen = ({ navigation }) => {
           placeholder="کد تایید"
         />
         <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           mode="contained"
           style={[styles.btn]}
           loading={verifyCode.isFetching}
@@ -90,8 +90,6 @@ const VerifyRelationScreen = ({ navigation }) => {
           <Text color="white">ارسال</Text>
         </Button>
       </View>
-
-      <TabBar seperate={true} navigation={navigation} />
 
       {snackbar.visible === true ? (
         <Snackbar
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
     paddingLeft: rw(2),
     marginTop: rh(2),
     elevation: 3,
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
   },
   btn: { width: '30%', height: 40, marginTop: 'auto', elevation: 3 },
 });

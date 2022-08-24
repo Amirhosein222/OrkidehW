@@ -11,10 +11,19 @@ import {
   PMSInfoScreen,
   EnterInfoScreen,
   WelcomeScreen,
+  ProfileScreen,
+  CyclesScreen,
+  PrivacyScreen,
+  RemindersScreen,
+  EditMobileScreen,
+  RelationsScreen,
+  AddRelScreen,
+  UpdateRelScreen,
 } from '../screens';
 
 import DrawerNavigator from './DrawerNavigation';
 import { ActivityIndicator } from 'react-native';
+import { COLORS } from '../configs';
 
 const Stack = createStackNavigator();
 
@@ -43,10 +52,16 @@ export default function MainStackNavigator({ isLoggedin }) {
   return (
     <NavigationContainer
       linking={linking}
-      fallback={<ActivityIndicator color="blue" size="large" />}>
+      fallback={
+        <ActivityIndicator
+          color={COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
+          size="large"
+        />
+      }>
       <Stack.Navigator
         headerMode="none"
-        initialRouteName={isLoggedin ? 'HomeDrawer' : 'Login'}>
+        initialRouteName={isLoggedin ? 'HomeDrawer' : 'Register'}>
         <Stack.Screen name="HomeDrawer" component={DrawerNavigator} />
         <Stack.Screen
           name="Register"
@@ -64,6 +79,14 @@ export default function MainStackNavigator({ isLoggedin }) {
         <Stack.Screen name="SetAlarm" component={SetAlarmScreen} />
         <Stack.Screen name="PMSInfo" component={PMSInfoScreen} />
         <Stack.Screen name="Symptoms" component={SymptomsScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Cycles" component={CyclesScreen} />
+        <Stack.Screen name="Reminders" component={RemindersScreen} />
+        <Stack.Screen name="Privacy" component={PrivacyScreen} />
+        <Stack.Screen name="EditMobile" component={EditMobileScreen} />
+        <Stack.Screen name="Relations" component={RelationsScreen} />
+        <Stack.Screen name="AddRel" component={AddRelScreen} />
+        <Stack.Screen name="UpdateRel" component={UpdateRelScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

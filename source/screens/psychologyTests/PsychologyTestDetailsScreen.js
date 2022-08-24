@@ -6,22 +6,44 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
+  Image,
+  View,
 } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
 import {
   Container,
-  Text,
-  TabBar,
-  Header,
+  Button,
+  ScreenHeader,
   Snackbar,
+  BackgroundView,
 } from '../../components/common';
-import { PsychologyTestDetail } from '../../components/PsychologyTests';
-import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
+import {
+  PsychologyTestDetail,
+  TestResultModal,
+} from '../../components/PsychologyTests';
+import { COLORS, rh, rw } from '../../configs';
 import { showSnackbar } from '../../libs/helpers';
 import { useIsPeriodDay } from '../../libs/hooks';
+
+const TestDetail = [
+  {
+    title: 'تست روانشناسی 1',
+    description: 'توضیحات تست',
+    id: '1',
+    questions: [
+      {
+        question: 'نظر شما چیست؟',
+        options: [
+          { title: 'سوال 1', id: 1, question_id: 1 },
+          { title: 'سوال 2', id: 2, question_id: 1 },
+          { title: 'سوال 3', id: 3, question_id: 1 },
+        ],
+      },
+    ],
+  },
+];
 
 const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -30,6 +52,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   const [resetState, setResetState] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
   let selectedChoices = {
@@ -72,6 +95,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   };
 
   const sendTestAnswers = async function () {
+    setShowResultModal(true);
     if (selectedChoices.option_id.length < testDetails[0].questions.length) {
       showSnackbar('لطفا به تمام سوالات پاسخ دهید.');
       return;
@@ -83,7 +107,8 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         .then((response) => {
           setIsSending(false);
           if (response.data.is_successful) {
-            navigation.navigate('TestResult', { testId: params.testId });
+            setShowResultModal(true);
+            // navigation.navigate('TestResult', { testId: params.testId });
           } else {
             selectedChoices = {
               gender: 'woman',
@@ -120,7 +145,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
   if (isFetching === true) {
     return (
-      <Container justifyContent="center">
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -128,22 +153,28 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
         />
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container justifyContent="flex-start">
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <Header
-          navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
-        />
+
+        <ScreenHeader title="تست های روانشناسی" />
+
+        <View style={styles.imageContainer}>
+          <Image
+            source={require('../../assets/images/icons8-heart-100.png')}
+            style={styles.image}
+          />
+        </View>
+
         <FlatList
           data={testDetails}
           renderItem={renderAnswers}
@@ -151,18 +182,22 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         />
 
         <Button
-          mode="contained"
-          color={COLORS.grey}
-          style={styles.btn}
+          title="مشاهده نتیجه"
+          icon="checkmark-sharp"
+          color={COLORS.primary}
+          onPress={() => sendTestAnswers()}
           loading={isSending ? true : false}
           disabled={isSending ? true : false}
-          onPress={() => sendTestAnswers()}>
-          <Text bold color={COLORS.white}>
-            مشاهده نتیجه تست
-          </Text>
-        </Button>
+          style={{ marginTop: 'auto', marginBottom: rh(4), width: rw(80) }}
+        />
 
-        <TabBar seperate={true} navigation={navigation} />
+        {showResultModal && (
+          <TestResultModal
+            visible={showResultModal}
+            closeModal={() => setShowResultModal(false)}
+            tid={params.testId}
+          />
+        )}
         {snackbar.visible === true ? (
           <Snackbar
             message={snackbar.msg}
@@ -170,7 +205,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
             handleVisible={handleVisible}
           />
         ) : null}
-      </Container>
+      </BackgroundView>
     );
   }
 };
@@ -184,6 +219,18 @@ const styles = StyleSheet.create({
     margin: 10,
     width: '50%',
     alignSelf: 'center',
+  },
+  imageContainer: {
+    width: rw(90),
+    height: rh(10),
+    alignItems: 'center',
+    marginVertical: rh(3),
+    borderRightWidth: 4,
+    borderRightColor: COLORS.icon,
+  },
+  image: {
+    width: 100,
+    height: 100,
   },
 });
 

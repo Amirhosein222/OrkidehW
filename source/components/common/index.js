@@ -2,7 +2,6 @@ import Text from './Text';
 import Container from './Container';
 import RowContainer from './RowContainer';
 import TextInput from './TextInput';
-import Button from './TextInput';
 import Image from './Image';
 import Divider from './Divider';
 import BottomHalfModal from './BottomHalfModal';
@@ -20,13 +19,17 @@ import Snackbar from './Snackbar';
 import NoRelation from './NoRelation';
 import PeriodDayTabBar from './PeriodDayTabBar';
 import Picker from './Picker/Picker';
+import InputRow from './inputRow/InputRow';
+import Button from './button';
+import { DeleteModal, ReportModal } from './Modals';
+import ScreenHeader from './screenHeader';
+import BackgroundView from './backgroundView/BackgroundView';
 
 export {
   Text,
   Container,
   RowContainer,
   TextInput,
-  Button,
   Image,
   Divider,
   BottomHalfModal,
@@ -44,4 +47,10 @@ export {
   NoRelation,
   PeriodDayTabBar,
   Picker,
+  InputRow,
+  Button,
+  DeleteModal,
+  ReportModal,
+  ScreenHeader,
+  BackgroundView,
 };

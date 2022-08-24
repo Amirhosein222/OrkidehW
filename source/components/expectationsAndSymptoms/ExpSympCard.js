@@ -19,7 +19,7 @@ const ExpSympCard = ({ item, onPress, onReadMore, isExp = false }) => {
         {isExp.storing && isExp.exId === item.id ? (
           <View
             style={{ height: rh(13.2), width: 100, justifyContent: 'center' }}>
-            <ActivityIndicator color={COLORS.pink} size="large" />
+            <ActivityIndicator color={COLORS.primary} size="large" />
           </View>
         ) : (
           <Image

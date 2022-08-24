@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-import { COLORS, rh } from '../../../configs';
+import { COLORS, rh, rw } from '../../../configs';
 
 const Picker = ({
   data,
@@ -41,15 +41,26 @@ const Picker = ({
         onItemSelect(val);
       }}
       labelStyle={styles.labelStyle}
-      listItemLabelStyle={{ fontFamily: 'Vazir', color: 'black' }}
+      listItemLabelStyle={{ fontFamily: 'Qs_Iranyekan_bold', color: 'black' }}
       arrowColor={COLORS.white}
       containerStyle={styles.pickerContainer}
-      style={{ backgroundColor: '#fafafa', marginTop: rh(1) }}
+      style={{
+        backgroundColor: COLORS.inputTabBarBg,
+        borderWidth: 0,
+        height: 40,
+      }}
       itemStyle={{
         justifyContent: 'flex-start',
       }}
-      dropDownStyle={{ backgroundColor: '#fafafa' }}
-      placeholderStyle={{ fontFamily: 'Vazir', color: 'black' }}
+      dropDownContainerStyle={{
+        borderWidth: 0,
+        elevation: 3,
+        backgroundColor: COLORS.mainBg,
+      }}
+      placeholderStyle={{
+        fontFamily: 'Qs_Iranyekan_bold',
+        color: COLORS.textLight,
+      }}
       placeholder={placeholder}
     />
   );
@@ -58,14 +69,13 @@ const Picker = ({
 const styles = StyleSheet.create({
   pickerContainer: {
     height: 40,
-    width: '60%',
-    marginTop: 5,
+    width: rw(60),
+    marginTop: rh(1),
     alignSelf: 'center',
   },
   labelStyle: {
-    color: 'black',
-    fontFamily: 'Vazir',
-    fontSize: 14,
+    fontFamily: 'Qs_Iranyekan_bold',
+    color: COLORS.textLight,
   },
 });
 

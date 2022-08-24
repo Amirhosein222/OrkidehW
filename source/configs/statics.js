@@ -61,9 +61,6 @@ const getYears = (startYear) => {
 };
 
 const dayNumbers = [
-  '18',
-  '19',
-  '20',
   '21',
   '22',
   '23',
@@ -83,6 +80,9 @@ const dayNumbers = [
   '37',
   '38',
   '39',
+  '40',
+  '41',
+  '42',
 ];
 
 export { months, days, getYears, dayNumbers };

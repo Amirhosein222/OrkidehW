@@ -1,6 +1,6 @@
-import EnterName from './EnterName';
+import PersonalInfo from './PersonalInfo';
 import PeriodInfo from './PeriodInfo';
 import SetPassword from './SetPassword';
 import CalendarInfo from './CalendarInfo';
 
-export { EnterName, PeriodInfo, SetPassword, CalendarInfo };
+export { PersonalInfo, PeriodInfo, SetPassword, CalendarInfo };

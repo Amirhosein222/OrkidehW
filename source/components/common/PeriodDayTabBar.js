@@ -94,7 +94,7 @@ const PeriodDayTabBar = ({
               style={[
                 styles.plusIconContainer,
                 {
-                  backgroundColor: isPeriodDay ? COLORS.white : COLORS.pink,
+                  backgroundColor: isPeriodDay ? COLORS.white : COLORS.primary,
                   marginRight: rw(1),
                 },
               ]}>

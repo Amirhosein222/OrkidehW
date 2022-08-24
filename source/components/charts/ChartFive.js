@@ -24,7 +24,7 @@ const ChartFive = ({ navigation }) => {
       <View>
            <RowContainer marginTop="20px">
                 <Text>میانگین داده شما در طول 6 دوره آخر</Text>
-                <Icon name="long-arrow-alt-left" color={COLORS.pink} size={25} />
+                <Icon name="long-arrow-alt-left" color={COLORS.primary} size={25} />
                 <Text bold>شما PMS</Text>
             </RowContainer> 
       </View>

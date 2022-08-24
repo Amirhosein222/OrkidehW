@@ -18,6 +18,7 @@ import {
   TestResultScreen,
   LoveNotificationScreen,
   VerifyRelationScreen,
+  SettingsScreen,
 } from '../screens';
 import { BottomTabs } from './BottomTabNavigator';
 
@@ -67,6 +68,7 @@ const DrawerNavigator = function () {
         component={LoveNotificationScreen}
       />
       <Drawer.Screen name="VerifyRelation" component={VerifyRelationScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
   );
 };

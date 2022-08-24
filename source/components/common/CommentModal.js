@@ -107,7 +107,7 @@ const CommentModal = ({
           style={styles.btn}
           loading={btnPressed ? true : false}
           onPress={() => sendComment()}>
-          <Text color={COLORS.pink}>ارسال نظر</Text>
+          <Text color={COLORS.primary}>ارسال نظر</Text>
         </Button>
       </View>
       {snackbar.visible === true ? (
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.primary,
     borderRadius: 20,
     height: '40%',
     justifyContent: 'center',

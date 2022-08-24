@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-import { Header, TabBar, Text } from '../../../components/common';
+import { Header, Text } from '../../../components/common';
 
 import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../../configs';
 
@@ -34,8 +34,6 @@ const LoveNotificationScreen = ({ navigation }) => {
           I Love You
         </Text>
       </View>
-
-      <TabBar seperate={true} navigation={navigation} />
     </View>
   );
 };

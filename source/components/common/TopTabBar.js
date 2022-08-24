@@ -2,35 +2,27 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, StatusBar } from 'react-native';
 
-import { Text, Header } from '../../components/common';
+import { Text, Header, BackgroundView } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 
-const TopTabBar = ({
-  state,
-  descriptors,
-  navigation,
-  periodTabs = false,
-  seperated = false,
-}) => {
+const TopTabBar = ({ state, descriptors, navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const { routes, index } = state;
 
   const handleTabColors = (focused) => {
     if (isPeriodDay) {
-      return focused ? COLORS.rossoCorsa : COLORS.dark;
+      return focused ? COLORS.rossoCorsa : COLORS.textLight;
     } else {
-      return focused ? COLORS.pink : COLORS.dark;
+      return focused ? COLORS.primary : COLORS.textLight;
     }
   };
 
   return (
-    <View
-      style={{
-        // marginTop: STATUS_BAR_HEIGHT - rh(0.2),
-        backgroundColor: '#fff',
-      }}>
+    <BackgroundView
+      resizeMode="stretch"
+      style={{ width: rw(100), height: rh(22) }}>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -57,7 +49,7 @@ const TopTabBar = ({
           return (
             <Pressable
               style={{
-                borderBottomWidth: 2,
+                borderBottomWidth: 4,
                 borderBottomColor: handleTabColors(focused),
                 width: '50%',
                 paddingHorizontal: rw(4),
@@ -71,7 +63,7 @@ const TopTabBar = ({
           );
         })}
       </View>
-    </View>
+    </BackgroundView>
   );
 };
 
@@ -82,14 +74,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    height: 50,
-    backgroundColor: COLORS.white,
+    height: rh(8),
+    backgroundColor: 'transparent',
   },
   plusIconContainer: {
     width: 35,
     height: 35,
     borderRadius: 30,
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 5,

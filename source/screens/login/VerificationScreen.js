@@ -1,7 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext, useState } from 'react';
-import { View, StatusBar, StyleSheet, Keyboard } from 'react-native';
-import { Button } from 'react-native-paper';
+import {
+  View,
+  StatusBar,
+  StyleSheet,
+  Keyboard,
+  Image,
+  Pressable,
+} from 'react-native';
 import {
   CodeField,
   Cursor,
@@ -11,6 +17,7 @@ import {
 import CountDown from 'react-native-countdown-component';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 
 import authApi from '../../libs/api/authApi';
 import {
@@ -19,13 +26,23 @@ import {
   WomanInfoContext,
 } from '../../libs/context/womanInfoContext';
 
-import { Container, Text, Divider, Snackbar } from '../../components/common';
-import { COLORS, rh, rw } from '../../configs';
+import {
+  Button,
+  Text,
+  Snackbar,
+  BackgroundView,
+} from '../../components/common';
+import { COLORS, PALETTE, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
+
+import verifyBg from '../../assets/vectors/register/verify.png';
+import back from '../../assets/icons/btns/back.png';
+import enableCheck from '../../assets/icons/btns/enabled-check.png';
+import disableCheck from '../../assets/icons/btns/disabled-check.png';
 
 const CELL_COUNT = 4;
 
 const VerificationScreen = ({ navigation, route }) => {
-  const { saveFullInfo } = useContext(WomanInfoContext);
+  const { settings, saveFullInfo } = useContext(WomanInfoContext);
   const params = route.params;
   const [code, setCode] = useState('');
   const [checkingCode, setCheckingCode] = useState(false);
@@ -75,10 +92,26 @@ const VerificationScreen = ({ navigation, route }) => {
             'userToken',
             JSON.stringify(response.data.data.token),
           );
+          await AsyncStorage.setItem(
+            'fullInfo',
+            JSON.stringify(response.data.data.user),
+          );
           const periodStart = await AsyncStorage.getItem('periodStart');
           periodStart && (await AsyncStorage.removeItem('periodStart'));
           await AsyncStorage.setItem('logedOut', 'false');
-          navigation.navigate('EnterInfo');
+          params.isNew
+            ? navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'EnterInfo' }],
+                }),
+              )
+            : navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'HomeDrawer' }],
+                }),
+              );
         } else {
           setSnackbar({
             msg: response.data.message,
@@ -94,7 +127,6 @@ const VerificationScreen = ({ navigation, route }) => {
         });
       });
   };
-
   const onPressSendCode = function () {
     setResending(true);
     const formData = new FormData();
@@ -126,102 +158,99 @@ const VerificationScreen = ({ navigation, route }) => {
         });
       });
   };
+
   return (
-    <Container>
+    <BackgroundView>
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <Text large bold color={COLORS.dark}>
-        تایید کد فعالسازی
-      </Text>
-      <Text color={COLORS.grey} marginTop={rh(0.5)}>
-        عزیزم کد فعالسازی رو به شماره {params.mobile} ارسال کردیم.
-      </Text>
 
-      <View>
-        <View style={{ paddingHorizontal: rw(4), marginTop: rh(1) }}>
-          <Text color={COLORS.grey}>
-            اگر لازم داری که دوباره کد برات ارسال بشه،باید تا صفر شدن ثانیه شمار
-            صبر کنی.
-          </Text>
-        </View>
-        <View style={styles.counterContainer}>
-          <Button
-            color={COLORS.pink}
-            mode="contained"
-            style={[styles.btn, { width: '40%', height: 30, marginTop: 20 }]}
-            disabled={!resendCode ? true : false}
-            loading={resending ? true : false}
-            onPress={() => onPressSendCode()}>
-            <Text color="white"> ارسال مجدد کد</Text>
-          </Button>
-          <CountDown
-            size={20}
-            until={timer}
-            onFinish={() => setResendCode(true)}
-            digitStyle={{
-              backgroundColor: '#FFF',
+      <View style={styles.content}>
+        <Pressable
+          disabled={!resendCode ? true : false}
+          style={{
+            alignSelf: 'flex-start',
+            marginTop: rh(3),
+          }}
+          onPress={navigation.goBack}>
+          <Image
+            source={back}
+            style={{
+              width: 25,
+              height: 25,
             }}
-            digitTxtStyle={{ color: COLORS.dark }}
-            timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
-            separatorStyle={{ color: COLORS.dark }}
-            timeToShow={['M', 'S']}
-            timeLabels={{ m: null, s: null }}
-            showSeparator
           />
-        </View>
-      </View>
+        </Pressable>
 
-      <Divider color={COLORS.pink} width="90%" style={{ marginTop: 20 }} />
-
-      <View style={{ paddingHorizontal: rw(1), marginTop: rh(2) }}>
-        <Text bold color={COLORS.dark}>
-          لطفا عدد چهار رقمی که برات پیامک کردیم رو اینجا وارد کن.
-        </Text>
-      </View>
-
-      <CodeField
-        ref={ref}
-        {...props}
-        value={code}
-        onChangeText={setCode}
-        cellCount={CELL_COUNT}
-        rootStyle={styles.codeFieldRoot}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        onEndEditing={() => Keyboard.dismiss()}
-        onSubmitEditing={() => Keyboard.dismiss()}
-        renderCell={({ index, symbol, isFocused }) => (
-          <Text
-            key={index}
-            color={COLORS.pink}
-            style={[styles.cell, isFocused && styles.focusCell]}
-            onLayout={getCellOnLayoutHandler(index)}>
-            {symbol || (isFocused ? <Cursor /> : null)}
+        <Image source={verifyBg} style={styles.image} />
+        <View style={{ marginTop: rh(3), width: rw(83) }}>
+          <Text large bold color={COLORS.dark}>
+            کد تایید
           </Text>
-        )}
-      />
-      <Button
-        color={COLORS.pink}
-        mode="contained"
-        style={styles.btn}
-        loading={checkingCode ? true : false}
-        disabled={checkingCode ? true : false}
-        onPress={() => onPressCheckCode()}>
-        <Text color="white">تایید</Text>
-      </Button>
+          <Text color={COLORS.textLight} marginTop={rh(3)}>
+            کد تایید به شماره {params.mobile} ارسال شده
+          </Text>
+        </View>
+        <CodeField
+          ref={ref}
+          {...props}
+          value={code}
+          onChangeText={setCode}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          onEndEditing={() => Keyboard.dismiss()}
+          onSubmitEditing={() => Keyboard.dismiss()}
+          renderCell={({ index, symbol, isFocused }) => (
+            <Text
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
+              onLayout={getCellOnLayoutHandler(index)}>
+              {symbol || (isFocused ? <Cursor /> : null)}
+            </Text>
+          )}
+        />
+        <View style={styles.counterContainer}>
+          {!resendCode && (
+            <CountDown
+              size={16}
+              until={timer}
+              onFinish={() => setResendCode(true)}
+              digitStyle={{
+                backgroundColor: '#FFF',
+              }}
+              digitTxtStyle={{ color: COLORS.textDark }}
+              timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
+              separatorStyle={{ color: COLORS.textDark }}
+              timeToShow={['M', 'S']}
+              timeLabels={{ m: null, s: null }}
+              showSeparator
+            />
+          )}
 
-      <Divider color={COLORS.pink} width="90%" style={{ marginTop: 50 }} />
-
-      <Button
-        color={COLORS.pink}
-        mode="contained"
-        style={[styles.btn, { width: '45%', height: 35 }]}
-        onPress={() => navigation.goBack()}>
-        <Text color="white">تغییر شماره موبایل</Text>
-      </Button>
+          <Pressable
+            disabled={!resendCode ? true : false}
+            style={{ marginTop: resendCode ? rh(1) : 0 }}
+            onPress={() => onPressSendCode()}>
+            <Text color={resendCode ? COLORS.borderLinkBtn : COLORS.textLight}>
+              ارسال مجدد کد
+            </Text>
+          </Pressable>
+        </View>
+        <Button
+          icons={[disableCheck, enableCheck]}
+          title="تایید کد"
+          name="check"
+          color={COLORS.primary}
+          loading={checkingCode ? true : false}
+          disabled={checkingCode ? true : false}
+          onPress={() => onPressCheckCode()}
+          style={{ marginTop: 'auto', marginBottom: rh(4) }}
+        />
+      </View>
 
       {snackbar.visible === true ? (
         <Snackbar
@@ -230,36 +259,46 @@ const VerificationScreen = ({ navigation, route }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
 const styles = StyleSheet.create({
-  btn: {
-    width: '28%',
-    height: 50,
-    borderRadius: 40,
-    marginTop: 40,
-    marginBottom: 20,
-    justifyContent: 'center',
+  content: {
+    flex: 1,
+    width: rw(83),
+    marginTop: STATUS_BAR_HEIGHT,
+    alignItems: 'center',
+  },
+  image: {
+    width: 220,
+    height: 220,
+    marginTop: 'auto',
+    marginBottom: rh(1),
   },
   root: { flex: 1, padding: 20 },
   title: { textAlign: 'center', fontSize: 30 },
-  codeFieldRoot: { marginTop: 20 },
+  codeFieldRoot: { marginTop: rh(3) },
   cell: {
-    width: 40,
-    height: 40,
+    width: rw(10),
+    height: rh(5),
     lineHeight: 38,
     fontSize: 24,
-    borderBottomWidth: 2,
+    backgroundColor: PALETTE.snow,
+    borderRadius: 6,
     marginRight: 10,
-    borderColor: '#000030',
     textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.textLight,
   },
   focusCell: {
     borderColor: '#000',
   },
   counterContainer: {
+    marginTop: rh(2),
+    marginBottom: rh(8),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

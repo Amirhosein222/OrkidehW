@@ -232,13 +232,13 @@ const styles = StyleSheet.create({
     bottom: rh(5),
   },
   selectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     color: COLORS.white,
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,

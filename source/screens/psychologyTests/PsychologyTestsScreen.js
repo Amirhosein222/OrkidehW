@@ -1,15 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { StatusBar, FlatList, ActivityIndicator } from 'react-native';
+import { View, StatusBar, FlatList, ActivityIndicator } from 'react-native';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
 import {
   Container,
-  TabBar,
-  Header,
   Snackbar,
   Text,
+  ScreenHeader,
+  BackgroundView,
 } from '../../components/common';
 import { PsychologyTestCard } from '../../components/PsychologyTests';
 
@@ -67,60 +67,48 @@ const PsychologyTestsScreen = ({ navigation }) => {
 
   if (isFetching === true) {
     return (
-      <Container justifyContent="center">
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
           barStyle="dark-content"
         />
+        <ScreenHeader title="تست های روانشناسی" />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
-      </Container>
-    );
-  } else if (testsList.length === 0) {
-    return (
-      <Container justifyContent="space-between">
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle="dark-content"
-        />
-        <Header
-          navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
-        />
-        <Text large color={COLORS.blue}>
-          در حال حاضر هیچ تستی وجود ندارد!
-        </Text>
-
-        <TabBar seperate={true} navigation={navigation} />
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container justifyContent="flex-start">
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <Header
-          navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
-        />
-        <FlatList
-          data={testsList}
-          keyExtractor={(item) => item.id}
-          renderItem={RenderTests}
-          style={{ marginTop: 20 }}
-          contentContainerStyle={{
-            marginBottom: rh(2),
-            width: rw(90),
-          }}
-        />
-        <TabBar seperate={true} navigation={navigation} />
+        <ScreenHeader title="تست های روانشناسی" />
+        {testsList.length ? (
+          <FlatList
+            data={testsList}
+            keyExtractor={(item) => item.id}
+            renderItem={RenderTests}
+            style={{ marginTop: 20 }}
+            contentContainerStyle={{
+              marginBottom: rh(2),
+              width: rw(100),
+            }}
+          />
+        ) : (
+          <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+            <Text large color={COLORS.blue}>
+              در حال حاضر هیچ تستی وجود ندارد!
+            </Text>
+          </View>
+        )}
+
         {snackbar.visible === true ? (
           <Snackbar
             message={snackbar.msg}
@@ -128,7 +116,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
             handleVisible={handleVisible}
           />
         ) : null}
-      </Container>
+      </BackgroundView>
     );
   }
 };

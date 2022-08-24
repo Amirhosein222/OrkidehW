@@ -58,13 +58,13 @@ const LearningBankScreen = ({ navigation }) => {
       <Pressable
         onPress={() => navigation.navigate('Posts', { catId: item.id })}
         style={styles.imgContainer}>
-        <Image
+        {/* <Image
           imageSource={require('../../assets/images/09.png')}
           width="90%"
           height="120px"
           borderRadius="10px"
           marginTop="10px"
-        />
+        /> */}
         <View style={styles.overlayText}>
           <Text medium color={COLORS.white}>
             {item.title}
@@ -83,7 +83,7 @@ const LearningBankScreen = ({ navigation }) => {
       <Container>
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
         />
       </Container>
     );
@@ -100,7 +100,7 @@ const LearningBankScreen = ({ navigation }) => {
             <View />
             <Text
               marginLeft="35"
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
               bold
               large>
               بانک آموزشی

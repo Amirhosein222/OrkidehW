@@ -5,20 +5,18 @@ import Modal from 'react-native-modal';
 import { Button } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNPusherPushNotifications from 'react-native-pusher-push-notifications';
 
-import {
-  WomanInfoContext,
-  saveWomanRelations,
-  saveActiveRel,
-} from '../../libs/context/womanInfoContext';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 import { Text } from './index';
 
+import { initPusher } from '../../libs/helpers';
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS } from '../../configs';
 
 const ExitModal = ({ visible, closeModal, navigation }) => {
-  const { saveFullInfo } = useContext(WomanInfoContext);
+  const { savePeriodInfo } = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
 
   const onLogOut = async function () {
@@ -31,13 +29,16 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
     // saveWomanRelations([]);
     // saveFullInfo([]);
     // saveActiveRel(null);
-
+    // RNPusherPushNotifications.clearAllState();
+    // closeModal();
+    savePeriodInfo(null);
+    initPusher('', '', true);
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [
           {
-            name: 'Login',
+            name: 'Register',
           },
         ],
       }),
@@ -55,7 +56,7 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
       animationIn="zoomIn"
-      animationOut="zoomOut"
+      // animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
@@ -68,14 +69,14 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
 
         <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => closeModal()}>
             <Text color="white">نه</Text>
           </Button>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => onLogOut()}>
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.primary,
     borderRadius: 20,
     height: '30%',
     justifyContent: 'center',

@@ -43,7 +43,7 @@ import { useIsPeriodDay } from '../../libs/hooks';
 
 const CALENDAR_THEME = {
   calendarBackground: '#ffffff',
-  textSectionTitleColor: COLORS.pink,
+  textSectionTitleColor: COLORS.primary,
   selectedDayBackgroundColor: '#00adf5',
   selectedDayTextColor: '#ffffff',
   todayTextColor: '#00adf5',
@@ -51,11 +51,11 @@ const CALENDAR_THEME = {
   textDisabledColor: '#d9e1e8',
   dotColor: '#00adf5',
   selectedDotColor: '#ffffff',
-  arrowColor: COLORS.pink,
-  monthTextColor: COLORS.pink,
-  textDayFontFamily: 'Vazir',
-  textMonthFontFamily: 'Vazir',
-  textDayHeaderFontFamily: 'Vazir',
+  arrowColor: COLORS.primary,
+  monthTextColor: COLORS.primary,
+  textDayFontFamily: 'Qs_Iranyekan_bold',
+  textMonthFontFamily: 'Qs_Iranyekan_bold',
+  textDayHeaderFontFamily: 'Qs_Iranyekan_bold',
   textDayFontSize: 14,
   textMonthFontSize: 14,
   textDayHeaderFontSize: 10,
@@ -263,7 +263,7 @@ const CalendarScreen = ({ navigation, route }) => {
         marked: true,
         selectedColor:
           item.type === 'period'
-            ? COLORS.pink
+            ? COLORS.primary
             : item.type === 'sex'
             ? COLORS.red
             : item.type === 'period_f'
@@ -311,7 +311,8 @@ const CalendarScreen = ({ navigation, route }) => {
       newDates[selectedDate] = {
         selected: true,
         marked: true,
-        selectedColor: selectedOption === 'period' ? COLORS.pink : COLORS.red,
+        selectedColor:
+          selectedOption === 'period' ? COLORS.primary : COLORS.red,
       };
       const selectedDates = [...newDatesForApi];
       selectedDates.push({ date: jalaaliDate, type: selectedOption });
@@ -331,7 +332,7 @@ const CalendarScreen = ({ navigation, route }) => {
             markedDates[date[0]] = {
               selected: true,
               marked: true,
-              selectedColor: COLORS.pink,
+              selectedColor: COLORS.primary,
             };
             break;
           case 'sex':
@@ -376,7 +377,7 @@ const CalendarScreen = ({ navigation, route }) => {
             markedDates[date[0]] = {
               selected: true,
               marked: true,
-              selectedColor: COLORS.pink,
+              selectedColor: COLORS.primary,
               disableTouchEvent: true,
               disabled: true,
             };
@@ -526,7 +527,7 @@ const CalendarScreen = ({ navigation, route }) => {
         ) : (
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           />
         )}
 
@@ -539,7 +540,7 @@ const CalendarScreen = ({ navigation, route }) => {
         {edit === true ? (
           <View style={styles.editContainer}>
             <Button
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
               mode="contained"
               style={[
                 styles.btn,
@@ -551,7 +552,7 @@ const CalendarScreen = ({ navigation, route }) => {
               <Text color="white">ثبت تغییرات</Text>
             </Button>
             <Button
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
               mode="contained"
               style={{ ...styles.btn, width: '30%', marginTop: rh(18) }}
               onPress={() => showEdit(true)}>
@@ -560,7 +561,7 @@ const CalendarScreen = ({ navigation, route }) => {
           </View>
         ) : (
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={{ ...styles.btn, marginTop: rh(18) }}
             onPress={() => showEdit()}>

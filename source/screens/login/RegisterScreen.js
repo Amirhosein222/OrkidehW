@@ -1,19 +1,31 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useContext } from 'react';
-import { StatusBar, StyleSheet, Image } from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, StatusBar, StyleSheet, Image } from 'react-native';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 
-import { Container, Text, TextInput, Snackbar } from '../../components/common';
+import {
+  BackgroundView,
+  Text,
+  Snackbar,
+  InputRow,
+  Button,
+} from '../../components/common';
 
+import { useApi } from '../../libs/hooks';
 import getLoginClient from '../../libs/api/loginClientApi';
+import { sendActivationCode } from '../../libs/apiCalls';
 import authApi from '../../libs/api/authApi';
 import { validatePhoneNumber, showSnackbar } from '../../libs/helpers';
 
-import { COLORS, rh, rw } from '../../configs';
+import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
+
+import loginBg from '../../assets/vectors/register/login.png';
+
+import disabledAccept from '../../assets/icons/btns/disabled-accept.png';
+import enabledAccept from '../../assets/icons/btns/enabled-accept.png';
 
 const RegisterScreen = ({ navigation, route }) => {
   const params = route.params;
@@ -23,24 +35,20 @@ const RegisterScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSendingEdit, setIsSendingEdit] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-
-  const handleTextInput = function (text, name) {
-    if (name === 'phoneNumber') {
-      setPhoneNumber(text);
-    } else {
-      setRegentCode(text);
-    }
-  };
+  const [activeCode, setActiveCode] = useApi(() =>
+    sendActivationCode(phoneNumber),
+  );
 
   const handleVisible = () => {
     setSnackbar({
       visible: !snackbar.visible,
     });
   };
+
   const validateInput = function () {
     if (phoneNumber.length !== 11) {
       setSnackbar({
-        msg: 'شماره تماس صحیح نیست!',
+        msg: 'شماره موبایل صحیح نیست!',
         visible: true,
       });
       return false;
@@ -55,35 +63,40 @@ const RegisterScreen = ({ navigation, route }) => {
     return true;
   };
 
-  const onPressLogin = function () {
-    if (validateInput()) {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append('mobile', phoneNumber);
-      formData.append('gender', 'woman');
-      formData.append('regent_code', regentCode);
-      authApi
-        .post('register/send_activation_code', formData)
-        .then((response) => {
-          setIsLoading(false);
-          if (response.data.is_successful) {
-            navigation.navigate('Verification', {
-              mobile: response.data.data.mobile,
-              regentCode: response.data.data.regent_code,
-            });
-          } else {
-            setSnackbar({
-              msg: response.data.message.mobile[0],
-              visible: true,
-            });
-          }
-        })
-        .catch((e) => {
+  const onRegister = () => {
+    const formData = new FormData();
+    formData.append('mobile', phoneNumber);
+    formData.append('gender', 'woman');
+    formData.append('regent_code', regentCode);
+    authApi
+      .post('register/send_activation_code', formData)
+      .then((response) => {
+        setIsLoading(false);
+        if (response.data.is_successful) {
+          navigation.navigate('Verification', {
+            mobile: response.data.data.mobile,
+            regentCode: response.data.data.regent_code,
+            isNew: true,
+          });
+        } else {
           setSnackbar({
-            msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+            msg: response.data.message.mobile[0],
             visible: true,
           });
+        }
+      })
+      .catch((e) => {
+        setSnackbar({
+          msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+          visible: true,
         });
+      });
+  };
+
+  const handleRegisterLogin = function () {
+    if (validateInput()) {
+      setIsLoading(true);
+      setActiveCode();
     }
   };
 
@@ -120,101 +133,123 @@ const RegisterScreen = ({ navigation, route }) => {
     }
   };
 
+  useEffect(() => {
+    if (activeCode.data && activeCode.data.is_successful) {
+      setIsLoading(false);
+      navigation.navigate('Verification', {
+        mobile: phoneNumber,
+        regentCode: '',
+        isNew: false,
+      });
+    }
+    if (activeCode.data && !activeCode.data.is_successful) {
+      onRegister();
+    }
+  }, [activeCode]);
+
   return (
-    <Container>
+    <BackgroundView>
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <Text large color="#fe0294">
-        {params.editNumber ? 'تغییر شماره تلفن' : 'ایجاد حساب کاربری'}
-      </Text>
-      <TextInput
-        placeholder="لطفا شماره موبایلت رو اینجا وارد کن."
-        textColor={COLORS.white}
-        phColor={COLORS.white}
-        style={{ ...styles.input, marginTop: rh(6) }}
-        keyboardType="numeric"
-        testID="pinput"
-        onChangeText={handleTextInput}
-        inputName="phoneNumber"
-        fontWeight="bold"
-      />
 
-      {params.editNumber === false ? (
-        <TextInput
-          placeholder="اگه کد معرف داری اینجا بنویس."
-          style={styles.input}
-          textColor={COLORS.white}
-          phColor={COLORS.white}
-          keyboardType="numeric"
-          testID="iinput"
-          onChangeText={handleTextInput}
-          inputName="regentCode"
-          fontWeight="bold"
+      <View style={styles.content}>
+        <Image
+          source={loginBg}
+          style={{
+            ...styles.image,
+          }}
         />
-      ) : null}
-
-      <Button
-        color={COLORS.pink}
-        mode="contained"
-        style={styles.btn}
-        testID="loginBtn"
-        loading={
-          params.editNumber
-            ? isSendingEdit
-              ? true
-              : false
-            : isLoading
-            ? true
-            : false
-        }
-        disabled={
-          params.editNumber
-            ? isSendingEdit
-              ? true
-              : false
-            : isLoading
-            ? true
-            : false
-        }
-        onPress={
-          params.editNumber ? () => onPressEdit() : () => onPressLogin()
-        }>
-        <Text color="white">
-          {params.editNumber === false ? 'ثبت نام' : 'ویرایش'}
+        <Text large color={COLORS.textDark} bold marginTop={rh(3)}>
+          {params.editNumber ? 'تغییر شماره تلفن' : 'ورود با شماره تلفن'}
         </Text>
-      </Button>
-
-      <Image
-        source={{ uri: settings && settings.app_image_register_page.value }}
-        style={{ ...styles.image, backgroundColor: 'rgba(200,200,200, 0.6)' }}
-      />
-
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
+        <InputRow
+          title="شماره موبایل :"
+          placeholder="شماره موبایل خود را اینجا وارد کنید"
+          containerStyle={{ marginTop: rh(4) }}
+          kType="numeric"
+          handleTextInput={setPhoneNumber}
+          name="phoneNumber"
+          tipText="فرمت شماره وارد شده صحیح است"
+          textStyle={{ width: rw(29) }}
         />
-      ) : null}
-    </Container>
+        {params.editNumber === false ? (
+          <InputRow
+            title="کد معرف :"
+            placeholder="کد معرف خود را اینجا وارد کنید"
+            containerStyle={{ marginTop: rh(0.5), marginBottom: rh(1) }}
+            handleTextInput={setRegentCode}
+            name="regentCode"
+            textStyle={{ width: rw(29) }}
+          />
+        ) : null}
+        <View
+          style={{
+            width: rw(82),
+            marginBottom: rh(4),
+            paddingHorizontal: rw(0.1),
+          }}>
+          <Text
+            small
+            color={COLORS.textLight}
+            textAlign="right"
+            marginTop={rh(2)}>
+            قبل از تایید شماره تلفنتان از امکان دریافت پیامک به این شماره
+            اطمینان حاصل نمایید
+          </Text>
+        </View>
+
+        <Button
+          title={params.editNumber === false ? 'دریافت کد تایید' : 'ویرایش'}
+          color={COLORS.primary}
+          icons={[disabledAccept, enabledAccept]}
+          loading={
+            params.editNumber
+              ? isSendingEdit
+                ? true
+                : false
+              : isLoading
+              ? true
+              : false
+          }
+          disabled={
+            params.editNumber
+              ? isSendingEdit
+                ? true
+                : false
+              : isLoading
+              ? true
+              : false
+          }
+          onPress={params.editNumber ? onPressEdit : handleRegisterLogin}
+          style={{ marginTop: 'auto', marginBottom: rh(4) }}
+        />
+
+        {snackbar.visible === true ? (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            handleVisible={handleVisible}
+          />
+        ) : null}
+      </View>
+    </BackgroundView>
   );
 };
 
 const styles = StyleSheet.create({
-  btn: {
-    width: '30%',
-    height: 50,
-    borderRadius: 40,
-    marginTop: 20,
-    marginBottom: 20,
-    justifyContent: 'center',
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: COLORS.mainBg,
   },
-  input: {
-    width: '75%',
-    marginTop: 20,
+  content: {
+    flex: 1,
+    width: rw(83),
+    marginTop: STATUS_BAR_HEIGHT,
+    alignItems: 'center',
   },
   snackbar: {
     backgroundColor: COLORS.red,
@@ -223,10 +258,10 @@ const styles = StyleSheet.create({
     height: 60,
   },
   image: {
-    width: rw(73),
-    height: rh(35),
-    borderRadius: 15,
-    marginTop: rh(8),
+    width: 220,
+    height: 220,
+    marginTop: 'auto',
+    marginBottom: rh(1),
   },
 });
 

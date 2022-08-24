@@ -1,81 +1,74 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Image } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Text } from './index';
+import CalendarModal from '../calendar/CalendarModal';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../configs';
-import { Snackbar } from '../../components/common';
 import { showSnackbar } from '../../libs/helpers';
 
 const Header = ({ navigation, style }) => {
   const { isPeriodDay } = useContext(WomanInfoContext);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
 
   const onSendLove = () => {
-    // setSnackbar({
-    //   msg: 'با موفقیت ارسال شد',
-    //   visible: true,
-    //   type: 'success',
-    // });
     showSnackbar('با موفقیت ارسال شد', 'success');
   };
-
-  // const handleVisible = () => {
-  //   setSnackbar({
-  //     visible: !snackbar.visible,
-  //   });
-  // };
 
   return (
     <View style={[styles.container, { ...style }]}>
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           alignItems: 'center',
+          alignSelf: 'center',
+          width: rw(100),
+          paddingHorizontal: rw(4),
         }}>
-        <Pressable
-          onPress={onSendLove}
-          style={{
-            ...styles.sendLoveContainer,
-            backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
-          }}>
-          <MaterialCommunityIcons name="heart" size={28} color={COLORS.white} />
-          <Text textAlign="center" color="white" mini marginRight={rw(1)}>
-            ارسال علاقه مندی به همسر
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => navigation.navigate('Symptoms')}
-          style={{
-            ...styles.sendLoveContainer,
-            backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.pink,
-          }}>
-          <Ionicons
-            name="ios-person-add"
-            size={28}
-            color={COLORS.white}
-            style={{ marginLeft: rw(1) }}
-          />
-          <Text textAlign="center" color="white" mini marginRight={rw(1)}>
-            مشاهده انتظارات همسر
-          </Text>
-        </Pressable>
-      </View>
+        <View style={{ flexDirection: 'row', marginLeft: rw(4) }}>
+          <Pressable
+            onPress={onSendLove}
+            style={{
+              ...styles.sendLoveContainer,
+              backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.primary,
+            }}>
+            <MaterialCommunityIcons
+              name="heart-outline"
+              size={30}
+              color={COLORS.white}
+            />
+          </Pressable>
+          <Pressable
+            onPress={() => setShowCalendarModal(true)}
+            style={{
+              ...styles.sendLoveContainer,
+              marginLeft: rw(2),
+            }}>
+            <Image
+              source={require('../../assets/icons/home/calendar.png')}
+              style={{ width: 25, height: 25 }}
+            />
+          </Pressable>
+        </View>
 
-      <Pressable onPress={() => navigation.openDrawer()}>
-        <MaterialCommunityIcons
-          name="menu"
-          color={COLORS.grey}
-          size={28}
-          style={{ marginRight: 20 }}
-        />
-      </Pressable>
+        <Pressable onPress={() => navigation.openDrawer()}>
+          <Image
+            source={require('../../assets/icons/home/menu.png')}
+            style={{ width: 25, height: 25, marginRight: rw(4) }}
+          />
+        </Pressable>
+        {showCalendarModal && (
+          <CalendarModal
+            visible={showCalendarModal}
+            closeModal={() => setShowCalendarModal(false)}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -85,10 +78,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
     width: '100%',
-    margin: 20,
+    marginVertical: rh(2),
     height: 50,
+    backgroundColor: 'transparent',
   },
   leftSide: {
     flexDirection: 'row',
@@ -103,13 +96,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    flexShrink: 1,
-    width: rw(35),
-    paddingHorizontal: rw(2),
-    paddingVertical: rh(0.5),
+    width: rw(12.3),
+    height: rh(5.9),
     borderRadius: 35,
-    marginLeft: rw(4),
-    elevation: 3,
   },
 });
 

@@ -60,3 +60,67 @@ export const getWomanInfo = async function () {
     throw error;
   }
 };
+
+export const getPusherUserId = async function () {
+  try {
+    const loginClient = await getLoginClient();
+    const formData = new FormData();
+    formData.append('gender', 'woman');
+    const res = await loginClient.post('pusher/beams-auth', formData);
+    return res.data;
+  } catch (error) {
+    // console.log('e ', error.response.status);
+    throw error;
+  }
+};
+
+export const sendActivationCode = async function (mobile) {
+  try {
+    const formData = new FormData();
+    formData.append('gender', 'woman');
+    formData.append('mobile', mobile);
+    const res = await axios.post(
+      'https://orkidehapp.ir/api/auth/user/send_activation_code',
+      formData,
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteCmApi = async function (id) {
+  try {
+    const token = await getAccessToken();
+    const formData = new FormData();
+    formData.append('gender', 'woman');
+    formData.append('memory_id', id);
+    const res = await axios.post(
+      'https://orkidehapp.ir/api/user/delete/memory',
+      formData,
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      },
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getCycles = async function (id) {
+  try {
+    const token = await getAccessToken();
+    const res = await axios.get('https://orkidehapp.ir/api/woman/show/cycles', {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

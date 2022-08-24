@@ -1,25 +1,41 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, FlatList, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Pressable, StatusBar, StyleSheet, FlatList, View } from 'react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
-import { Container, Text, Snackbar } from '../../components/common';
-import { MemoriesCard } from '../../components/memories';
+import {
+  Container,
+  Snackbar,
+  DeleteModal,
+  BackgroundView,
+} from '../../components/common';
+import { MemoriesCard, AddMemoryModal } from '../../components/memories';
 
-import { COLORS, rh } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const MyMemoriesScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [myMemories, setMyMemories] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showAddMemoryModal, setShowAddMemoryModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState({
+    show: false,
+    id: null,
+  });
+
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [edit, setEdit] = useState({ isEdit: false, memory: null });
 
   const handleNewMemory = function () {
     setShouldUpdate(!shouldUpdate);
+  };
+
+  const handleDeleteCm = (id) => {
+    setShowDeleteModal({ show: true, id: id });
   };
 
   const handleVisible = () => {
@@ -46,6 +62,16 @@ const MyMemoriesScreen = ({ navigation }) => {
     setShowModal(!showModal);
   };
 
+  const onEdit = (m) => {
+    setEdit({ isEdit: true, memory: m });
+    setShowAddMemoryModal(true);
+  };
+
+  const onAdd = (m) => {
+    setEdit({ isEdit: false, memory: null });
+    setShowAddMemoryModal(true);
+  };
+
   const RenderMemory = function ({ item }) {
     return (
       <MemoriesCard
@@ -54,6 +80,8 @@ const MyMemoriesScreen = ({ navigation }) => {
         myMemory={true}
         navigation={navigation}
         handleNewMemory={handleNewMemory}
+        handleEdit={onEdit}
+        handleDelete={handleDeleteCm}
       />
     );
   };
@@ -63,39 +91,43 @@ const MyMemoriesScreen = ({ navigation }) => {
   }, [shouldUpdate]);
 
   return (
-    <Container justifyContent="flex-start">
+    <BackgroundView style={{ width: rw(100), height: rh(100) }}>
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <View style={styles.content}>
-        <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          mode="contained"
-          style={[
-            styles.btn,
-            { width: '35%', height: 40, marginBottom: rh(1) },
-          ]}
-          onPress={() =>
-            navigation.navigate('AddMemory', {
-              handleNewMemory: handleNewMemory,
-              edit: false,
-              id: null,
-              text: null,
-              title: null,
-            })
-          }>
-          <Text color="white">خاطره جدید</Text>
-        </Button>
-      </View>
-
       <FlatList
         data={myMemories}
         keyExtractor={(item) => String(item.id)}
         renderItem={RenderMemory}
       />
 
+      <Pressable onPress={onAdd} style={styles.plusIconContainer}>
+        <FontAwesome5 name="plus" size={30} color={COLORS.white} />
+      </Pressable>
+      {showAddMemoryModal && (
+        <AddMemoryModal
+          visible={showAddMemoryModal}
+          handleNewMemory={handleNewMemory}
+          id={null}
+          text={null}
+          title={null}
+          closeModal={() => setShowAddMemoryModal(false)}
+          edit={edit}
+        />
+      )}
+      {showDeleteModal.show && (
+        <DeleteModal
+          type="mem"
+          title="خاطره"
+          visible={showDeleteModal.show}
+          closeModal={() => setShowDeleteModal({ show: false, id: null })}
+          id={showDeleteModal.id}
+          updateData={getMyMemories}
+          setSnackbar={setSnackbar}
+        />
+      )}
       {snackbar.visible === true ? (
         <Snackbar
           message={snackbar.msg}
@@ -103,7 +135,7 @@ const MyMemoriesScreen = ({ navigation }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
@@ -120,6 +152,17 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
     marginTop: 20,
+  },
+  plusIconContainer: {
+    width: rw(14.3),
+    height: rh(7),
+    borderRadius: 30,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: rh(63),
+    left: rw(44),
   },
 });
 

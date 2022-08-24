@@ -50,7 +50,7 @@ const IconWithBg = ({
       {loading ? (
         <ActivityIndicator
           size="large"
-          color={useIsPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={useIsPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
         />
       ) : icon === 'user-alt' ? (
         <View>

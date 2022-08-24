@@ -157,7 +157,7 @@ const ContactSpouseScreen = ({ navigation }) => {
         })
         .catch((e) => {
           setIsAdding(false);
-          console.log('Error at Adding Spouse ', e.response.data);
+          // console.log('Error at Adding Spouse ', e.response.data);
         });
     }
   };
@@ -294,7 +294,7 @@ const ContactSpouseScreen = ({ navigation }) => {
         borderRadius="10">
         <View style={styles.cardContent}>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={styles.cardBtn}
             disabled={isAdding || isDeleting.deleting}
@@ -313,7 +313,7 @@ const ContactSpouseScreen = ({ navigation }) => {
 
         <View style={styles.cardContent}>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={styles.cardBtn}
             disabled={isAdding || isDeleting.deleting}
@@ -330,7 +330,6 @@ const ContactSpouseScreen = ({ navigation }) => {
           style={[
             styles.cardBtn,
             {
-              // alignSelf: 'flex-start',
               margin: 5,
               height: 50,
               width: '90%',
@@ -372,7 +371,7 @@ const ContactSpouseScreen = ({ navigation }) => {
           ارتباط با همسر
         </Text>
         <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           width="90%"
           style={{ marginTop: 10 }}
         />
@@ -387,8 +386,8 @@ const ContactSpouseScreen = ({ navigation }) => {
           onChangeText={handleTextInput}
           inputName="spouseName"
           editedText={spouseName}
-          textColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          phColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          textColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          phColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
         />
         <Text marginTop="20" medium bold>
           شماره موبایل همسر
@@ -402,15 +401,17 @@ const ContactSpouseScreen = ({ navigation }) => {
           onChangeText={handleTextInput}
           inputName="spouseNumber"
           editedText={spouseNumber}
-          textColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          phColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          textColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          phColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
         />
 
         {spousePicture ? (
           <Pressable
             onPress={() => selectPicture(true)}
             style={{ marginTop: 20, alignItems: 'center' }}>
-            <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink} medium>
+            <Text
+              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+              medium>
               حذف تصویر پروفایل
             </Text>
             <View style={styles.userIcon}>
@@ -443,7 +444,7 @@ const ContactSpouseScreen = ({ navigation }) => {
         )}
 
         <Button
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           mode="contained"
           style={[styles.btn, { width: '25%', height: 40, margin: 20 }]}
           loading={isAdding}
@@ -453,7 +454,7 @@ const ContactSpouseScreen = ({ navigation }) => {
         </Button>
 
         <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           width="90%"
         />
 
@@ -470,7 +471,7 @@ const ContactSpouseScreen = ({ navigation }) => {
         ) : (
           <ActivityIndicator
             size="small"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             style={{ marginTop: rh(1) }}
           />
         )}
@@ -483,8 +484,6 @@ const ContactSpouseScreen = ({ navigation }) => {
           relation={toBeUpdated}
         />
       ) : null}
-
-      <TabBar seperate={true} navigation={navigation} />
 
       {snackbar.visible === true ? (
         <Snackbar

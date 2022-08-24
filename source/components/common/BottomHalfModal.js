@@ -25,7 +25,7 @@ const BottomHalfModal = ({ visible, closeModal, text }) => {
         <RowContainer
           borderRadius={40}
           justifyContent="space-between"
-          bgColor='white'>
+          bgColor="white">
           <Pressable onPress={() => closeModal()}>
             <Icon name="closecircle" color={COLORS.dark} size={28} />
           </Pressable>
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: 'white',
     height: '40%',
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
 });
 

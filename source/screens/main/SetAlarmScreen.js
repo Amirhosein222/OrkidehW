@@ -27,7 +27,7 @@ const SetAlarmScreen = ({}) => {
         barStyle="dark-content"
       />
       <IconWithBg
-        bgColor={COLORS.pink}
+        bgColor={COLORS.primary}
         width="30px"
         height="30px"
         borderRadius="20px"
@@ -37,7 +37,7 @@ const SetAlarmScreen = ({}) => {
         marginLeft="20px"
         alignSelf="flex-start"
       />
-      <Divider color={COLORS.pink} width="80%" style={{ margin: 20 }} />
+      <Divider color={COLORS.primary} width="80%" style={{ margin: 20 }} />
       <Text marginTop="10" small>
         صدای دریافت و ارسال هشدار
       </Text>
@@ -50,7 +50,7 @@ const SetAlarmScreen = ({}) => {
         رنگ اعلان ها
       </Text>
       <Switch active={notifColor} changeStatus={setNotifColor} />
-      <Divider color={COLORS.pink} width="80%" style={{ marginTop: 20 }} />
+      <Divider color={COLORS.primary} width="80%" style={{ marginTop: 20 }} />
     </Container>
   );
 };

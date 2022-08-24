@@ -157,9 +157,8 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
       backdropTransitionOutTiming={1}
       animationOutTiming={0}
       animationInTiming={0}
-      onBackdropPress={() => closeModal()}
+      onBackdropPress={isSending ? null : () => closeModal()}
       animationIn="zoomIn"
-      animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
@@ -169,7 +168,7 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
         {isLoading || fetchingMyMood ? (
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           />
         ) : (
           <View
@@ -180,7 +179,7 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
             }}>
             <View style={styles.header}>
               <AntDesign
-                onPress={() => closeModal()}
+                onPress={isSending ? null : () => closeModal()}
                 name="close"
                 size={26}
                 color={COLORS.expSympTitle}
@@ -274,7 +273,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    backgroundColor: COLORS.pink,
+    backgroundColor: COLORS.primary,
     borderRadius: 20,
     // height: '50%',
     justifyContent: 'center',

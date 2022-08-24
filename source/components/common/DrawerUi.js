@@ -7,7 +7,6 @@ import {
   Pressable,
   Linking,
   Image,
-  ActivityIndicator,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -34,12 +33,15 @@ import {
   SCROLL_VIEW_CONTAINER,
   STATUS_BAR_HEIGHT,
 } from '../../configs';
-import { numberConverter } from '../../libs/helpers';
+import { convertToFullDate, numberConverter } from '../../libs/helpers';
+
+import CalendarModal from '../calendar/CalendarModal';
 
 const DrawerUi = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
 
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [buyAccount, setBuyAccount] = useApi(() => buyGoldenAccount());
   const [resetPicker, setResetPicker] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -66,6 +68,7 @@ const DrawerUi = ({ navigation }) => {
           label: response.data.data.man_name,
           image: response.data.data.man_image,
           mobile: response.data.data.man.mobile,
+          birthday: response.data.data.man.birth_date,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -93,10 +96,6 @@ const DrawerUi = ({ navigation }) => {
     });
   };
 
-  const onBuyAccount = async () => {
-    setBuyAccount();
-  };
-
   const onSelectSpouse = (spouse) => {
     setActiveSpouse(spouse);
   };
@@ -105,109 +104,121 @@ const DrawerUi = ({ navigation }) => {
     setShowModal(!showModal);
   };
 
-  useEffect(() => {
-    if (buyAccount.data) {
-      buyAccount.data.is_successful
-        ? Linking.openURL(buyAccount.data.data.action)
-        : setSnackbar({
-            msg: buyAccount.data.message,
-            visible: true,
-            type: 'error',
-          });
-    }
-  }, [buyAccount]);
-
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={{
         ...SCROLL_VIEW_CONTAINER,
         paddingTop: STATUS_BAR_HEIGHT + rh(2),
+        backgroundColor: COLORS.mainBg,
       }}>
       {womanInfo.fullInfo && (
         <>
-          <View
-            style={{
-              ...styles.imageContainer,
-              justifyContent: womanInfo.activeRel ? 'space-between' : 'center',
-            }}>
+          <View style={styles.userRelationContainer}>
+            <View style={styles.avatarContainer}>
+              <View style={styles.nameContainer}>
+                <Text
+                  medium
+                  color={COLORS.textDark}
+                  textAlign="right"
+                  alignSelf="flex-end">
+                  {womanInfo.fullInfo.display_name}
+                </Text>
+                <Text color={COLORS.textLight} alignSelf="flex-end">
+                  {numberConverter(
+                    convertToFullDate(womanInfo.fullInfo.birth_date),
+                  )}
+                </Text>
+              </View>
+              {womanInfo.fullInfo.image ? (
+                <View
+                  style={{
+                    ...styles.avatarBorderdContainer,
+                    width: 110,
+                    height: 110,
+                  }}>
+                  <Image
+                    source={{ uri: baseUrl + womanInfo.fullInfo.image }}
+                    style={styles.avatar}
+                    resizeMode="contain"
+                  />
+                </View>
+              ) : (
+                <View
+                  style={{
+                    ...styles.avatarBorderdContainer,
+                    width: 110,
+                    height: 110,
+                  }}>
+                  <View style={styles.avatarBorderdContainer}>
+                    <Fontisto name="female" size={60} color={COLORS.textDark} />
+                  </View>
+                </View>
+              )}
+            </View>
             {womanInfo.activeRel && (
-              <View style={styles.womanAvatarContainer}>
-                <View style={styles.avatarContainer}>
-                  {womanInfo.activeRel.image ? (
+              <View style={styles.avatarContainer}>
+                <View style={styles.nameContainer}>
+                  <Text
+                    medium
+                    color={COLORS.textDark}
+                    textAlign="right"
+                    alignSelf="flex-end">
+                    {womanInfo.activeRel.label}
+                  </Text>
+                  <Text color={COLORS.textLight} alignSelf="flex-end">
+                    {numberConverter(
+                      convertToFullDate(womanInfo.activeRel.birthday),
+                    )}
+                  </Text>
+                </View>
+                {womanInfo.activeRel.image ? (
+                  <View
+                    style={{
+                      ...styles.avatarBorderdContainer,
+                      width: 110,
+                      height: 110,
+                    }}>
                     <Image
                       source={{ uri: baseUrl + womanInfo.activeRel.image }}
                       style={styles.avatar}
                       resizeMode="contain"
                     />
-                  ) : (
-                    <Fontisto
-                      name="male"
-                      size={92}
-                      color={COLORS.dark}
-                      style={{ marginBottom: 'auto', marginTop: rh(0.8) }}
-                    />
-                  )}
-                  <View style={styles.nameContainer}>
-                    <Text color="white">{womanInfo.activeRel.label}</Text>
                   </View>
-                </View>
-                <Text marginTop="5">
-                  {numberConverter(womanInfo.activeRel.mobile)}
-                </Text>
+                ) : (
+                  <View
+                    style={{
+                      ...styles.avatarBorderdContainer,
+                      width: 110,
+                      height: 110,
+                    }}>
+                    <View style={styles.avatarBorderdContainer}>
+                      <Fontisto name="male" size={60} color={COLORS.textDark} />
+                    </View>
+                  </View>
+                )}
               </View>
             )}
-            <View style={styles.womanAvatarContainer}>
-              <View style={styles.avatarContainer}>
-                {womanInfo.fullInfo.image ? (
-                  <Image
-                    source={{ uri: baseUrl + womanInfo.fullInfo.image }}
-                    style={styles.avatar}
-                    resizeMode="stretch"
-                  />
-                ) : (
-                  <Fontisto
-                    name="female"
-                    size={90}
-                    color={COLORS.dark}
-                    style={{ marginBottom: 'auto', marginTop: rh(0.8) }}
-                  />
-                )}
-
-                <View style={styles.nameContainer}>
-                  <Text color="white">{womanInfo.fullInfo.display_name}</Text>
-                </View>
-              </View>
-              <Text marginTop="5">
-                {numberConverter(womanInfo.fullInfo.mobile)}
-              </Text>
-            </View>
           </View>
 
           {womanInfo.relations.length && womanInfo.fullInfo ? (
-            <View
-              style={{
-                width: '100%',
-                alignItems: 'center',
-                marginBottom: rh(3),
-              }}>
-              <Picker
-                data={womanInfo.relations}
-                onItemSelect={onSelectSpouse}
-                reset={resetPicker}
-                placeholder={
-                  womanInfo.activeRel
-                    ? womanInfo.activeRel.label
-                    : 'انتخاب رابطه'
-                }
-                listMode="SCROLLVIEW"
-              />
-            </View>
+            <Picker
+              data={womanInfo.relations}
+              onItemSelect={onSelectSpouse}
+              reset={resetPicker}
+              placeholder={
+                womanInfo.activeRel ? womanInfo.activeRel.label : 'انتخاب رابطه'
+              }
+              listMode="SCROLLVIEW"
+            />
           ) : (
-            <NoRelation navigation={navigation} />
+            <NoRelation
+              navigation={navigation}
+              containerStyle={{ marginBottom: rh(2) }}
+            />
           )}
 
-          {womanInfo.fullInfo.account_type === '' && (
+          {/* {womanInfo.fullInfo.account_type === '' && (
             <Pressable
               onPress={onBuyAccount}
               style={[
@@ -221,127 +232,177 @@ const DrawerUi = ({ navigation }) => {
                   style={{ marginRight: rw(5) }}
                 />
               ) : (
-                <Text marginRight="20" color={COLORS.white}>
+                <Text marginRight="15" color={COLORS.white}>
                   استفاده کامل از امکانات
                 </Text>
               )}
               <AntDesign name="staro" color={COLORS.white} size={20} />
             </Pressable>
-          )}
-          <Pressable
+          )} */}
+
+          {/* <Pressable
             onPress={() => Linking.openURL(`tel:${emergency}`)}
             style={styles.itemContainer}>
-            <Text marginRight="20">تماس اضطراری</Text>
+            <Text marginRight="15">تماس اضطراری</Text>
             <MaterialCommunityIcons
               name="phone-plus"
-              color={COLORS.red}
+              color={COLORS.textDark}
               size={30}
             />
-          </Pressable>
-          {womanInfo.relations.length ? (
-            <Pressable
-              onPress={() => navigate('Symptoms')}
-              style={styles.itemContainer}>
-              <Text marginRight="20">انتظارات همسر</Text>
-              <AntDesign name="heart" color={COLORS.dark} size={22} />
-            </Pressable>
-          ) : null}
+          </Pressable> */}
         </>
       )}
-
-      <Pressable
+      <View style={styles.optionsContainer}>
+        {/* {womanInfo.relations.length ? (
+          <Pressable
+            onPress={() => navigate('Symptoms')}
+            style={{ ...styles.itemContainer, marginTop: rh(3) }}>
+            <Text marginRight="15">انتظارات همسر</Text>
+            <AntDesign name="heart" color={COLORS.textDark} size={22} />
+          </Pressable>
+        ) : null} */}
+        {/* <Pressable
         onPress={() => navigate('ContactSpouse')}
         style={styles.itemContainer}>
-        <Text marginRight="20">روابط من</Text>
+        <Text marginRight="15">روابط من</Text>
         <MaterialCommunityIcons
           name="human-male-female"
-          color={COLORS.dark}
+          color={COLORS.textDark}
           size={30}
         />
       </Pressable>
       <Pressable
         onPress={() => navigate('VerifyRelation')}
         style={styles.itemContainer}>
-        <Text marginRight="20">تایید رابطه</Text>
-        <FontAwesome5 name="user-check" color={COLORS.dark} size={22} />
-      </Pressable>
-      <Pressable
-        onPress={() => navigate('PsychologyTests')}
-        style={styles.itemContainer}>
-        <Text marginRight="20">تست های روانشناسی</Text>
-        <FontAwesome5
-          name="clipboard-list"
-          color={COLORS.dark}
-          size={28}
-          style={{ marginRight: rw(1) }}
+        <Text marginRight="15">تایید رابطه</Text>
+        <FontAwesome5 name="user-check" color={COLORS.textDark} size={22} />
+      </Pressable> */}
+        <Pressable
+          onPress={() => setShowCalendarModal(true)}
+          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+          <Text marginRight="15">تقویم</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/calendar-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+        <Pressable
+          // onPress={() => navigate('PsychologyTests')}
+          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+          <Text marginRight="15">علائم من</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/symptoms-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => navigate('MemoriesTab')}
+          style={{ ...styles.itemContainer, marginLeft: rw(2) }}>
+          <Text marginRight="15">خاطرات من</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/memories-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => navigate('PeriodTabs')}
+          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+          <Text marginRight="15">دلبر</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/sweetheart-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => navigate('PsychologyTests')}
+          style={styles.itemContainer}>
+          <Text marginRight="15">تست های روانشناسی</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/psychologicalTest-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => navigate('Charts')}
+          style={styles.itemContainer}>
+          <Text marginRight="15">نمودار وضعیت من</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/chart-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => navigate('ContactCounselor')}
+          style={styles.itemContainer}>
+          <Text marginRight="15"> تماس با کارشناس</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/ContactAnExpert-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+
+        <Divider
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}
+          width="100%"
+          style={{ marginVertical: rh(1.5) }}
         />
-      </Pressable>
-      <Pressable
-        onPress={() => navigate('Charts')}
-        style={styles.itemContainer}>
-        <Text marginRight="20">نمودار وضعیت من</Text>
-        <FontAwesome5 name="chart-bar" color={COLORS.dark} size={28} />
-      </Pressable>
-      <Pressable
-        onPress={() => navigate('ContactCounselor')}
-        style={styles.itemContainer}>
-        <Text marginRight="20"> تماس با کارشناس</Text>
-        <MaterialCommunityIcons
-          name="account-group"
-          color={COLORS.dark}
-          size={28}
-        />
-      </Pressable>
-      <Pressable
-        onPress={() => navigate('ProfileUpdate')}
-        style={styles.itemContainer}>
-        <Text marginRight="20">تنظیمات</Text>
-        <Ionicons name="ios-settings-sharp" color={COLORS.dark} size={28} />
-      </Pressable>
-      <Divider
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-        width="100%"
-      />
-      <Pressable
+        <Pressable
+          onPress={() => navigate('Settings')}
+          style={styles.itemContainer}>
+          <Text marginRight="15">تنظیمات</Text>
+          <Image
+            source={require('../../assets/icons/drawerSettings/setting-menu.png')}
+            style={{ width: 28, height: 28 }}
+          />
+        </Pressable>
+        {/* <Pressable
         onPress={() => navigate('AppGuide')}
         style={styles.itemContainer}>
-        <Text marginRight="20">راهنما</Text>
-        <FontAwesome5 name="map-signs" color={COLORS.dark} size={28} />
+        <Text marginRight="15">راهنما</Text>
+        <FontAwesome5 name="map-signs" color={COLORS.textDark} size={28} />
       </Pressable>
       <Pressable
         onPress={() => navigate('AboutUs')}
         style={styles.itemContainer}>
-        <Text marginRight="20">درباره اپلیکیشن</Text>
+        <Text marginRight="15">درباره اپلیکیشن</Text>
         <MaterialCommunityIcons
           name="google-circles-extended"
-          color={COLORS.dark}
+          color={COLORS.textDark}
           size={28}
         />
       </Pressable>
       <Pressable
         onPress={() => navigate('Developers')}
         style={styles.itemContainer}>
-        <Text marginRight="20">سازندگان اپلیکیشن</Text>
-        <FontAwesome5 name="laptop-code" color={COLORS.dark} size={28} />
-      </Pressable>
-      <Pressable onPress={() => handleExitModal()} style={styles.itemContainer}>
-        <Text marginRight="20">خروج از حساب کاربری</Text>
+        <Text marginRight="15">سازندگان اپلیکیشن</Text>
+        <FontAwesome5 name="laptop-code" color={COLORS.textDark} size={28} />
+      </Pressable> */}
+        {/* <Pressable onPress={() => handleExitModal()} style={styles.itemContainer}>
+        <Text marginRight="15">خروج از حساب کاربری</Text>
         <MaterialCommunityIcons
           name="exit-to-app"
-          color={COLORS.dark}
+          color={COLORS.textDark}
           size={30}
         />
-      </Pressable>
-      <ExitModal
-        visible={showModal}
-        navigation={navigation}
-        closeModal={handleExitModal}
-      />
+      </Pressable> */}
+        <ExitModal
+          visible={showModal}
+          navigation={navigation}
+          closeModal={handleExitModal}
+        />
+      </View>
+      {showCalendarModal && (
+        <CalendarModal
+          visible={showCalendarModal}
+          closeModal={() => setShowCalendarModal(false)}
+        />
+      )}
       {snackbar.visible === true ? (
         <Snackbar
           message={snackbar.msg}
           type={snackbar.type}
           handleVisible={handleVisible}
+          style={{ width: rw(65) }}
         />
       ) : null}
     </ScrollView>
@@ -352,57 +413,59 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 0,
     flex: 1,
+    backgroundColor: COLORS.mainBg,
   },
   itemContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    padding: 20,
+    marginVertical: rh(2),
   },
-  imageContainer: {
-    flexDirection: 'row',
+  optionsContainer: {
     width: '100%',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: rh(0),
-    paddingHorizontal: rw(2),
+    backgroundColor: COLORS.mainBg,
+    flex: 1,
+    paddingHorizontal: rw(8),
+  },
+  userRelationContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     alignSelf: 'center',
   },
   avatarContainer: {
-    borderWidth: 1,
-    borderColor: COLORS.dark,
-    width: rw(32.5),
+    flexDirection: 'row',
+    width: '100%',
     height: rh(15.5),
-    borderRadius: 5,
     overflow: 'hidden',
     alignSelf: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingRight: rw(6),
+  },
+  avatarBorderdContainer: {
+    backgroundColor: COLORS.inputTabBarBg,
+    width: 100,
+    height: 100,
+    borderRadius: 55,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
   },
   womanAvatarNameContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   nameContainer: {
-    position: 'absolute',
-    top: rh(12.5),
-    width: '100%',
-    backgroundColor: 'rgba(100,100,100, 0.5)',
+    paddingRight: rw(3),
   },
   avatar: {
-    width: '100%',
-    height: '100%',
-  },
-  pickerContainer: {
-    height: 40,
-    width: '60%',
-    marginTop: 5,
-  },
-  labelStyle: {
-    color: 'black',
-    fontFamily: 'Vazir',
-    fontSize: 14,
+    width: 100,
+    height: 100,
+    borderRadius: 90,
   },
 });
 

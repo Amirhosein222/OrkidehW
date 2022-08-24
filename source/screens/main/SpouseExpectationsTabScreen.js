@@ -5,11 +5,11 @@ import { View, StatusBar, StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
-  Container,
   Text,
   Snackbar,
   NoRelation,
   Picker,
+  BackgroundView,
 } from '../../components/common';
 import {
   ExpSympInfoModal,
@@ -22,7 +22,7 @@ import {
   WomanInfoContext,
 } from '../../libs/context/womanInfoContext';
 
-import { COLORS, rh, rw } from '../../configs';
+import { COLORS, HEIGHT, rh, rw } from '../../configs';
 
 const HusbandExpectationsScreen = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
@@ -106,6 +106,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           label: response.data.data.man_name,
           image: response.data.data.man_image,
           mobile: response.data.data.man.mobile,
+          birthday: response.data.data.man.birth_date,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -151,7 +152,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
   }, [womanInfo.activeRel]);
 
   return (
-    <Container justifyContent="flex-start">
+    <BackgroundView resizeMode="cover">
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -165,6 +166,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           renderItem={RenderExpectations}
           numColumns={2}
           style={{ marginTop: rh(2) }}
+          showsVerticalScrollIndicator={false}
         />
       ) : womanInfo.relations.length && !womanInfo.activeRel ? (
         <View style={styles.noRel}>
@@ -194,7 +196,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
   },
   noRel: {
     width: '100%',
-    marginTop: 20,
+    marginTop: rh(30),
   },
   expTitleContainer: {
     flexDirection: 'row',

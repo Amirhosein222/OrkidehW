@@ -203,8 +203,8 @@ const LoginScreen = ({ navigation, route }) => {
         </Text> */}
         <TextInput
           placeholder="لطفا شماره موبایلت رو اینجا وارد کن."
-          textColor={COLORS.white}
-          phColor={COLORS.white}
+          textColor={COLORS.textLight}
+          phColor={COLORS.textLight}
           style={{ ...styles.input, marginTop: rh(8) }}
           keyboardType="numeric"
           testID="pinput"
@@ -218,8 +218,8 @@ const LoginScreen = ({ navigation, route }) => {
         </Text> */}
         <TextInput
           placeholder="لطفا رمز عبورت رو اینجا وارد کن."
-          textColor={COLORS.white}
-          phColor={COLORS.white}
+          textColor={COLORS.textLight}
+          phColor={COLORS.textLight}
           style={styles.input}
           testID="pinput"
           onChangeText={handleTextInput}
@@ -233,35 +233,35 @@ const LoginScreen = ({ navigation, route }) => {
             justifyContent: 'center',
           }}>
           <Button
-            color={COLORS.pink}
-            mode="contained"
+            color={COLORS.primary}
+            mode="outlined"
             style={styles.btn}
             testID="loginBtn"
             loading={isSending ? true : false}
             disabled={isSending ? true : false}
             onPress={() => onPressLogin()}>
-            <Text color="white">ورود کاربر</Text>
+            <Text color={COLORS.textDark}>ورود کاربر</Text>
           </Button>
           <Button
-            color={COLORS.pink}
-            mode="contained"
+            color={COLORS.primary}
+            mode="outlined"
             style={[styles.btn, { width: '40%' }]}
             testID="loginBtn"
             onPress={() => showAuthenticationDialog()}>
-            <Text color="white" small>
+            <Text color={COLORS.textDark} small>
               ورود با اثر انگشت
             </Text>
           </Button>
         </View>
 
         <Button
-          color={COLORS.pink}
+          color={COLORS.primary}
           mode="outlined"
           style={{ width: '50%', borderRadius: 40, marginTop: rh(1) }}
           testID="loginBtn"
           disabled={!settings.data ? true : false}
           onPress={() => navigation.navigate('Register')}>
-          <Text color={COLORS.pink}>ایجاد حساب کاربری</Text>
+          <Text color={COLORS.textDark}>ایجاد حساب کاربری</Text>
         </Button>
       </View>
 
@@ -286,6 +286,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: COLORS.mainBg,
   },
   content: {
     justifyContent: 'center',
@@ -301,6 +302,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
+    backgroundColor: COLORS.inputTabBarBg,
     width: '75%',
     margin: 10,
   },

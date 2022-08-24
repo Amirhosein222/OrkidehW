@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 
 import { Text, Divider } from '../common';
 
@@ -15,8 +15,10 @@ const PsychologyTestDetail = ({
 }) => {
   const isPeriodDay = useIsPeriodDay();
   const [selectedOption, setSelectedOption] = useState(new Map([]));
+  const [selected, setSelected] = useState({ selected: false, id: null });
 
   const handleSelectedChoices = function (answer) {
+    setSelected({ selected: true, id: answer.id });
     const answers = new Map([...selectedOption]);
     if (answers.size === 0) {
       answers.set(answer.question_id, { oId: answer.id });
@@ -39,39 +41,57 @@ const PsychologyTestDetail = ({
       <View
         style={{
           flexShrink: 1,
-          paddingHorizontal: rw(4),
-          borderWidth: 1,
+          borderBottomWidth: 1,
+          borderBottomColor: COLORS.icon,
           paddingVertical: rh(2),
           marginVertical: 10,
-          width: '90%',
+          width: '80%',
           alignSelf: 'center',
           borderRadius: 5,
         }}>
-        <Text small textAlign="right" alignSelf="flex-end">
+        <Text
+          small
+          color={COLORS.textLight}
+          textAlign="right"
+          marginBottom={rh(1)}
+          marginRight={rw(1.5)}
+          alignSelf="flex-end">
           {item.question}
         </Text>
         {item.options.map((op) => {
           return (
-            <Button
-              mode={
-                selectedOption.has(op.question_id) &&
-                selectedOption.get(op.question_id).oId === op.id
-                  ? 'contained'
-                  : 'outlined'
-              }
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-              style={styles.btn}
-              onPress={() => handleSelectedChoices(op)}>
-              <Text
-                color={
-                  selectedOption.has(op.question_id) &&
-                  selectedOption.get(op.question_id).oId === op.id
-                    ? COLORS.white
-                    : COLORS.pink
-                }>
+            <View style={styles.checkBoxContainer}>
+              <Text small color={COLORS.textLight}>
                 {op.title}
               </Text>
-            </Button>
+              <Checkbox
+                uncheckedColor={COLORS.textLight}
+                color={COLORS.primary}
+                // disabled={isLoading ? true : false}
+                status={selected.id === op.id ? 'checked' : 'unchecked'}
+                onPress={() => handleSelectedChoices(op)}
+              />
+            </View>
+            // <Button
+            //   mode={
+            //     selectedOption.has(op.question_id) &&
+            //     selectedOption.get(op.question_id).oId === op.id
+            //       ? 'contained'
+            //       : 'outlined'
+            //   }
+            //   color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            //   style={styles.btn}
+            //   onPress={() => handleSelectedChoices(op)}>
+            //   <Text
+            //     color={
+            //       selectedOption.has(op.question_id) &&
+            //       selectedOption.get(op.question_id).oId === op.id
+            //         ? COLORS.white
+            //         : COLORS.primary
+            //     }>
+            //     {op.title}
+            //   </Text>
+            // </Button>
           );
         })}
       </View>
@@ -84,15 +104,15 @@ const PsychologyTestDetail = ({
         {testDetails.title}
       </Text>
       <Divider
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-        width="90%"
-        style={{ marginTop: 10 }}
+        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textLight}
+        width="80%"
+        style={{ marginTop: rh(2) }}
       />
       <FlatList
         data={testDetails.questions}
         keyExtractor={(item) => item.id}
         renderItem={RenderQuestions}
-        style={{ marginTop: 20, width: '100%' }}
+        style={{ marginTop: rh(1), width: '100%' }}
       />
     </View>
   );
@@ -119,6 +139,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
     marginLeft: 5,
+  },
+  checkBoxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexShrink: 1,
+    width: '100%',
+    marginTop: rh(0.5),
   },
 });
 

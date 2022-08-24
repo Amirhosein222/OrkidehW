@@ -3,13 +3,7 @@ import React, { useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-import {
-  Container,
-  Text,
-  Divider,
-  TabBar,
-  Header,
-} from '../../components/common';
+import { Container, Text, Divider, Header } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
@@ -31,14 +25,17 @@ const DevelopersScreen = ({ navigation }) => {
       <View style={styles.container}>
         <FontAwesome5
           name="laptop-code"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           size={90}
         />
-        <Text medium bold color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+        <Text
+          medium
+          bold
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
           سازندگان اپلیکیشن
         </Text>
         <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           width="85%"
           style={{ marginTop: 20 }}
         />
@@ -46,7 +43,6 @@ const DevelopersScreen = ({ navigation }) => {
           شرکت توسعه نرم افزار موازی پرداز
         </Text>
       </View>
-      <TabBar seperate={true} navigation={navigation} />
     </Container>
   );
 };

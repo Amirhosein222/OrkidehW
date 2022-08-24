@@ -12,7 +12,7 @@ const Switch = ({ active, changeStatus }) => {
 
   return (
     <View style={styles.switchContainer}>
-      <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+      <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
         فعال
       </Text>
       <Toggle
@@ -34,7 +34,7 @@ const Switch = ({ active, changeStatus }) => {
           activeBackgroundColor: COLORS.grey,
           inActiveBackgroundColor: isPeriodDay
             ? COLORS.rossoCorsa
-            : COLORS.pink,
+            : COLORS.primary,
           width: 35,
           height: 35,
         }}
@@ -46,7 +46,6 @@ const Switch = ({ active, changeStatus }) => {
 
 const styles = StyleSheet.create({
   switchContainer: {
-    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: '100%',

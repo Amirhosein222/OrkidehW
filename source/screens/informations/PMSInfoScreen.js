@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, StatusBar, StyleSheet } from 'react-native';
@@ -13,100 +14,115 @@ import {
 import { Bars } from '../../components/charts';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
+import PMSCard from '../../components/periodInfo/PMSCard';
+
+import muscleten from '../../assets/vectors/charts/muscleten.png';
+import backpain from '../../assets/vectors/charts/backpain.png';
+import headache from '../../assets/vectors/charts/headache.png';
+import dep from '../../assets/vectors/charts/dep.png';
 
 const PMSInfoScreen = ({}) => {
   const isPeriodDay = useIsPeriodDay();
   return (
-    <Container justifyContent="flex-start">
+    <Container
+      justifyContent="flex-start"
+      bgColor="transparent"
+      marginTop={rh(2)}>
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <RowContainer marginTop="20px">
-        <Text marginRight={4} bold>
-          میانگین داده شما در طول 6 دوره آخر
-        </Text>
-        <Icon
-          name="long-arrow-alt-left"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}
-          size={25}
+      <Text color={COLORS.textDark} bold>
+        اطلاعات PMS در شش دوره اخیر شما
+      </Text>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          width: rw(84),
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'space-between',
+          marginVertical: rh(2),
+        }}>
+        <PMSCard info={{ title: 'سردرد', count: 3 }} icon={headache} />
+        <PMSCard info={{ title: 'حس افسردگی', count: 2 }} icon={dep} />
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: rw(84),
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'space-between',
+          marginVertical: rh(2),
+        }}>
+        <PMSCard
+          info={{ title: 'درد کمر، پا، دست یا زانو', count: 4 }}
+          icon={backpain}
         />
-        <Text bold marginLeft={4}>
-          پی ام اس شما
-        </Text>
-      </RowContainer>
-      <RowContainer justifyContent="center">
-        <View style={styles.pmsInfoCont}>
-          <Image
-            imageSource={require('../../assets/images/pa.png')}
-            width="75px"
-            height="75px"
-          />
-          <Text>1 روز</Text>
-        </View>
-        <View style={styles.pmsInfoCont}>
-          <Image
-            imageSource={require('../../assets/images/de.png')}
-            width="75px"
-            height="75px"
-          />
-          <Text>2 روز</Text>
-        </View>
-        <View style={styles.pmsInfoCont}>
-          <Image
-            imageSource={require('../../assets/images/se.png')}
-            width="75px"
-            height="75px"
-          />
-          <Text>1 روز</Text>
-        </View>
-        <View style={styles.pmsInfoCont}>
-          <Image
-            imageSource={require('../../assets/images/se.png')}
-            width="75px"
-            height="75px"
-          />
-          <Text>6 روز</Text>
-        </View>
-      </RowContainer>
-      <Divider color={COLORS.pink} width="90%" />
+        <PMSCard info={{ title: 'گرفتگی ماهیچه', count: 2 }} icon={muscleten} />
+      </View>
+      <Divider
+        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}
+        width={rw(82)}
+        style={{
+          marginTop: 5,
+          alignSelf: 'center',
+          borderBottomWidth: 0.7,
+        }}
+      />
       <Text
         alignSelf="center"
         marginRight="20"
         marginTop="20"
         bold
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.pink}>
+        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
         مقایسه علائم PMS شما و همسالان شما
       </Text>
 
-      <RowContainer justifyContent="space-evenly">
-        <Image
-          imageSource={require('../../assets/images/se.png')}
-          width="75px"
-          height="75px"
+      <View
+        style={{
+          flexDirection: 'row',
+          width: rw(85),
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'space-between',
+          marginVertical: rh(2),
+        }}>
+        <PMSCard
+          info={{ title: 'سردرد', count: 3 }}
+          hasBar={true}
+          icon={headache}
         />
-        <Bars />
-      </RowContainer>
-      <RowContainer justifyContent="space-evenly">
-        <Image
-          imageSource={require('../../assets/images/pa.png')}
-          width="75px"
-          height="75px"
+        <PMSCard
+          info={{ title: 'حس افسردگی', count: 2 }}
+          hasBar={true}
+          icon={dep}
         />
-
-        <Bars />
-      </RowContainer>
-      <RowContainer justifyContent="space-evenly">
-        <Image
-          imageSource={require('../../assets/images/de.png')}
-          width="75px"
-          height="75px"
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: rw(87),
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'space-between',
+          marginVertical: rh(2),
+        }}>
+        <PMSCard
+          info={{ title: 'درد کمر، پا، دست یا زانو', count: 4 }}
+          icon={backpain}
+          hasBar={true}
         />
-
-        <Bars />
-      </RowContainer>
+        <PMSCard
+          info={{ title: 'گرفتگی ماهیچه', count: 2 }}
+          hasBar={true}
+          icon={muscleten}
+        />
+      </View>
     </Container>
   );
 };
