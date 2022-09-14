@@ -12,7 +12,7 @@ const Switch = ({ active, changeStatus }) => {
 
   return (
     <View style={styles.switchContainer}>
-      <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
+      <Text small color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
         فعال
       </Text>
       <Toggle
@@ -33,7 +33,7 @@ const Switch = ({ active, changeStatus }) => {
         thumbButton={{
           activeBackgroundColor: COLORS.grey,
           inActiveBackgroundColor: isPeriodDay
-            ? COLORS.rossoCorsa
+            ? COLORS.fireEngineRed
             : COLORS.primary,
           width: 35,
           height: 35,

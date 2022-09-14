@@ -14,8 +14,11 @@ import {
   BackgroundView,
 } from '../../components/common';
 
-import { rw, rh, COLORS, baseUrl } from '../../configs';
+import { rw, rh, COLORS, baseUrl, ICON_SIZE } from '../../configs';
 import getLoginClient from '../../libs/api/loginClientApi';
+
+import manIcon from '../../assets/vectors/profile/man-1.png';
+import EnabledEdit from '../../assets/icons/btns/enabled-edit.svg';
 
 const UpdateRelScreen = ({ navigation, route }) => {
   const params = route.params || {};
@@ -114,7 +117,11 @@ const UpdateRelScreen = ({ navigation, route }) => {
             </View>
           ) : (
             <View style={styles.avatarBorderdContainer}>
-              <Fontisto name="male" size={55} color={COLORS.textDark} />
+              <Image
+                source={manIcon}
+                style={{ width: 80, height: 80, borderRadius: 70 }}
+                resizeMode="contain"
+              />
             </View>
           )}
 
@@ -129,7 +136,7 @@ const UpdateRelScreen = ({ navigation, route }) => {
         <View style={{ marginTop: rh(2) }}>
           <InputRow
             title="نام :"
-            placeholder="نام پارتنر خود را اینجا وارد کنید"
+            placeholder="نام پارتنر را اینجا وارد کنید"
             handleTextInput={setPartner}
             name="pName"
             editedText={partner}
@@ -137,7 +144,7 @@ const UpdateRelScreen = ({ navigation, route }) => {
           />
           <InputRow
             title="شماره موبایل :"
-            placeholder="شماره موبایل پارتنر خود را اینجا وارد کنید"
+            placeholder="شماره موبایل پارتنر را اینجا وارد کنید"
             handleTextInput={setPartnerMobile}
             name="pMobile"
             kType="numeric"
@@ -149,9 +156,9 @@ const UpdateRelScreen = ({ navigation, route }) => {
         <Button
           disabled={isAdding}
           loading={isAdding}
-          title="تایید اطلاعات"
-          icon="checkmark-sharp"
-          color={COLORS.success}
+          title="ویرایش اطلاعات"
+          Icon={() => <EnabledEdit style={ICON_SIZE} />}
+          color={COLORS.borderLinkBtn}
           onPress={() => onUpdateRel()}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
         />

@@ -76,7 +76,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
         <ScreenHeader title="تست های روانشناسی" />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>

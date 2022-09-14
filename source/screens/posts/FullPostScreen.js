@@ -161,7 +161,9 @@ const FullPostScreen = ({ navigation, route }) => {
       <Container>
         <View
           style={{ flex: 1, width: '100%', marginTop: STATUS_BAR_HEIGHT + 5 }}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary} large>
+          <Text
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            large>
             بانک آموزشی
           </Text>
           <Divider
@@ -173,7 +175,7 @@ const FullPostScreen = ({ navigation, route }) => {
         <View style={{ flex: 1 }}>
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           />
         </View>
       </Container>
@@ -189,7 +191,7 @@ const FullPostScreen = ({ navigation, route }) => {
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()}>
             <IconWithBg
-              bgColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+              bgColor={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
               width="40px"
               height="40px"
               borderRadius="20px"
@@ -204,7 +206,7 @@ const FullPostScreen = ({ navigation, route }) => {
 
           <View style={{ flex: 1, marginRight: 20 }}>
             <Text
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
               large>
               بانک آموزشی
             </Text>
@@ -263,7 +265,7 @@ const FullPostScreen = ({ navigation, route }) => {
             <>
               <View style={styles.textContainer}>
                 <Text
-                  color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+                  color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
                   medium
                   alignSelf="flex-end"
                   marginTop="20">
@@ -364,7 +366,7 @@ const FullPostScreen = ({ navigation, route }) => {
                 marginRight="5"
                 alignSelf="flex-start"
                 medium
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
                 ثبت
               </Text>
             </Pressable>

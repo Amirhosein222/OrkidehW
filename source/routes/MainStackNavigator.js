@@ -48,7 +48,7 @@ const linking = {
   },
 };
 
-export default function MainStackNavigator({ isLoggedin }) {
+export default function MainStackNavigator({ isLoggedin, showAuth }) {
   return (
     <NavigationContainer
       linking={linking}
@@ -61,14 +61,20 @@ export default function MainStackNavigator({ isLoggedin }) {
       }>
       <Stack.Navigator
         headerMode="none"
-        initialRouteName={isLoggedin ? 'HomeDrawer' : 'Register'}>
+        initialRouteName={
+          isLoggedin && showAuth
+            ? 'Login'
+            : isLoggedin && !showAuth
+            ? 'HomeDrawer'
+            : 'Register'
+        }>
         <Stack.Screen name="HomeDrawer" component={DrawerNavigator} />
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
           initialParams={{ editNumber: false }}
         />
-        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Verification" component={VerificationScreen} />
         <Stack.Screen
           name="EnterInfo"

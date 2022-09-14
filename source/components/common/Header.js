@@ -10,9 +10,11 @@ import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../configs';
 import { showSnackbar } from '../../libs/helpers';
 
+import CalendarIcon from '../../assets/icons/home/calendar.svg';
+import MenuIcon from '../../assets/icons/home/menu.svg';
+
 const Header = ({ navigation, style }) => {
   const { isPeriodDay } = useContext(WomanInfoContext);
-  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showCalendarModal, setShowCalendarModal] = useState(false);
 
   const onSendLove = () => {
@@ -35,7 +37,9 @@ const Header = ({ navigation, style }) => {
             onPress={onSendLove}
             style={{
               ...styles.sendLoveContainer,
-              backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.primary,
+              backgroundColor: isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
             }}>
             <MaterialCommunityIcons
               name="heart-outline"
@@ -43,24 +47,18 @@ const Header = ({ navigation, style }) => {
               color={COLORS.white}
             />
           </Pressable>
-          <Pressable
+          {/* <Pressable
             onPress={() => setShowCalendarModal(true)}
             style={{
               ...styles.sendLoveContainer,
               marginLeft: rw(2),
             }}>
-            <Image
-              source={require('../../assets/icons/home/calendar.png')}
-              style={{ width: 25, height: 25 }}
-            />
-          </Pressable>
+            <CalendarIcon style={{ width: 25, height: 25 }} />
+          </Pressable> */}
         </View>
 
         <Pressable onPress={() => navigation.openDrawer()}>
-          <Image
-            source={require('../../assets/icons/home/menu.png')}
-            style={{ width: 25, height: 25, marginRight: rw(4) }}
-          />
+          <MenuIcon style={{ width: 25, height: 25, marginRight: rw(4) }} />
         </Pressable>
         {showCalendarModal && (
           <CalendarModal

@@ -4,35 +4,34 @@ import Orientation from 'react-native-orientation-locker';
 
 import MainStackNavigator from './routes/MainStackNavigator';
 
-import { getFromAsyncStorage } from './libs/helpers';
 import { WomanInfoProvider } from './libs/context/womanInfoContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Orientation.lockToPortrait();
 
 const App = () => {
   const [checkingIsLoggedin, setCheckingIsLoggedin] = useState(true);
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const [hasPassOrFinger, setHasPassOrFinger] = useState(false);
+
+  const handleRenederInitialScreen = async () => {
+    const hasToken = await AsyncStorage.getItem('userToken');
+    if (!hasToken) {
+      setIsLoggedin(false);
+      setCheckingIsLoggedin(false);
+      return;
+    }
+    const hasPass = await AsyncStorage.getItem('isPassActive');
+    const hasFinger = await AsyncStorage.getItem('isFingerActive');
+    if (hasPass || hasFinger) {
+      setHasPassOrFinger(true);
+    }
+    setIsLoggedin(true);
+    setCheckingIsLoggedin(false);
+  };
 
   useEffect(() => {
-    getFromAsyncStorage('logedOut')
-      .then((result) => {
-        if (result === 'true') {
-          setIsLoggedin(false);
-          setCheckingIsLoggedin(false);
-        } else {
-          getFromAsyncStorage('userToken')
-            .then((res) => {
-              setIsLoggedin(res);
-              setCheckingIsLoggedin(false);
-            })
-            .catch((e) => {
-              // console.log(e);
-            });
-        }
-      })
-      .catch((e) => {
-        // console.log(e);
-      });
+    handleRenederInitialScreen();
   }, []);
 
   if (checkingIsLoggedin === true) {
@@ -40,7 +39,10 @@ const App = () => {
   } else {
     return (
       <WomanInfoProvider>
-        <MainStackNavigator isLoggedin={isLoggedin} />
+        <MainStackNavigator
+          isLoggedin={isLoggedin}
+          showAuth={hasPassOrFinger}
+        />
       </WomanInfoProvider>
     );
   }

@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     width: rw(81),
     borderRadius: 10,
     color: COLORS.textLight,
-    fontFamily: 'Qs_Iranyekan_bold',
+    fontFamily: 'IRANYekanXFaNum-Regular',
     textAlign: 'right',
     textAlignVertical: 'top',
     fontSize: 14,

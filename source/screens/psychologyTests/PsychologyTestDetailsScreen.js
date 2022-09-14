@@ -3,17 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import {
   StatusBar,
-  StyleSheet,
   ActivityIndicator,
   FlatList,
   Image,
   View,
+  StyleSheet,
 } from 'react-native';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
 import {
-  Container,
   Button,
   ScreenHeader,
   Snackbar,
@@ -23,27 +22,12 @@ import {
   PsychologyTestDetail,
   TestResultModal,
 } from '../../components/PsychologyTests';
-import { COLORS, rh, rw } from '../../configs';
+
+import { COLORS, ICON_SIZE, rh, rw } from '../../configs';
 import { showSnackbar } from '../../libs/helpers';
 import { useIsPeriodDay } from '../../libs/hooks';
 
-const TestDetail = [
-  {
-    title: 'تست روانشناسی 1',
-    description: 'توضیحات تست',
-    id: '1',
-    questions: [
-      {
-        question: 'نظر شما چیست؟',
-        options: [
-          { title: 'سوال 1', id: 1, question_id: 1 },
-          { title: 'سوال 2', id: 2, question_id: 1 },
-          { title: 'سوال 3', id: 3, question_id: 1 },
-        ],
-      },
-    ],
-  },
-];
+import EnabledCheck from '../../assets/icons/btns/enabled-check.svg';
 
 const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -153,7 +137,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
         />
       </BackgroundView>
     );
@@ -183,7 +167,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
         <Button
           title="مشاهده نتیجه"
-          icon="checkmark-sharp"
+          Icon={() => <EnabledCheck style={ICON_SIZE} />}
           color={COLORS.primary}
           onPress={() => sendTestAnswers()}
           loading={isSending ? true : false}

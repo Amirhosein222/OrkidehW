@@ -2,7 +2,6 @@
 import React, { useState, useRef, useContext } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import Modal from 'react-native-modal';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment-jalaali';
 
 import {
@@ -11,11 +10,14 @@ import {
   InputRow,
   Snackbar,
 } from '../../../../components/common';
-import { rw, rh, COLORS } from '../../../../configs';
+import { rw, rh, COLORS, ICON_SIZE } from '../../../../configs';
 import getLoginClient from '../../../../libs/api/loginClientApi';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showSnackbar } from '../../../../libs/helpers';
+
+import Close from '../../../../assets/icons/btns/close.svg';
+import EnableCheck from '../../../../assets/icons/btns/enabled-check.svg';
 
 const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
   const { fullInfo, saveFullInfo } = useContext(WomanInfoContext);
@@ -97,12 +99,7 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
           <View style={{ width: rw(11) }} />
           <Text>{title} خود را وارد کنید</Text>
           <Pressable onPress={isUpdating ? null : closeModal} hitSlop={7}>
-            <Ionicons
-              name="close"
-              size={32}
-              color={COLORS.icon}
-              style={styles.closeIcon}
-            />
+            <Close style={{ ...ICON_SIZE, marginRight: rw(5) }} />
           </Pressable>
         </View>
         <View style={{ marginTop: rh(6) }}>
@@ -127,8 +124,8 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
 
         <Button
           title="تایید اطلاعات"
-          icon="checkmark-sharp"
-          color={COLORS.success}
+          Icon={() => <EnableCheck style={ICON_SIZE} />}
+          color={COLORS.primary}
           disabled={isUpdating}
           loading={isUpdating}
           onPress={updateName}

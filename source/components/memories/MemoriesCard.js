@@ -9,7 +9,6 @@ import {
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -22,6 +21,13 @@ import {
   numberConverter,
 } from '../../libs/helpers';
 import ReadMore from '@fawazahmed/react-native-read-more';
+
+import DelIcon from '../../assets/icons/btns/delete.svg';
+import EnEdit from '../../assets/icons/btns/enabled-edit.svg';
+import EnSend from '../../assets/icons/btns/enabled-send.svg';
+import CmIcon from '../../assets/icons/btns/comment.svg';
+import Avatar from '../../assets/vectors/profile/woman-1.png';
+import { ICON_SIZE } from '../../configs/styles';
 
 const MemoriesCard = ({
   memory = null,
@@ -76,7 +82,7 @@ const MemoriesCard = ({
     },
     moreLess: {
       color: COLORS.textLight,
-      fontFamily: 'Qs_Iranyekan_bold',
+      fontFamily: 'IRANYekanXFaNum-Regular',
       textAlign: 'left',
       alignSelf: 'flex-start',
     },
@@ -123,7 +129,7 @@ const MemoriesCard = ({
       width: rw(70),
       borderRadius: 10,
       color: COLORS.textLight,
-      fontFamily: 'Qs_Iranyekan_bold',
+      fontFamily: 'IRANYekanXFaNum-Regular',
       textAlign: 'right',
       textAlignVertical: 'top',
       fontSize: 14,
@@ -171,16 +177,10 @@ const MemoriesCard = ({
         {myMemory === true ? (
           <View style={styles.editDeleteContainer}>
             <Pressable onPress={() => handleDelete(memory.id)}>
-              <Image
-                source={require('../../assets/icons/btns/delete.png')}
-                style={{ width: 25, height: 25 }}
-              />
+              <DelIcon style={ICON_SIZE} />
             </Pressable>
             <Pressable hitSlop={5} onPress={() => handleEdit(memory)}>
-              <Image
-                source={require('../../assets/icons/btns/enabled-edit.png')}
-                style={{ width: 25, height: 25 }}
-              />
+              <EnEdit style={ICON_SIZE} />
             </Pressable>
           </View>
         ) : (
@@ -222,7 +222,7 @@ const MemoriesCard = ({
               height: 80,
             }}>
             <View style={styles.avatarBorderdContainer}>
-              <FontAwesome5 name="user" size={25} color={COLORS.icon} />
+              <Image style={{ width: rw(13), height: rh(7) }} source={Avatar} />
             </View>
           </View>
         </View>
@@ -238,7 +238,7 @@ const MemoriesCard = ({
             ellipsis="..."
             style={{
               color: COLORS.textCommentCal,
-              fontFamily: 'Qs_Iranyekan_bold',
+              fontFamily: 'IRANYekanXFaNum-Regular',
               textAlign: 'right',
             }}
             seeLessText="بستن">
@@ -250,10 +250,7 @@ const MemoriesCard = ({
       {/* Comments Section */}
       {/* <Comment comment={memory} /> */}
       <View style={styles.cmInputContainer}>
-        <Image
-          source={require('../../assets/icons/btns/enabled-send.png')}
-          style={{ width: 28, height: 28 }}
-        />
+        <EnSend style={ICON_SIZE} />
         <TextInput
           placeholder="نظر خود را اینجا وارد کنید"
           placeholderTextColor={COLORS.textLight}
@@ -292,10 +289,7 @@ const MemoriesCard = ({
               marginRight: myMemory ? 'auto' : 0,
             }}>
             <Pressable style={{ margin: 0, justifyContent: 'center' }}>
-              <Image
-                source={require('../../assets/icons/btns/comment.png')}
-                style={{ width: 20, height: 20 }}
-              />
+              <CmIcon style={ICON_SIZE} />
             </Pressable>
             <Text style={{ marginLeft: 5 }} color={COLORS.textLight}>
               {numberConverter(0)}

@@ -2,12 +2,13 @@
 import React from 'react';
 import { Pressable, View, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
 
-import { Text, IconWithBg } from '../common';
+import { Text } from '../common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, rh, rw } from '../../configs';
+import { COLORS, ICON_SIZE, rh, rw } from '../../configs';
+
+import DisabledBack from '../../assets/icons/btns/disabled-back.svg';
 
 const PsychologyTestCard = ({
   testTitle,
@@ -26,9 +27,17 @@ const PsychologyTestCard = ({
 
   return (
     <View style={styles.container}>
-      <Ionicons name="heart" size={100} color={COLORS.primary} />
-      <View style={styles.badge}>
-        <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.white}>جدید</Text>
+      <Ionicons
+        name="heart"
+        size={100}
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+      />
+      <View
+        style={{
+          ...styles.badge,
+          backgroundColor: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+        }}>
+        <Text color={COLORS.white}>جدید</Text>
       </View>
       <View
         style={{
@@ -41,25 +50,20 @@ const PsychologyTestCard = ({
         <Pressable
           onPress={() => handleNavigation()}
           style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
-          <Entypo
-            name="chevron-thin-left"
-            size={20}
-            color={COLORS.textLight}
-            style={{ marginTop: rh(0.5) }}
-          />
+          <DisabledBack style={ICON_SIZE} />
           <Text
             small
             marginLeft="10"
             alignSelf="flex-end"
             bold
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
             0
           </Text>
           <Text
             small
             alignSelf="flex-end"
             bold
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
             /100
           </Text>
         </Pressable>
@@ -75,7 +79,7 @@ const PsychologyTestCard = ({
             marginRight="10"
             alignSelf="flex-end"
             bold
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
             {testTitle}
           </Text>
           <Text

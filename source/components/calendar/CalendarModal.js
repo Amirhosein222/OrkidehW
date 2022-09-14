@@ -26,10 +26,10 @@ import {
   numberConverter,
 } from '../../libs/helpers';
 
-import { COLORS, rh, rw } from '../../configs';
+import { COLORS, ICON_SIZE, rh, rw } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
-import editIcon from '../../assets/icons/btns/enabled-edit.png';
+import EditIcon from '../../assets/icons/btns/enabled-edit.svg';
 
 const CALENDAR_THEME = {
   calendarBackground: '#ffffff',
@@ -43,9 +43,9 @@ const CALENDAR_THEME = {
   selectedDotColor: '#ffffff',
   arrowColor: COLORS.primary,
   monthTextColor: COLORS.primary,
-  textDayFontFamily: 'Qs_Iranyekan_bold',
-  textMonthFontFamily: 'Qs_Iranyekan_bold',
-  textDayHeaderFontFamily: 'Qs_Iranyekan_bold',
+  textDayFontFamily: 'IRANYekanXFaNum-Regular',
+  textMonthFontFamily: 'IRANYekanXFaNum-Regular',
+  textDayHeaderFontFamily: 'IRANYekanXFaNum-Regular',
   textDayFontSize: 14,
   textMonthFontSize: 14,
   textDayHeaderFontSize: 10,
@@ -525,7 +525,7 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
         ) : (
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           />
         )}
 
@@ -538,25 +538,27 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
         {edit === true ? (
           <View style={styles.editContainer}>
             <Button
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.borderLinkBtn}
+              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.borderLinkBtn}
               title="ثبت تغییرات"
               mode="contained"
               style={{ width: '35%', marginRight: 10, height: 40 }}
               loading={edit && isUpdating ? true : false}
               disabled={edit && isUpdating ? true : false}
               onPress={() => submitNewDates()}
+              Icon={null}
             />
             <Button
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.borderLinkBtn}
+              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.borderLinkBtn}
               title="لغو"
               style={{ width: '35%', height: 40 }}
               onPress={() => showEdit(true)}
+              Icon={null}
             />
           </View>
         ) : (
           <Button
             title="ویرایش دوره ها"
-            icons={[editIcon, editIcon]}
+            Icon={() => <EditIcon style={ICON_SIZE} />}
             color={COLORS.borderLinkBtn}
             style={{ ...styles.btn, marginTop: rh(5), marginBottom: rh(4) }}
             onPress={() => showEdit()}

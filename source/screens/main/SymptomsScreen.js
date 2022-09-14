@@ -26,10 +26,11 @@ import {
   Snackbar,
   NoRelation,
   Picker,
+  Image,
 } from '../../components/common';
 import ExpectationCard from '../../components/common/ExpectationCard';
 
-import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
+import { baseUrl, COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const SymptomsScreen = ({ navigation }) => {
@@ -136,17 +137,21 @@ const SymptomsScreen = ({ navigation }) => {
           alignItems: 'center',
         }}>
         <View style={{ marginBottom: 'auto' }}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
+          <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
             {item.sign.title} {item.mood.title}
           </Text>
         </View>
 
-        {/* <Image
-          imageSource={require('../../assets/images/pa.png')}
+        <Image
+          imageSource={
+            item.image
+              ? { uri: baseUrl + item.image }
+              : require('../../assets/images/pa.png')
+          }
           width="75px"
           height="75px"
           marginTop={rh(0.6)}
-        /> */}
+        />
       </View>
     );
   };
@@ -205,7 +210,7 @@ const SymptomsScreen = ({ navigation }) => {
                 horizontal
                 renderItem={renderSpouseMoods}
                 contentContainerStyle={{
-                  marginVertical: rh(3),
+                  marginVertical: rh(2),
                   paddingHorizontal: rw(2),
                 }}
               />
@@ -239,10 +244,12 @@ const SymptomsScreen = ({ navigation }) => {
               <FlatList
                 data={expectations}
                 keyExtractor={(item) => String(item.id)}
+                style={{ flexGrow: 1 }}
                 contentContainerStyle={{
-                  justifyContent: 'center',
+                  justifyContent: 'flex-start',
                   alignSelf: 'center',
                   width: '100%',
+                  height: rh(40),
                 }}
                 renderItem={(item) => {
                   return <ExpectationCard exp={item.item} />;
@@ -303,13 +310,13 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   selectedDate: {
-    fontFamily: 'Qs_Iranyekan_bold',
+    fontFamily: 'IRANYekanXFaNum-Regular',
     fontSize: 12,
     color: COLORS.white,
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'Qs_Iranyekan_bold',
+    fontFamily: 'IRANYekanXFaNum-Regular',
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,

@@ -49,7 +49,7 @@ const Comment = ({ comment }) => {
     },
     moreLess: {
       color: COLORS.textLight,
-      fontFamily: 'Qs_Iranyekan_bold',
+      fontFamily: 'IRANYekanXFaNum-Regular',
       textAlign: 'left',
       alignSelf: 'flex-start',
     },
@@ -129,7 +129,7 @@ const Comment = ({ comment }) => {
             ellipsis="..."
             style={{
               color: COLORS.textCommentCal,
-              fontFamily: 'Qs_Iranyekan_bold',
+              fontFamily: 'IRANYekanXFaNum-Regular',
               textAlign: 'right',
               fontSize: 12,
             }}

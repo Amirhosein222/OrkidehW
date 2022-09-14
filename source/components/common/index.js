@@ -24,6 +24,7 @@ import Button from './button';
 import { DeleteModal, ReportModal } from './Modals';
 import ScreenHeader from './screenHeader';
 import BackgroundView from './backgroundView/BackgroundView';
+import HDatePicker from './HDatePicker';
 
 export {
   Text,
@@ -53,4 +54,5 @@ export {
   ReportModal,
   ScreenHeader,
   BackgroundView,
+  HDatePicker,
 };

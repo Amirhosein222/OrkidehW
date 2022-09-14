@@ -1,4 +1,5 @@
 import PrivacyOption from './privacyOption';
-import PasswordFingerModal from './modals';
+import PasswordModal from './modals';
+import FingerPrintLegacyModal from './fingerPrintLegacyModal';
 
-export { PrivacyOption, PasswordFingerModal };
+export { PrivacyOption, PasswordModal, FingerPrintLegacyModal };

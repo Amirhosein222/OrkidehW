@@ -1,11 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-undef */
 import React from 'react';
-import { Image, StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { Text } from '../index';
 import { rw, rh, COLORS, STATUS_BAR_HEIGHT } from '../../../configs';
+
+import Back from '../../../assets/icons/btns/back.svg';
 
 const ScreenHeader = ({ title, disableBack = false, style }) => {
   const navigation = useNavigation();
@@ -26,12 +28,9 @@ const ScreenHeader = ({ title, disableBack = false, style }) => {
         disabled={disableBack}
         hitSlop={5}
         onPress={() => navigation.goBack()}>
-        <Image
-          source={require('../../../assets/icons/btns/back.png')}
-          style={{ width: 30, height: 30 }}
-        />
+        <Back style={{ width: 28, height: 28 }} />
       </Pressable>
-      <Text large color={COLORS.textLight}>
+      <Text medium bold color={COLORS.textLight}>
         {title}
       </Text>
     </View>

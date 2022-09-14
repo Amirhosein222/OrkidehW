@@ -79,7 +79,7 @@ const PsychologyTestDetail = ({
             //       ? 'contained'
             //       : 'outlined'
             //   }
-            //   color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            //   color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             //   style={styles.btn}
             //   onPress={() => handleSelectedChoices(op)}>
             //   <Text
@@ -104,7 +104,7 @@ const PsychologyTestDetail = ({
         {testDetails.title}
       </Text>
       <Divider
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textLight}
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
         width="80%"
         style={{ marginTop: rh(2) }}
       />

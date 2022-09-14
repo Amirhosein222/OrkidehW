@@ -4,6 +4,7 @@ import {
   PALETTE,
   SCROLL_VIEW_CONTAINER,
   SNACKBAR_OPTIONS,
+  ICON_SIZE,
 } from './styles';
 import { HEIGHT, WIDTH, STATUS_BAR_HEIGHT, rh, rw } from './dimensions';
 import { faLocale } from './calendarLocaleConfig';
@@ -28,4 +29,5 @@ export {
   rw,
   PALETTE,
   PUSHER_INSTANCE_ID,
+  ICON_SIZE,
 };

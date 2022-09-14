@@ -17,8 +17,9 @@ import getLoginClient from '../../libs/api/loginClientApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertToFullDate, showSnackbar } from '../../libs/helpers';
 
-import nameIcon from '../../assets/icons/profilePrivacy/name.png';
-import dateOfBirth from '../../assets/icons/profilePrivacy/dateOfBirth.png';
+import NameIcon from '../../assets/icons/profilePrivacy/name.svg';
+import DateOfBirth from '../../assets/icons/profilePrivacy/dateOfBirth.svg';
+import { ICON_SIZE } from '../../configs/styles';
 
 const ProfileScreen = ({ navigation }) => {
   const { saveFullInfo, fullInfo } = useContext(WomanInfoContext);
@@ -131,21 +132,21 @@ const ProfileScreen = ({ navigation }) => {
           name="username"
           title="نام کاربری"
           data={fullInfo.display_name}
-          icon={nameIcon}
+          Icon={() => <NameIcon style={ICON_SIZE} />}
           onPress={onOptionPress}
         />
         <ProfileOption
           name="name"
           title="نام"
           data={fullInfo.display_name}
-          icon={nameIcon}
+          Icon={() => <NameIcon style={ICON_SIZE} />}
           onPress={onOptionPress}
         />
         <ProfileOption
           name="birthday"
           title="تاریخ تولد"
           data={convertToFullDate(fullInfo.birth_date)}
-          icon={dateOfBirth}
+          Icon={() => <DateOfBirth style={ICON_SIZE} />}
           onPress={() => setShowBirthdayModal(true)}
         />
       </View>

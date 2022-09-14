@@ -10,7 +10,7 @@ import { deleteCmApi } from '../../../libs/apiCalls';
 import getLoginClient from '../../../libs/api/loginClientApi';
 
 import deleteVector from '../../../assets/vectors/register/delete.png';
-import trash from '../../../assets/icons/btns/delete.png';
+import Trash from '../../../assets/icons/btns/delete.svg';
 
 const DeleteModal = ({
   id,
@@ -99,7 +99,7 @@ const DeleteModal = ({
 
         <Button
           title={`حذف ${title}`}
-          icons={[trash, trash]}
+          Icon={() => <Trash style={{ width: 25, height: 25 }} />}
           color={COLORS.error}
           loading={isDeleting}
           disabled={isDeleting}

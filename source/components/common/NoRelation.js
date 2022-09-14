@@ -17,7 +17,7 @@ const NoRelation = ({ navigation, containerStyle }) => {
       <Text color={COLORS.textDark}>شما تاکنون هیچ رابطه ای ثبت نکرده اید</Text>
       <Button
         onPress={() => navigation.navigate('Relations')}
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
         mode="contained"
         style={styles.btn}>
         <Text color="white">ثبت رابطه</Text>

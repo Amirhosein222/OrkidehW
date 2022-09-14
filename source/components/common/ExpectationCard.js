@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import { Text } from '../../components/common';
-import { COLORS, rw } from '../../configs';
+import { baseUrl, COLORS, rw, rh } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const ExpectationCard = ({ exp, onRight = false }) => {
@@ -20,11 +20,13 @@ const ExpectationCard = ({ exp, onRight = false }) => {
       elevation: 5,
       borderRadius: 10,
       margin: 10,
+      paddingRight: rh(0.5),
     },
     img: {
-      height: 90,
-      width: 90,
+      height: 65,
+      width: 65,
       margin: 5,
+      borderRadius: 7,
     },
     imgContainer: {
       ...StyleSheet.absoluteFillObject,
@@ -46,41 +48,43 @@ const ExpectationCard = ({ exp, onRight = false }) => {
       <TouchableOpacity style={styles.container}>
         {/* <View style={styles.overlay} /> */}
         <View style={styles.titleContainer}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary} medium>
+          <Text
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            medium>
             {exp.expectation.title}
           </Text>
           <Text small>{exp.expectation.title}</Text>
         </View>
-        {/*
+
         <View>
           <Image
             source={
               exp.expectation.image
-                ? { uri: exp.expectation.image }
+                ? { uri: baseUrl + exp.expectation.image }
                 : require('../../assets/images/de.png')
             }
             style={styles.img}
           />
-        </View> */}
+        </View>
       </TouchableOpacity>
     );
   } else {
     return (
       <TouchableOpacity style={styles.container}>
         <View>
-          {/* <Image
+          <Image
             source={
               exp.expectation.image
-                ? { uri: exp.expectation.image }
+                ? { uri: baseUrl + exp.expectation.image }
                 : require('../../assets/images/de.png')
             }
             style={styles.img}
-          /> */}
+          />
         </View>
 
         <View style={styles.titleContainer}>
           <Text
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             medium
             textAlign="right"
             alignSelf="flex-end">

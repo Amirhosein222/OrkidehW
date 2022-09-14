@@ -13,8 +13,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 import { Text } from '../../../../components/common';
-import { baseUrl, COLORS, rh, rw } from '../../../../configs';
+import { baseUrl, COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
 import { convertToFullDate, numberConverter } from '../../../../libs/helpers';
+
+import manIcon from '../../../../assets/vectors/profile/man-1.png';
+import Delete from '../../../../assets/icons/btns/delete.svg';
+import EnabledEdit from '../../../../assets/icons/btns/enabled-edit.svg';
 
 const RelItem = ({
   rel,
@@ -29,10 +33,7 @@ const RelItem = ({
       <View style={{ alignSelf: 'flex-start' }}>
         <View style={styles.editDeleteContainer}>
           <Pressable onPress={() => handleShowDeleteModal(rel.id)} hitSlop={7}>
-            <Image
-              source={require('../../../../assets/icons/btns/delete.png')}
-              style={{ width: 25, height: 25 }}
-            />
+            <Delete style={ICON_SIZE} />
           </Pressable>
           <Pressable
             hitSlop={7}
@@ -42,13 +43,10 @@ const RelItem = ({
                 handleUpdateRels: updateRels,
               })
             }>
-            <Image
-              source={require('../../../../assets/icons/btns/enabled-edit.png')}
-              style={{ width: 25, height: 25 }}
-            />
+            <EnabledEdit style={ICON_SIZE} />
           </Pressable>
         </View>
-        {!rel.is_verified && (
+        {!rel.is_verified && rel.applicant === 'man' && (
           <Pressable
             disabled={isVerifying}
             onPress={() => handleVerifyRel(rel.verification_code)}
@@ -98,7 +96,11 @@ const RelItem = ({
               height: 100,
             }}>
             <View style={styles.avatarBorderdContainer}>
-              <Fontisto name="male" size={55} color={COLORS.textDark} />
+              <Image
+                source={manIcon}
+                style={{ width: 80, height: 80, borderRadius: 70 }}
+                resizeMode="contain"
+              />
             </View>
           </View>
         )}

@@ -41,7 +41,10 @@ const Picker = ({
         onItemSelect(val);
       }}
       labelStyle={styles.labelStyle}
-      listItemLabelStyle={{ fontFamily: 'Qs_Iranyekan_bold', color: 'black' }}
+      listItemLabelStyle={{
+        fontFamily: 'IRANYekanXFaNum-Regular',
+        color: 'black',
+      }}
       arrowColor={COLORS.white}
       containerStyle={styles.pickerContainer}
       style={{
@@ -58,7 +61,7 @@ const Picker = ({
         backgroundColor: COLORS.mainBg,
       }}
       placeholderStyle={{
-        fontFamily: 'Qs_Iranyekan_bold',
+        fontFamily: 'IRANYekanXFaNum-Regular',
         color: COLORS.textLight,
       }}
       placeholder={placeholder}
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   labelStyle: {
-    fontFamily: 'Qs_Iranyekan_bold',
+    fontFamily: 'IRANYekanXFaNum-Regular',
     color: COLORS.textLight,
   },
 });

@@ -2,15 +2,16 @@
 /* eslint-disable prettier/prettier */
 import React, { useContext } from 'react';
 import { Image, StyleSheet, View, Pressable } from 'react-native';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 
 import { Text } from '../../../../components/common';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
-import { baseUrl, COLORS, rh, rw } from '../../../../configs';
-import { convertToFullDate, numberConverter } from '../../../../libs/helpers';
+import { COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
+
+import womanIcon from '../../../../assets/vectors/profile/woman-1.png';
+import NextPage from '../../../../assets/icons/drawerSettings/nextPage.svg';
+// import EnabledEdit from '../../../../assets/btns/enabled-edit.s'
 
 const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
   const womanInfo = useContext(WomanInfoContext);
@@ -27,23 +28,19 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
           <Pressable
             onPress={() => navigation.navigate('Profile')}
             style={{ marginTop: rh(0.5), marginRight: 'auto' }}>
-            <Image
-              style={{ width: 25, height: 25 }}
-              source={require('../../../../assets/icons/drawerSettings/next-page.png')}
-            />
+            <NextPage style={ICON_SIZE} />
           </Pressable>
           <View style={styles.nameContainer}>
             <Text
               medium
+              bold
               color={COLORS.textDark}
               textAlign="right"
               alignSelf="flex-end">
               {womanInfo.fullInfo.display_name}
             </Text>
-            <Text color={COLORS.textLight} alignSelf="flex-end">
-              {numberConverter(
-                convertToFullDate(womanInfo.fullInfo.birth_date),
-              )}
+            <Text bold color={COLORS.textLight} alignSelf="flex-end">
+              {womanInfo.fullInfo.mobile}
             </Text>
           </View>
         </>
@@ -63,7 +60,11 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
           />
         ) : (
           <View style={styles.avatarBorderdContainer}>
-            <Fontisto name="female" size={60} color={COLORS.textDark} />
+            <Image
+              source={womanIcon}
+              style={{ width: 90, height: 90, borderRadius: 70 }}
+              resizeMode="contain"
+            />
           </View>
         )}
 

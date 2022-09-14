@@ -1,21 +1,28 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
-import { StyleSheet, View, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Switch } from 'react-native-paper';
 
-import { Text, InputRow } from '../../../../../components/common';
+import { Text } from '../../../../../components/common';
 import { COLORS, rh, rw } from '../../../../../configs';
 
-const PrivacyOption = ({ title, handleModal, type, modalType }) => {
-  const [beforeP, setBeforeP] = useState(false);
-
-  const onToggleSwitch = () => {
-    if (type === 'finger') {
-      setBeforeP(!beforeP);
-      !beforeP && handleModal();
-      return;
-    }
-    setBeforeP(!beforeP);
+const PrivacyOption = ({
+  title,
+  handleModal,
+  type,
+  modalType,
+  switchStatus,
+  setSwichStatus,
+}) => {
+  const onToggleSwitch = async () => {
+    modalType(type);
+    setSwichStatus(!switchStatus);
+    !switchStatus && handleModal();
+    switchStatus &&
+      (await AsyncStorage.removeItem(
+        type === 'finger' ? 'isFingerActive' : 'isPassActive',
+      ));
   };
 
   return (
@@ -27,7 +34,7 @@ const PrivacyOption = ({ title, handleModal, type, modalType }) => {
           justifyContent: 'space-between',
         }}>
         <Switch
-          value={beforeP}
+          value={switchStatus}
           onValueChange={onToggleSwitch}
           color={COLORS.borderLinkBtn}
         />

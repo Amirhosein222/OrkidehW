@@ -1,51 +1,114 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Image, StyleSheet, Pressable, View, Alert } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { Image, StyleSheet, Pressable, View, Platform } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { PrivacyOption, PasswordFingerModal } from './components';
+import {
+  PrivacyOption,
+  PasswordModal,
+  FingerPrintLegacyModal,
+} from './components';
 import {
   ScreenHeader,
   Divider,
   Text,
   BackgroundView,
+  Snackbar,
 } from '../../../components/common';
 
-import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
-import { baseUrl, COLORS, rh, rw } from '../../../configs';
+import { COLORS, rh, rw } from '../../../configs';
 
 const PrivacyScreen = ({ navigation }) => {
-  const { fullInfo } = useContext(WomanInfoContext);
-  const [reminderText, setReminderText] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showFingerModal, setShowFingerModal] = useState(false);
   const [modalType, setModalType] = useState('');
   const [biometryType, setBiometryType] = useState(null);
+  const [errLegacy, setErrLegacy] = useState('');
+  const [passStat, setPassStat] = useState(null);
+  const [fingerStat, setFingerStat] = useState(null);
+  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+
+  const handleVisible = () => {
+    setSnackbar({
+      visible: !snackbar.visible,
+    });
+  };
 
   const getMessage = function () {
     if (biometryType === 'Face ID') {
       return 'Scan your Face on the device to continue';
     } else {
-      return 'انگشت خود را بر روی حسگر اثر انگشت گوشی خود قرار دهید.';
+      return 'حسگر اثر انگشت را لمس کنید';
     }
+  };
+
+  const authCurrent = () => {
+    FingerprintScanner.authenticate({
+      description: getMessage(),
+    })
+      .then(async () => {
+        FingerprintScanner.release();
+        setSnackbar({
+          visible: true,
+          msg: 'اثر انگشت برای ورود به برنامه فعال شد',
+          type: 'success',
+        });
+        await AsyncStorage.setItem('isFingerActive', 'true');
+      })
+      .catch((error) => {
+        FingerprintScanner.release();
+        setFingerStat(false);
+      });
+  };
+
+  const authLegacy = () => {
+    FingerprintScanner.authenticate({
+      onAttempt: handleAuthenticationAttemptedLegacy,
+    })
+      .then(() => {
+        console.log('successfully authenticated legacy.');
+      })
+      .catch((error) => {});
+  };
+
+  const handleAuthenticationAttemptedLegacy = (error) => {
+    setErrLegacy(error.message);
   };
 
   const showAuthenticationDialog = function () {
     if (biometryType !== null && biometryType !== undefined) {
-      FingerprintScanner.authenticate({
-        description: getMessage(),
-      })
-        .then(() => {
-          AsyncStorage.setItem('logedOut', 'false');
-        })
-        .catch((error) => {
-          // console.log('Authentication error is => ', error);
-        });
+      if (requiresLegacyAuthentication()) {
+        setShowFingerModal(true);
+        authLegacy();
+      } else {
+        authCurrent();
+      }
     } else {
-      // console.log('biometric authentication is not available');
     }
   };
+
+  const requiresLegacyAuthentication = () => {
+    return Platform.Version < 23;
+  };
+
+  const onClosePassModal = (st) => {
+    // on Successful or not pass active....
+    setPassStat(st);
+    setShowModal(false);
+  };
+
+  const handleSwitchDefaultValue = async () => {
+    const passStats = await AsyncStorage.getItem('isPassActive');
+    const fingerStats = await AsyncStorage.getItem('isFingerActive');
+    setPassStat(passStats ? true : false);
+    setFingerStat(fingerStats ? true : false);
+  };
+
+  useEffect(() => {
+    handleSwitchDefaultValue();
+  }, []);
 
   useEffect(() => {
     FingerprintScanner.isSensorAvailable()
@@ -53,10 +116,10 @@ const PrivacyScreen = ({ navigation }) => {
         setBiometryType(bioType);
       })
       .catch((error) =>
-        Alert.alert(
-          'خطا',
-          'دستگاه شما از قابلیت اسکن اثر انگشت برخوردار نمی باشد.',
-        ),
+        setSnackbar({
+          visible: true,
+          msg: 'دستگاه شما از قابلیت اسکن اثر انگشت برخوردار نمی باشد.',
+        }),
       );
     return () => {
       FingerprintScanner.release();
@@ -93,9 +156,11 @@ const PrivacyScreen = ({ navigation }) => {
         />
         <PrivacyOption
           title="فعال سازی رمز عبور برای ورود به ارکیده"
-          handleModal={setShowModal}
-          type="pass"
+          handleModal={() => setShowModal(true)}
+          type="password"
           modalType={setModalType}
+          switchStatus={passStat}
+          setSwichStatus={setPassStat}
         />
         <View style={{ width: rw(84), marginTop: rh(2) }}>
           <Text color={COLORS.textLight} textAlign="right" small>
@@ -115,6 +180,8 @@ const PrivacyScreen = ({ navigation }) => {
           handleModal={showAuthenticationDialog}
           type="finger"
           modalType={setModalType}
+          switchStatus={fingerStat}
+          setSwichStatus={setFingerStat}
         />
         <View style={{ width: rw(84), marginTop: rh(2) }}>
           <Text color={COLORS.textLight} textAlign="right" small>
@@ -139,10 +206,24 @@ const PrivacyScreen = ({ navigation }) => {
           />
         </View>
         {showModal && (
-          <PasswordFingerModal
+          <PasswordModal
             visible={showModal}
-            closeModal={() => setShowModal(false)}
+            closeModal={onClosePassModal}
             modalType={modalType}
+            handleSnackbar={setSnackbar}
+          />
+        )}
+        {showFingerModal && (
+          <FingerPrintLegacyModal
+            visible={showFingerModal}
+            closeModal={() => setShowFingerModal(false)}
+          />
+        )}
+        {snackbar.visible && (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            handleVisible={handleVisible}
           />
         )}
       </View>

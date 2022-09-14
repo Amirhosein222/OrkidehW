@@ -1,1 +1,1 @@
-export { default } from './PasswordFingerModal';
+export { default } from './PasswordModal';

@@ -1,27 +1,23 @@
-import React, { useState, useContext } from 'react';
-import {
-  Image,
-  StyleSheet,
-  View,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, View, Pressable, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Share from 'react-native-share';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-import { Text, Snackbar } from '../../../../components/common';
-import { COLORS, rh, rw } from '../../../../configs';
+import { Text } from '../../../../components/common';
+import { COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
 
-import share from '../../../../assets/icons/drawerSettings/share.png';
-import copy from '../../../../assets/icons/drawerSettings/copy.png';
+import ShareIcon from '../../../../assets/icons/drawerSettings/share.svg';
+import Copy from '../../../../assets/icons/drawerSettings/copy.svg';
+import NextPage from '../../../../assets/icons/drawerSettings/nextPage.svg';
+
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
 
 const SettingOption = ({
   name = 'default',
   title,
-  icon,
+  Icon,
   navigateTo = null,
   onBuyAccount = null,
   isFetching = false,
@@ -59,13 +55,10 @@ const SettingOption = ({
       {name === 'invite' ? (
         <View style={{ flexDirection: 'row' }}>
           <Pressable onPress={shareCode}>
-            <Image style={{ width: 25, height: 25 }} source={share} />
+            <ShareIcon style={ICON_SIZE} />
           </Pressable>
           <Pressable onPress={copyToClipboard}>
-            <Image
-              style={{ width: 25, height: 25, marginLeft: rw(2) }}
-              source={copy}
-            />
+            <Copy style={{ ...ICON_SIZE, marginLeft: rw(2) }} />
           </Pressable>
         </View>
       ) : null}
@@ -74,10 +67,7 @@ const SettingOption = ({
           {isFetching ? (
             <ActivityIndicator size="small" color={COLORS.textLight} />
           ) : (
-            <Image
-              style={{ width: 25, height: 25 }}
-              source={require('../../../../assets/icons/drawerSettings/next-page.png')}
-            />
+            <NextPage style={ICON_SIZE} />
           )}
         </Pressable>
       ) : (
@@ -93,6 +83,8 @@ const SettingOption = ({
               ? COLORS.primary
               : COLORS.textDark
           }
+          bold
+          small
           marginRight={rw(2)}>
           {title}
         </Text>
@@ -103,7 +95,7 @@ const SettingOption = ({
             color={COLORS.textDark}
           />
         ) : (
-          <Image style={{ width: 25, height: 25 }} source={icon} />
+          Icon()
         )}
       </View>
     </View>
@@ -116,7 +108,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     width: rw(81),
-    marginTop: rh(3),
+    marginTop: rh(1.5),
     marginVertical: rh(0.5),
     justifyContent: 'space-between',
     alignItems: 'center',

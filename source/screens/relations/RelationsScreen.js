@@ -30,6 +30,9 @@ import { COLORS, rh, rw } from '../../configs';
 import { useApi, useIsPeriodDay } from '../../libs/hooks';
 import { verifyRelation } from '../../libs/apiCalls';
 
+import AddPerson from '../../assets/icons/drawerSettings/addNewPerson-menu.svg';
+import NextIcon from '../../assets/icons/drawerSettings/nextPage.svg';
+
 const RelationsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
 
@@ -142,76 +145,75 @@ const RelationsScreen = ({ navigation }) => {
   }, [shouldUpdate]);
 
   return (
-    <BackgroundView>
-      <ScreenHeader title="روابط من" />
-      {loadingRelations && (
-        <ActivityIndicator
-          size="small"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
-          style={{ marginTop: rh(2), marginBottom: rh(2) }}
-        />
-      )}
-      {!loadingRelations && relations.length ? (
-        <View style={{ height: rh(30) }}>
-          <FlatList
-            data={relations}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderRelations}
-            style={{ marginTop: rh(2), marginBottom: rh(2), height: rh(10) }}
+    console.log('relations ', relations),
+    (
+      <BackgroundView>
+        <ScreenHeader title="روابط من" />
+        {loadingRelations && (
+          <ActivityIndicator
+            size="small"
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            style={{ marginTop: rh(2), marginBottom: rh(2) }}
           />
+        )}
+        {!loadingRelations && relations.length ? (
+          <View style={{ height: rh(30) }}>
+            <FlatList
+              data={relations}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderRelations}
+              style={{ marginTop: rh(2), marginBottom: rh(2), height: rh(10) }}
+            />
+          </View>
+        ) : null}
+        {!loadingRelations && !relations.length ? (
+          <Text marginTop={rh(2)} marginBottom={rh(2)}>
+            شما هیچ رابطه ای ثبت نکرده اید
+          </Text>
+        ) : null}
+
+        <Divider
+          color={COLORS.textDark}
+          width={rw(80)}
+          style={{ borderBottomWidth: 0.6, marginTop: rh(1) }}
+        />
+
+        <View style={styles.addRelContainer}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate('AddRel', {
+                handleUpdateRels: () => setShouldUpdate(!shouldUpdate),
+              })
+            }
+            hitSlop={7}>
+            <NextIcon style={{ width: 25, height: 25 }} />
+          </Pressable>
+          <View style={{ flexDirection: 'row' }}>
+            <Text marginRight={rw(3)}>افزودن رابطه جدید</Text>
+            <AddPerson style={{ width: 25, height: 25 }} />
+          </View>
         </View>
-      ) : null}
-      {!loadingRelations && !relations.length ? (
-        <Text marginTop={rh(2)} marginBottom={rh(2)}>
-          شما هیچ رابطه ای ثبت نکرده اید
-        </Text>
-      ) : null}
 
-      <Divider
-        color={COLORS.textDark}
-        width={rw(80)}
-        style={{ borderBottomWidth: 0.6, marginTop: rh(1) }}
-      />
-
-      <View style={styles.addRelContainer}>
-        <Pressable
-          onPress={() =>
-            navigation.navigate('AddRel', {
-              handleUpdateRels: () => setShouldUpdate(!shouldUpdate),
-            })
-          }
-          hitSlop={7}>
-          <Image
-            source={require('../../assets/icons/drawerSettings/next-page.png')}
+        {snackbar.visible === true ? (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            handleVisible={handleVisible}
           />
-        </Pressable>
-        <View style={{ flexDirection: 'row' }}>
-          <Text marginRight={rw(3)}>افزودن رابطه جدید</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/addNewPerson-menu.png')}
+        ) : null}
+        {showDeleteModal.show && (
+          <DeleteModal
+            type="rel"
+            title="پارتنر"
+            visible={showDeleteModal.show}
+            closeModal={() => setShowDeleteModal({ show: false, id: null })}
+            id={showDeleteModal.id}
+            updateData={getRelations}
+            setSnackbar={setSnackbar}
           />
-        </View>
-      </View>
-
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null}
-      {showDeleteModal.show && (
-        <DeleteModal
-          type="rel"
-          title="پارتنر"
-          visible={showDeleteModal.show}
-          closeModal={() => setShowDeleteModal({ show: false, id: null })}
-          id={showDeleteModal.id}
-          updateData={getRelations}
-          setSnackbar={setSnackbar}
-        />
-      )}
-    </BackgroundView>
+        )}
+      </BackgroundView>
+    )
   );
 };
 

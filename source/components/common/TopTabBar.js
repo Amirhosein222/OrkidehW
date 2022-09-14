@@ -13,7 +13,7 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
 
   const handleTabColors = (focused) => {
     if (isPeriodDay) {
-      return focused ? COLORS.rossoCorsa : COLORS.textLight;
+      return focused ? COLORS.fireEngineRed : COLORS.textLight;
     } else {
       return focused ? COLORS.primary : COLORS.textLight;
     }

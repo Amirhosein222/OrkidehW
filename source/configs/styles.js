@@ -13,6 +13,7 @@ export const PALETTE = {
   darkPurple: '#331B2D',
   nickle: '#687777',
   roseRed: '#C03762',
+  fireEngineRed: '#D22328',
   greenPantone: '#4AB755',
   vividSkyBlue: '#48c7ef',
 };
@@ -34,7 +35,7 @@ const COLORS = {
   darkYellow: '#FFCC00',
   red: '#FE024E',
   red1: '#FFC2D4',
-  rossoCorsa: '#D30706',
+  fireEngineRed: PALETTE.fireEngineRed,
   lightRed: '#fca09f',
   darkRed: '#D40707',
   orange: '#F9741B',
@@ -60,7 +61,7 @@ const SCROLL_VIEW_CONTAINER = {
 const SNACKBAR_OPTIONS = {
   duration: Snackbar.LENGTH_LONG,
   rtl: true,
-  fontFamily: 'Qs_Iranyekan_bold',
+  fontFamily: 'IRANYekanXFaNum-Regular',
   backgroundColor: COLORS.red,
 };
 
@@ -76,13 +77,21 @@ const CALENDAR_THEME = {
   selectedDotColor: '#ffffff',
   arrowColor: COLORS.primary,
   monthTextColor: COLORS.primary,
-  textDayFontFamily: 'Qs_Iranyekan_bold',
-  textMonthFontFamily: 'Qs_Iranyekan_bold',
-  textDayHeaderFontFamily: 'Qs_Iranyekan_bold',
+  textDayFontFamily: 'IRANYekanXFaNum-Regular',
+  textMonthFontFamily: 'IRANYekanXFaNum-Regular',
+  textDayHeaderFontFamily: 'IRANYekanXFaNum-Regular',
   textMonthFontWeight: 'bold',
   textDayFontSize: 14,
   textMonthFontSize: 14,
   textDayHeaderFontSize: 10,
 };
 
-export { SCROLL_VIEW_CONTAINER, COLORS, SNACKBAR_OPTIONS, CALENDAR_THEME };
+const ICON_SIZE = { width: 25, height: 25 };
+
+export {
+  SCROLL_VIEW_CONTAINER,
+  COLORS,
+  SNACKBAR_OPTIONS,
+  CALENDAR_THEME,
+  ICON_SIZE,
+};

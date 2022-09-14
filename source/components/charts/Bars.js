@@ -30,7 +30,9 @@ const Bars = ({ data }) => {
             {data.count}
           </Text>
         </View>
-        <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textLight}>
+        <Text
+          small
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}>
           شما :
         </Text>
       </View>
@@ -48,7 +50,9 @@ const Bars = ({ data }) => {
             1/4
           </Text>
         </View>
-        <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textLight}>
+        <Text
+          small
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}>
           همسالان :
         </Text>
       </View>
@@ -60,7 +64,9 @@ const Bars = ({ data }) => {
             styles.points,
             {
               width: pts,
-              backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.primary,
+              backgroundColor: isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
             },
           ]}
         />

@@ -99,7 +99,7 @@ const PostsScreen = ({ navigation, route }) => {
             marginBottom: rh(2),
           }}>
           <Text
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             medium
             alignSelf="flex-end"
             marginRight="0"
@@ -118,7 +118,7 @@ const PostsScreen = ({ navigation, route }) => {
             <Text
               marginRight="5"
               alignSelf="flex-start"
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
+              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
               بیشتر...
             </Text>
           </Pressable>
@@ -173,7 +173,7 @@ const PostsScreen = ({ navigation, route }) => {
             marginTop: STATUS_BAR_HEIGHT + rh(2.2),
           }}>
           <Text
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             large
             bold>
             بانک آموزشی
@@ -187,7 +187,7 @@ const PostsScreen = ({ navigation, route }) => {
         <View style={{ flex: 1 }}>
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           />
         </View>
       </Container>
@@ -203,7 +203,7 @@ const PostsScreen = ({ navigation, route }) => {
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()}>
             <IconWithBg
-              bgColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+              bgColor={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
               width="40px"
               height="40px"
               borderRadius="20px"
@@ -218,7 +218,7 @@ const PostsScreen = ({ navigation, route }) => {
 
           <View style={{ flex: 1 }}>
             <Text
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
               large
               marginRight={rh(2)}
               bold>

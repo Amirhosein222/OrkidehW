@@ -1,19 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext } from 'react';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather';
 
 import { TabBar } from '../components/common';
-import { HomeScreen, LearningBankScreen, SymptomsScreen } from '../screens';
+import { HomeScreen, SymptomsScreen } from '../screens';
 
 import { MemoryTabs, PeriodTabs } from './TobTabNavigator';
 
 import { COLORS, rh, rw } from '../configs';
 import { WomanInfoContext } from '../libs/context/womanInfoContext';
+
+import BigSweet from '../assets/icons/home/big-sweetheart.svg';
+import SmallSweet from '../assets/icons/home/small-sweetheart.svg';
+import BigMem from '../assets/icons/home/big-memories.svg';
+import SmallMem from '../assets/icons/home/small-memories.svg';
+import BigHome from '../assets/icons/home/big-home.svg';
+import SmallHome from '../assets/icons/home/small-home.svg';
+import SympIcon from '../assets/icons/home/symptoms.svg';
 
 const Tab = createBottomTabNavigator();
 
@@ -58,14 +62,11 @@ export function BottomTabs() {
                 { marginLeft: rw(4) },
                 { marginTop: rw(1) },
               ]}>
-              <Image
-                source={
-                  focused
-                    ? require('../assets/icons/home/big-sweetheart.png')
-                    : require('../assets/icons/home/small-sweetheart.png')
-                }
-                style={{ width: 28, height: 28 }}
-              />
+              {focused ? (
+                <BigSweet style={{ width: 25, height: 25 }} />
+              ) : (
+                <SmallSweet style={{ width: 25, height: 25 }} />
+              )}
             </View>
           ),
         }}
@@ -82,14 +83,11 @@ export function BottomTabs() {
                 iconsBorderStyle(focused),
                 { marginTop: rw(1) },
               ]}>
-              <Image
-                source={
-                  focused
-                    ? require('../assets/icons/home/big-memories.png')
-                    : require('../assets/icons/home/small-memories.png')
-                }
-                style={{ width: 28, height: 28 }}
-              />
+              {focused ? (
+                <BigMem style={{ width: 25, height: 25 }} />
+              ) : (
+                <SmallMem style={{ width: 25, height: 25 }} />
+              )}
             </View>
           ),
         }}
@@ -106,14 +104,11 @@ export function BottomTabs() {
                 iconsBorderStyle(focused),
                 { marginTop: rw(1) },
               ]}>
-              <Image
-                source={
-                  focused
-                    ? require('../assets/icons/home/big-home.png')
-                    : require('../assets/icons/home/small-home.png')
-                }
-                style={{ width: 28, height: 28 }}
-              />
+              {focused ? (
+                <BigHome style={{ width: 25, height: 25 }} />
+              ) : (
+                <SmallHome style={{ width: 25, height: 25 }} />
+              )}
             </View>
           ),
         }}
@@ -123,11 +118,10 @@ export function BottomTabs() {
         name="Symptoms"
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
-            <Image
-              source={require('../assets/icons/home/symptoms.png')}
+            <SympIcon
               style={{
-                width: 28,
-                height: 28,
+                width: 25,
+                height: 25,
                 marginTop: rh(1),
                 marginLeft: rw(1),
               }}

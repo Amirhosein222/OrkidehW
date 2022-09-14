@@ -83,7 +83,7 @@ const LearningBankScreen = ({ navigation }) => {
       <Container>
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
         />
       </Container>
     );
@@ -100,7 +100,7 @@ const LearningBankScreen = ({ navigation }) => {
             <View />
             <Text
               marginLeft="35"
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
               bold
               large>
               بانک آموزشی

@@ -26,7 +26,9 @@ const Input = ({
       color: textColor ? textColor : 'white',
       borderRadius: 5,
       fontFamily:
-        fontWeight === 'normal' ? 'Qs_Iranyekan_bold' : 'Qs_Iranyekan_bold',
+        fontWeight === 'normal'
+          ? 'IRANYekanXFaNum-Regular'
+          : 'IRANYekanXFaNum-Regular',
       fontSize: 13,
     },
   });

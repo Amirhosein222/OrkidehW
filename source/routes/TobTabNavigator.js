@@ -2,8 +2,8 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import {
-  MyMemoriesScreen,
-  AllMemoriesScreen,
+  MyGapsScreen,
+  AllGapsScreen,
   PeriodSymptomsTabScreen,
   SpouseExpectationsTabScreen,
 } from '../screens';
@@ -16,7 +16,7 @@ const Tab = createMaterialTopTabNavigator();
 export function MemoryTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="AllMemories"
+      initialRouteName="AllGaps"
       tabBar={(props) => <TopTabBar {...props} />}
       tabBarOptions={{
         contentContainerStyle: {
@@ -29,22 +29,22 @@ export function MemoryTabs() {
           backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'Qs_Iranyekan_bold',
+          fontFamily: 'IRANYekanXFaNum-Regular',
         },
       }}>
       <Tab.Screen
         options={{
-          tabBarLabel: 'خاطرات همه',
+          tabBarLabel: 'گپ',
         }}
-        name="AllMemories"
-        component={AllMemoriesScreen}
+        name="AllGaps"
+        component={AllGapsScreen}
       />
       <Tab.Screen
         options={{
-          tabBarLabel: 'خاطرات من',
+          tabBarLabel: 'گپ های من',
         }}
-        name="MyMemories"
-        component={MyMemoriesScreen}
+        name="MyGaps"
+        component={MyGapsScreen}
       />
     </Tab.Navigator>
   );
@@ -62,7 +62,7 @@ export function PeriodTabs() {
           backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'Qs_Iranyekan_bold',
+          fontFamily: 'IRANYekanXFaNum-Regular',
         },
       }}>
       <Tab.Screen

@@ -25,17 +25,17 @@ const DevelopersScreen = ({ navigation }) => {
       <View style={styles.container}>
         <FontAwesome5
           name="laptop-code"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           size={90}
         />
         <Text
           medium
           bold
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
           سازندگان اپلیکیشن
         </Text>
         <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           width="85%"
           style={{ marginTop: 20 }}
         />

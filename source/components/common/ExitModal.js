@@ -5,7 +5,6 @@ import Modal from 'react-native-modal';
 import { Button } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNPusherPushNotifications from 'react-native-pusher-push-notifications';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
@@ -20,19 +19,13 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
   const isPeriodDay = useIsPeriodDay();
 
   const onLogOut = async function () {
-    await AsyncStorage.setItem('logedOut', 'true');
-    // AsyncStorage.removeItem('periodStart');
-    // AsyncStorage.removeItem('fullInfo');
-    // AsyncStorage.removeItem('rels');
-    // AsyncStorage.removeItem('fcmTokenSent');
-
-    // saveWomanRelations([]);
-    // saveFullInfo([]);
-    // saveActiveRel(null);
-    // RNPusherPushNotifications.clearAllState();
-    // closeModal();
     savePeriodInfo(null);
     initPusher('', '', true);
+    await AsyncStorage.removeItem('pusherUid');
+    await AsyncStorage.removeItem('isPassActive');
+    await AsyncStorage.removeItem('isFingerActive');
+    await AsyncStorage.removeItem('mobile');
+    await AsyncStorage.removeItem('userToken');
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -69,14 +62,14 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
 
         <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => closeModal()}>
             <Text color="white">نه</Text>
           </Button>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => onLogOut()}>

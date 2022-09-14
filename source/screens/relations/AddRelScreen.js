@@ -16,10 +16,10 @@ import {
 } from '../../components/common';
 
 import { validatePhoneNumber } from '../../libs/helpers';
-import { rw, rh, COLORS } from '../../configs';
+import { rw, rh, COLORS, ICON_SIZE } from '../../configs';
 import getLoginClient from '../../libs/api/loginClientApi';
 
-import enabledCheck from '../../assets/icons/btns/enabled-check.png';
+import EnabledCheck from '../../assets/icons/btns/enabled-check.svg';
 
 const AddRelScreen = ({ navigation, route }) => {
   const params = route.params || {};
@@ -159,14 +159,14 @@ const AddRelScreen = ({ navigation, route }) => {
         <View style={{ marginTop: rh(3) }}>
           <InputRow
             title="نام :"
-            placeholder="نام پارتنر خود را اینجا وارد کنید"
+            placeholder="نام پارتنر را اینجا وارد کنید"
             handleTextInput={setPartner}
             name="pName"
             containerStyle={styles.input}
           />
           <InputRow
             title="شماره موبایل :"
-            placeholder="شماره موبایل پارتنر خود را اینجا وارد کنید"
+            placeholder="شماره موبایل پارتنر را اینجا وارد کنید"
             handleTextInput={setPartnerMobile}
             name="pMobile"
             kType="numeric"
@@ -178,7 +178,7 @@ const AddRelScreen = ({ navigation, route }) => {
           disabled={isAdding}
           loading={isAdding}
           title="ثبت اطلاعات"
-          icons={[enabledCheck, enabledCheck]}
+          Icon={() => <EnabledCheck style={ICON_SIZE} />}
           color={COLORS.primary}
           onPress={() => onSubmitRel()}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}

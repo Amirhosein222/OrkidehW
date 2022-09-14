@@ -19,7 +19,7 @@ import {
 import { useIsPeriodDay } from '../../libs/hooks';
 import { WIDTH, COLORS, SCROLL_VIEW_CONTAINER, rh, rw } from '../../configs';
 
-import sendIcon from '../../assets/icons/btns/enabled-send.png';
+import SendIcon from '../../assets/icons/btns/enabled-send.svg';
 
 const ContactCounselorScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -114,15 +114,13 @@ const ContactCounselorScreen = ({ navigation }) => {
             marginBottom={rh(1)}
             medium
             bold
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
             موضوع
           </Text>
           <TextInput
             style={{
               ...styles.input,
-              backgroundColor: isPeriodDay
-                ? COLORS.lightRed
-                : COLORS.inputTabBarBg,
+              backgroundColor: COLORS.inputTabBarBg,
             }}
             onChangeText={handleTextInput}
             inputName="title"
@@ -132,15 +130,13 @@ const ContactCounselorScreen = ({ navigation }) => {
             marginBottom={rh(1)}
             medium
             bold
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
             شماره تماس
           </Text>
           <TextInput
             style={{
               ...styles.input,
-              backgroundColor: isPeriodDay
-                ? COLORS.lightRed
-                : COLORS.inputTabBarBg,
+              backgroundColor: COLORS.inputTabBarBg,
             }}
             keyboardType="numeric"
             onChangeText={handleTextInput}
@@ -151,15 +147,13 @@ const ContactCounselorScreen = ({ navigation }) => {
             marginBottom={rh(1)}
             medium
             bold
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
             متن پیام
           </Text>
           <TextInput
             style={{
               ...styles.input,
-              backgroundColor: isPeriodDay
-                ? COLORS.lightRed
-                : COLORS.inputTabBarBg,
+              backgroundColor: COLORS.inputTabBarBg,
             }}
             multiline={true}
             lineNums={10}
@@ -167,9 +161,18 @@ const ContactCounselorScreen = ({ navigation }) => {
             inputName="message"
           />
           <Button
-            title="ارسال پیام"
-            icons={[sendIcon, sendIcon]}
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            title="ارسال"
+            Icon={() => (
+              <SendIcon
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginTop: rh(0.5),
+                  marginLeft: rw(1),
+                }}
+              />
+            )}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             loading={isSending ? true : false}
             disabled={isSending ? true : false}
             onPress={() => sendMessageToCounselor()}

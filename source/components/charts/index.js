@@ -1,8 +1,15 @@
-import ChartTwo from './ChartTwo';
-import ChartThree from './ChartThree';
-import ChartFour from './ChartFour';
+import DaysPieChart from './DaysPieChart';
 import Bars from './Bars';
 import VerticalBar from './VerticalBar';
 import ChartCard from './ChartCard';
+import PeriodLengthChart from './periodLengthChart';
+import PeriodDaysChart from './periodDaysChart';
 
-export { ChartTwo, ChartThree, ChartFour, Bars, VerticalBar, ChartCard };
+export {
+  DaysPieChart,
+  Bars,
+  VerticalBar,
+  ChartCard,
+  PeriodLengthChart,
+  PeriodDaysChart,
+};

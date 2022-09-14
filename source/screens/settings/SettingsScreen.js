@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   StyleSheet,
   ScrollView,
-  View,
   Image,
   Pressable,
   Linking,
@@ -23,27 +22,21 @@ import { useApi } from '../../libs/hooks';
 import { buyGoldenAccount } from '../../libs/apiCalls';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
-import reminder from '../../assets/icons/drawerSettings/reminder.png';
-import relationships from '../../assets/icons/drawerSettings/relationships.png';
-import privacy from '../../assets/icons/drawerSettings/privacy.png';
-import premiumvVersion from '../../assets/icons/drawerSettings/premium-version.png';
-import guide from '../../assets/icons/drawerSettings/guide.png';
-import aboutUs from '../../assets/icons/drawerSettings/aboutUs.png';
-import inviteFriends from '../../assets/icons/drawerSettings/inviteFriends.png';
-import point from '../../assets/icons/drawerSettings/point.png';
-import exit from '../../assets/icons/drawerSettings/exit.png';
-import share from '../../assets/icons/drawerSettings/share.png';
-import copy from '../../assets/icons/drawerSettings/copy.png';
+import Reminder from '../../assets/icons/drawerSettings/reminder.svg';
+import Relationships from '../../assets/icons/drawerSettings/relationships.svg';
+import Privacy from '../../assets/icons/drawerSettings/privacy.svg';
+// import PremiumvVersion from '../../assets/icons/drawerSettings/premium-version.svg';
+import Guide from '../../assets/icons/drawerSettings/guide.svg';
+import AboutUs from '../../assets/icons/drawerSettings/aboutUs.svg';
+import InviteFriends from '../../assets/icons/drawerSettings/inviteFriends.svg';
+import Point from '../../assets/icons/drawerSettings/point.svg';
+import Exit from '../../assets/icons/drawerSettings/exit.svg';
 
 const SettingsScreen = ({ navigation }) => {
   const { fullInfo } = useContext(WomanInfoContext);
   const [showModal, setShowModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [buyAccount, setBuyAccount] = useApi(() => buyGoldenAccount());
-
-  const onBuyAccount = async () => {
-    setBuyAccount();
-  };
 
   const handleExitModal = function () {
     setShowModal(!showModal);
@@ -54,18 +47,6 @@ const SettingsScreen = ({ navigation }) => {
       visible: !snackbar.visible,
     });
   };
-
-  useEffect(() => {
-    if (buyAccount.data) {
-      buyAccount.data.is_successful
-        ? Linking.openURL(buyAccount.data.data.action)
-        : setSnackbar({
-            msg: buyAccount.data.message,
-            visible: true,
-            type: 'error',
-          });
-    }
-  }, [buyAccount]);
 
   return (
     <BackgroundView>
@@ -87,19 +68,19 @@ const SettingsScreen = ({ navigation }) => {
         />
         <SettingOption
           title="یادآورها"
-          icon={reminder}
+          Icon={() => <Reminder style={{ width: 25, height: 25 }} />}
           name="default"
           navigateTo="Reminders"
         />
         <SettingOption
           title="حریم خصوصی"
-          icon={privacy}
+          Icon={() => <Privacy style={{ width: 25, height: 25 }} />}
           name="default"
           navigateTo="Privacy"
         />
         <SettingOption
           title="روابط من"
-          icon={relationships}
+          Icon={() => <Relationships style={{ width: 25, height: 25 }} />}
           name="default"
           navigateTo="Relations"
         />
@@ -109,21 +90,14 @@ const SettingsScreen = ({ navigation }) => {
           style={{ marginTop: rh(2) }}
         />
         <SettingOption
-          title="خرید نسخه کامل برنامه"
-          icon={premiumvVersion}
-          name="vip"
-          onBuyAccount={onBuyAccount}
-          isFetching={buyAccount.isFetching}
-        />
-        <SettingOption
           title="راهنما"
-          icon={guide}
+          Icon={() => <Guide style={{ width: 25, height: 25 }} />}
           name="guide"
           navigateTo="AppGuide"
         />
         <SettingOption
           title="درباره ارکیده"
-          icon={aboutUs}
+          Icon={() => <AboutUs style={{ width: 25, height: 25 }} />}
           name="about"
           navigateTo="AboutUs"
         />
@@ -132,10 +106,13 @@ const SettingsScreen = ({ navigation }) => {
           width="82%"
           style={{ marginTop: rh(2) }}
         />
-        <SettingOption title="امتیاز به ارکیده" icon={point} />
+        <SettingOption
+          title="امتیاز به ارکیده"
+          Icon={() => <Point style={{ width: 25, height: 25 }} />}
+        />
         <SettingOption
           title="دعوت دوستان"
-          icon={inviteFriends}
+          Icon={() => <InviteFriends style={{ width: 25, height: 25 }} />}
           name="invite"
           handleVisible={setSnackbar}
         />
@@ -145,7 +122,11 @@ const SettingsScreen = ({ navigation }) => {
           style={{ marginTop: rh(2) }}
         />
         <Pressable onPress={handleExitModal}>
-          <SettingOption title="خروج از حساب کاربری" icon={exit} name="exit" />
+          <SettingOption
+            title="خروج از حساب کاربری"
+            Icon={() => <Exit style={{ width: 25, height: 25 }} />}
+            name="exit"
+          />
         </Pressable>
 
         <Image

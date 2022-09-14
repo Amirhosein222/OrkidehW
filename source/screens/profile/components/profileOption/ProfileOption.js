@@ -7,14 +7,15 @@ import { Text } from '../../../../components/common';
 import { COLORS, rh, rw } from '../../../../configs';
 import { convertToFullDate, numberConverter } from '../../../../libs/helpers';
 
-import GoToEditPage from '../../../../assets/icons/profilePrivacy/GoToEditPage.png';
+import GoToEditPage from '../../../../assets/icons/profilePrivacy/GoToEditPage.svg';
+import { ICON_SIZE } from '../../../../configs/styles';
 
-const ProfileOption = ({ name = 'default', title, icon, onPress, data }) => {
+const ProfileOption = ({ name = 'default', title, Icon, onPress, data }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Pressable onPress={() => onPress(title)} hitslop={7}>
-        <Image source={GoToEditPage} style={{ width: 25, height: 25 }} />
+        <GoToEditPage style={ICON_SIZE} />
       </Pressable>
 
       <View style={{ flexDirection: 'row' }}>
@@ -25,7 +26,7 @@ const ProfileOption = ({ name = 'default', title, icon, onPress, data }) => {
           {title} :
         </Text>
 
-        <Image source={icon} style={{ width: 25, height: 25 }} />
+        {Icon()}
       </View>
     </View>
   );

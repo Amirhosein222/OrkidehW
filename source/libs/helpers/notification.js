@@ -16,6 +16,7 @@ export const initPusher = (userId, token, clear = false) => {
 
   // Setup notification listeners
   RNPusherPushNotifications.on('notification', handleNotification);
+
   !clear &&
     setUser(userId.toString(), token, onPusherInitError, onPusherInitSuccess);
   clear && RNPusherPushNotifications.clearAllState();
@@ -46,7 +47,7 @@ function setUser(userId, token, onError, onSuccess) {
 
 // Handle notifications received
 const handleNotification = (notification) => {
-  // console.log(notification);
+  console.log(notification);
 };
 
 // Subscribe to an interest
@@ -62,3 +63,8 @@ const subscribe = (interest) => {
     },
   );
 };
+
+// const onSubscriptionsChanged = (interests) => {
+//   console.log('CALLBACK: onSubscriptionsChanged');
+//   console.log(interests);
+// };

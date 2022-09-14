@@ -7,17 +7,13 @@ import {
   PostsScreen,
   PsychologyTestsScreen,
   PsychologyTestDetailsScreen,
-  ProfileUpdateScreen,
   ContactCounselorScreen,
-  ContactSpouseScreen,
   AboutUsScreen,
   AppGuideScreen,
-  DevelopersScreen,
   FullPostScreen,
-  AddMemoryScreen,
+  AddGapScreen,
   TestResultScreen,
   LoveNotificationScreen,
-  VerifyRelationScreen,
   SettingsScreen,
 } from '../screens';
 import { BottomTabs } from './BottomTabNavigator';
@@ -48,12 +44,9 @@ const DrawerNavigator = function () {
       <Drawer.Screen name="Posts" component={PostsScreen} />
       <Drawer.Screen name="FullPost" component={FullPostScreen} />
       <Drawer.Screen name="PsychologyTests" component={PsychologyTestsScreen} />
-      <Drawer.Screen name="ProfileUpdate" component={ProfileUpdateScreen} />
-      <Drawer.Screen name="ContactSpouse" component={ContactSpouseScreen} />
       <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
       <Drawer.Screen name="AppGuide" component={AppGuideScreen} />
-      <Drawer.Screen name="Developers" component={DevelopersScreen} />
-      <Drawer.Screen name="AddMemory" component={AddMemoryScreen} />
+      <Drawer.Screen name="AddGap" component={AddGapScreen} />
       <Drawer.Screen
         name="PsychologyTestDetails"
         component={PsychologyTestDetailsScreen}
@@ -67,7 +60,6 @@ const DrawerNavigator = function () {
         name="LoveNotification"
         component={LoveNotificationScreen}
       />
-      <Drawer.Screen name="VerifyRelation" component={VerifyRelationScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
   );

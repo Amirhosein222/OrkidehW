@@ -28,17 +28,17 @@ const AboutUsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <MaterialCommunityIcons
           name="google-circles-extended"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.icon}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.icon}
           size={90}
         />
         <Text
           medium
           bold
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textlIGHT}>
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textlIGHT}>
           درباره اپلیکیشن
         </Text>
         <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}
           width="85%"
           style={{ marginTop: 20 }}
         />

@@ -13,8 +13,9 @@ import { InputRow, Text, Button, Snackbar } from '../../components/common';
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, rw } from '../../configs';
 
-import enabledSend from '../../assets/icons/btns/enabled-send.png';
-import enabledEdit from '../../assets/icons/btns/enabled-edit.png';
+import EnabledSend from '../../assets/icons/btns/enabled-send.svg';
+import EnabledEdit from '../../assets/icons/btns/enabled-edit.svg';
+import { ICON_SIZE } from '../../configs/styles';
 
 const AddMemoryModal = ({
   visible,
@@ -179,15 +180,15 @@ const AddMemoryModal = ({
         </View>
 
         <Button
-          title={edit.isEdit ? 'ویرایش خاطره' : 'ثبت خاطره'}
-          icons={
+          title={edit.isEdit ? 'ویرایش خاطره' : 'ارسال'}
+          Icon={
             edit.isEdit
-              ? [enabledEdit, enabledEdit]
-              : [enabledSend, enabledSend]
+              ? () => <EnabledEdit style={ICON_SIZE} />
+              : () => <EnabledSend style={ICON_SIZE} />
           }
           color={
             isPeriodDay
-              ? COLORS.rossoCorsa
+              ? COLORS.fireEngineRed
               : edit.isEdit
               ? COLORS.borderLinkBtn
               : COLORS.primary
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
     width: rw(81),
     borderRadius: 10,
     color: COLORS.textLight,
-    fontFamily: 'Qs_Iranyekan_bold',
+    fontFamily: 'IRANYekanXFaNum-Regular',
     textAlign: 'right',
     textAlignVertical: 'top',
     fontSize: 14,

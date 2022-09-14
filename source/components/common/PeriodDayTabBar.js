@@ -31,7 +31,9 @@ const PeriodDayTabBar = ({
         <View
           style={{
             ...styles.container,
-            backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.lightPink,
+            backgroundColor: isPeriodDay
+              ? COLORS.fireEngineRed
+              : COLORS.lightPink,
             width: rw(79),
             // paddingHorizontal: rw(0.5),
           }}>
@@ -101,7 +103,7 @@ const PeriodDayTabBar = ({
               <FontAwesome5
                 name="plus"
                 size={25}
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.white}
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.white}
               />
             </View>
           </TouchableWithoutFeedback>
@@ -137,7 +139,7 @@ const PeriodDayTabBar = ({
                   route.name === 'PeriodTabs'
                     ? {
                         ...styles.plusIconContainer,
-                        backgroundColor: COLORS.rossoCorsa,
+                        backgroundColor: COLORS.fireEngineRed,
                       }
                     : {}
                 }>

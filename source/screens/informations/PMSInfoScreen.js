@@ -66,7 +66,7 @@ const PMSInfoScreen = ({}) => {
         <PMSCard info={{ title: 'گرفتگی ماهیچه', count: 2 }} icon={muscleten} />
       </View>
       <Divider
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}
         width={rw(82)}
         style={{
           marginTop: 5,
@@ -79,7 +79,7 @@ const PMSInfoScreen = ({}) => {
         marginRight="20"
         marginTop="20"
         bold
-        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}>
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
         مقایسه علائم PMS شما و همسالان شما
       </Text>
 
