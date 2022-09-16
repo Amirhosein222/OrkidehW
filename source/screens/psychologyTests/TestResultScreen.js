@@ -12,7 +12,7 @@ import {
   Snackbar,
   Header,
 } from '../../components/common';
-import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, rh, STATUS_BAR_HEIGHT } from '../../configs';
 
 const TestResultScreen = ({ navigation, route }) => {
   const params = route.params;
@@ -70,6 +70,7 @@ const TestResultScreen = ({ navigation, route }) => {
         <Header
           navigation={navigation}
           style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
+          setSnackbar={setSnackbar}
         />
         <View style={{ width: '100%', alignItems: 'center' }}>
           <Text medium bold>

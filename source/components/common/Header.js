@@ -1,24 +1,26 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet, Pressable, Image } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import CalendarModal from '../calendar/CalendarModal';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../configs';
-import { showSnackbar } from '../../libs/helpers';
 
-import CalendarIcon from '../../assets/icons/home/calendar.svg';
 import MenuIcon from '../../assets/icons/home/menu.svg';
 
-const Header = ({ navigation, style }) => {
+const Header = ({ navigation, style, setSnackbar }) => {
   const { isPeriodDay } = useContext(WomanInfoContext);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
 
   const onSendLove = () => {
-    showSnackbar('با موفقیت ارسال شد', 'success');
+    setSnackbar({
+      msg: 'با موفقیت ارسال شد',
+      visible: true,
+      type: 'success',
+    });
   };
 
   return (
@@ -47,14 +49,6 @@ const Header = ({ navigation, style }) => {
               color={COLORS.white}
             />
           </Pressable>
-          {/* <Pressable
-            onPress={() => setShowCalendarModal(true)}
-            style={{
-              ...styles.sendLoveContainer,
-              marginLeft: rw(2),
-            }}>
-            <CalendarIcon style={{ width: 25, height: 25 }} />
-          </Pressable> */}
         </View>
 
         <Pressable onPress={() => navigation.openDrawer()}>

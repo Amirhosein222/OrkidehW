@@ -63,7 +63,7 @@ const SelectBirthDayModal = ({
           selected="1390/1/18"
           dateSeparator="/"
           minDate="1350/1/18"
-          maxDate="1390/12/29"
+          maxDate="1399/12/29"
           headerContainerStyle={{ height: '15%' }}
           yearMonthBoxStyle={{
             width: '30%',
@@ -77,7 +77,7 @@ const SelectBirthDayModal = ({
           yearMonthTextStyle={{
             fontSize: 22,
             color: COLORS.textCommentCal,
-            fontFamily: 'IRANYekanXFaNum-Regular',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           iconContainerStyle={{ width: `${100 / 7}%` }}
           backIconStyle={{
@@ -107,7 +107,7 @@ const SelectBirthDayModal = ({
           eachYearTextStyle={{
             fontSize: 16,
             color: 'white',
-            fontFamily: 'IRANYekanXFaNum-Regular',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           eachMonthStyle={{
             width: `${88 / 3}%`,
@@ -122,7 +122,7 @@ const SelectBirthDayModal = ({
           eachMonthTextStyle={{
             fontSize: 16,
             color: 'white',
-            fontFamily: 'IRANYekanXFaNum-Regular',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           weekdaysContainerStyle={{ height: '10%' }}
           weekdayStyle={{
@@ -134,7 +134,7 @@ const SelectBirthDayModal = ({
             fontSize: 16,
             color: COLORS.textCommentCal,
             marginBottom: 5,
-            fontFamily: 'IRANYekanXFaNum-Regular',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           borderColor={COLORS.textLight}
           dayStyle={{
@@ -153,7 +153,7 @@ const SelectBirthDayModal = ({
           selectedDayColor={COLORS.primary}
           dayTextStyle={{
             fontSize: 18,
-            fontFamily: 'IRANYekanXFaNum-Regular',
+            fontFamily: 'IRANYekanMobileBold',
             // color: COLORS.textLight,
           }}
           selectedDayTextColor="white"

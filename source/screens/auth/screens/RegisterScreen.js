@@ -122,7 +122,11 @@ const RegisterScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (changeNumber.data && changeNumber.data.is_successful) {
-      showSnackbar('شماره موبایل شما با موفقیت تغییر یافت', 'success');
+      setSnackbar({
+        msg: 'شماره موبایل شما با موفقیت تغییر یافت',
+        visible: true,
+        type: 'success',
+      });
       AsyncStorage.setItem('fullInfo', JSON.stringify(changeNumber.data.data));
       navigation.dispatch(
         CommonActions.reset({

@@ -37,7 +37,7 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
     getExpectationsFromSpouseApi(womanInfo.activeRel.relId),
   );
   const [storeExpectation, setStoreExpectation] = useApi(() =>
-    storeExpectationApi(selectedExp.id, womanInfo.activeRel.relId),
+    storeExpectationApi(selectedExp.current.id, womanInfo.activeRel.relId),
   );
   const onGetExpectationsFromSpouse = async function () {
     if (!womanInfo.activeRel) {
@@ -140,6 +140,7 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (storeExpectation.data && storeExpectation.data.is_successful) {
+      setIsStoring({ storing: false, exId: selectedExp.current.id });
       setSnackbar({
         msg: 'با موفقیت ثبت شد.',
         visible: true,
@@ -147,12 +148,13 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
       });
       handleModal();
     }
-    storeExpectation.data &&
-      !storeExpectation.data.is_successful &&
+    if (storeExpectation.data && !storeExpectation.data.is_successful) {
+      setIsStoring({ storing: false, exId: selectedExp.current.id });
       setSnackbar({
         msg: storeExpectation.data.message,
         visible: true,
       });
+    }
   }, [storeExpectation]);
 
   return (

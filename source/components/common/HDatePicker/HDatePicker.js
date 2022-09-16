@@ -50,13 +50,13 @@ const HDatePicker = ({
 
 const styles = StyleSheet.create({
   selectedDate: {
-    fontFamily: 'IRANYekanXFaNum-Regular',
+    fontFamily: 'IRANYekanMobileBold',
     fontSize: 12,
     color: 'white',
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'IRANYekanXFaNum-Regular',
+    fontFamily: 'IRANYekanMobileBold',
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.textLight,

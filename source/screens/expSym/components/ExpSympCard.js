@@ -15,7 +15,7 @@ import { rw, rh } from '../../../configs';
 const ExpSympCard = ({ item, onPress, onReadMore, isExp = false }) => {
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => onPress(item)}>
+      <Pressable onPress={() => onPress(item)} disabled={isExp.storing}>
         {isExp.storing && isExp.exId === item.id ? (
           <View
             style={{ height: rh(13.2), width: 100, justifyContent: 'center' }}>

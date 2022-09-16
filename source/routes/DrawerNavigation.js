@@ -11,10 +11,10 @@ import {
   AboutUsScreen,
   AppGuideScreen,
   FullPostScreen,
-  AddGapScreen,
   TestResultScreen,
   LoveNotificationScreen,
   SettingsScreen,
+  EditCyclesScreen,
 } from '../screens';
 import { BottomTabs } from './BottomTabNavigator';
 
@@ -46,7 +46,6 @@ const DrawerNavigator = function () {
       <Drawer.Screen name="PsychologyTests" component={PsychologyTestsScreen} />
       <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
       <Drawer.Screen name="AppGuide" component={AppGuideScreen} />
-      <Drawer.Screen name="AddGap" component={AddGapScreen} />
       <Drawer.Screen
         name="PsychologyTestDetails"
         component={PsychologyTestDetailsScreen}
@@ -61,6 +60,7 @@ const DrawerNavigator = function () {
         component={LoveNotificationScreen}
       />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name="EditCycles" component={EditCyclesScreen} />
     </Drawer.Navigator>
   );
 };

@@ -15,7 +15,7 @@ import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { baseUrl, COLORS, rh, rw } from '../../configs';
 import getLoginClient from '../../libs/api/loginClientApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { convertToFullDate, showSnackbar } from '../../libs/helpers';
+import { convertToFullDate } from '../../libs/helpers';
 
 import NameIcon from '../../assets/icons/profilePrivacy/name.svg';
 import DateOfBirth from '../../assets/icons/profilePrivacy/dateOfBirth.svg';
@@ -92,7 +92,11 @@ const ProfileScreen = ({ navigation }) => {
           setPicture(baseUrl + response.data.data.image);
           saveFullInfo(response.data.data);
           AsyncStorage.setItem('fullInfo', JSON.stringify(response.data.data));
-          showSnackbar('اطلاعات شما با موفقیت ویرایش شد', 'success');
+          setSnackbar({
+            msg: 'اطلاعات شما با موفقیت ویرایش شد',
+            visible: true,
+            type: 'success',
+          });
         } else {
           setSnackbar({
             msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',

@@ -27,7 +27,7 @@ import {
   WomanInfoContext,
   saveActiveRel,
 } from '../../../libs/context/womanInfoContext';
-import { getFromAsyncStorage, showSnackbar } from '../../../libs/helpers';
+import { getFromAsyncStorage } from '../../../libs/helpers';
 
 import {
   BackgroundView,
@@ -234,12 +234,14 @@ const HomeScreen = ({ navigation, route }) => {
     }
     getRelations.data &&
       !getRelations.data.is_successful &&
-      showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید');
+      setSnackbar({
+        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+        visible: true,
+      });
   }, [getRelations]);
 
   useEffect(() => {
     if (getPregnancy.data && getPregnancy.data.is_successful) {
-      console.log('preg res ', getPregnancy.data);
       setPregnancy(getPregnancy.data.data);
     }
     getPregnancy.data &&
@@ -254,10 +256,18 @@ const HomeScreen = ({ navigation, route }) => {
     if (storePeriodAuto.data && storePeriodAuto.data.is_successful) {
       AsyncStorage.setItem('periodStart', storePDate.current);
       if (storePeriodAuto.data.data.status === 'auto_s') {
-        showSnackbar('تاریخ شروع دوره پریود شما با موفقیت ثبت شد', 'success');
+        setSnackbar({
+          msg: 'تاریخ شروع دوره پریود شما با موفقیت ثبت شد',
+          visible: true,
+          type: 'success',
+        });
         setShowCalendarModal(true);
       } else if (storePeriodAuto.data.data.status === 'auto_e') {
-        showSnackbar('تاریخ پایان دوره پریود با موفقیت ثبت شد', 'success');
+        setSnackbar({
+          msg: 'تاریخ پایان دوره پریود با موفقیت ثبت شد',
+          visible: true,
+          type: 'success',
+        });
         setShowCalendarModal(true);
       }
     }
@@ -279,6 +289,7 @@ const HomeScreen = ({ navigation, route }) => {
       <Header
         navigation={navigation}
         style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+        setSnackbar={setSnackbar}
       />
 
       <View style={{ alignItems: 'center' }}>

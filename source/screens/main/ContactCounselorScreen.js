@@ -5,7 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import FormData from 'form-data';
 
 import getLoginClient from '../../libs/api/loginClientApi';
-import { validatePhoneNumber, showSnackbar } from '../../libs/helpers';
+import { validatePhoneNumber } from '../../libs/helpers';
 
 import {
   Text,
@@ -83,7 +83,11 @@ const ContactCounselorScreen = ({ navigation }) => {
       loginClient.post('call/to/admin', formData).then((response) => {
         setIsSending(false);
         if (response.data.is_successful) {
-          showSnackbar('پیام شما با موفقیت ارسال شد.', 'success');
+          setSnackbar({
+            msg: 'پیام شما با موفقیت ارسال شد.',
+            visible: true,
+            type: 'success',
+          });
           navigation.navigate('HomeDrawer');
         } else {
           setSnackbar({

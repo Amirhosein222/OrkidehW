@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.inputTabBarBg,
     borderRadius: 5,
     fontSize: 13,
-    fontFamily: 'IRANYekanXFaNum-Regular',
+    fontFamily: 'IRANYekanMobileBold',
     color: COLORS.textLight,
   },
 });

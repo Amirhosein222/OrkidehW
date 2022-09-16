@@ -1,57 +1,54 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Alert, View } from 'react-native';
 import { CalendarList } from 'react-native-calendars-persian';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import moment from 'moment-jalaali';
-import Modal from 'react-native-modal';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import RadioGroup from 'react-native-radio-buttons-group';
 
-import { CalendarInfo } from '../../components/informations';
-import { Button, Snackbar } from '../common';
+import {
+  BackgroundView,
+  Button,
+  ScreenHeader,
+  Snackbar,
+} from '../../../components/common';
 
-import { WomanInfoContext } from '../../libs/context/womanInfoContext';
-import getWomanClient from '../../libs/api/womanApi';
+import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
+import getWomanClient from '../../../libs/api/womanApi';
 import {
   convertToJalaali,
   getFromAsyncStorage,
   lastIndexOf,
   numberConverter,
-} from '../../libs/helpers';
+} from '../../../libs/helpers';
 
-import { COLORS, ICON_SIZE, rh, rw } from '../../configs';
-import { useIsPeriodDay } from '../../libs/hooks';
+import { COLORS, ICON_SIZE, rh, rw } from '../../../configs';
+import { useIsPeriodDay } from '../../../libs/hooks';
 
-import EditIcon from '../../assets/icons/btns/enabled-edit.svg';
+import EnabledCheck from '../../../assets/icons/btns/enabled-check.svg';
 
 const CALENDAR_THEME = {
-  calendarBackground: COLORS.mainBg,
-  textSectionTitleColor: COLORS.primary,
+  calendarBackground: 'transparent',
   selectedDayBackgroundColor: '#00adf5',
   selectedDayTextColor: '#ffffff',
   todayTextColor: '#00adf5',
-  dayTextColor: '#2d4150',
+  dayTextColor: COLORS.textLight,
   textDisabledColor: '#d9e1e8',
   dotColor: '#00adf5',
   selectedDotColor: '#ffffff',
   arrowColor: COLORS.primary,
-  monthTextColor: COLORS.primary,
+  monthTextColor: COLORS.textCommentCal,
   textDayFontFamily: 'IRANYekanMobileBold',
   textMonthFontFamily: 'IRANYekanMobileBold',
   textDayHeaderFontFamily: 'IRANYekanMobileBold',
   textDayFontSize: 14,
-  textMonthFontSize: 14,
+  textMonthFontSize: 16,
   textDayHeaderFontSize: 10,
+  textSectionTitleColor: COLORS.textCommentCal,
 };
 
-const CalendarModal = ({ visible, closeModal, updateCal }) => {
+const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
   const isPeriodDay = useIsPeriodDay();
   const navigation = useNavigation();
   const { userCalendar, handleUserCalendar } = useContext(WomanInfoContext);
@@ -63,6 +60,36 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
   const [newDatesForApi, setNewDatesForApi] = useState([]);
   const [info, setInfo] = useState(null);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [radioButtons, setRadioButtons] = useState([
+    {
+      id: '1', // acts as primary key, should be unique and non-empty string
+      label: 'علامت زدن به عنوان روز دوره پریود',
+      value: 'period',
+      selected: false,
+      color: COLORS.textLight,
+      size: 16,
+    },
+    {
+      id: '2',
+      label: 'علامت زدن به عنوان رابطه زناشویی  ',
+      value: 'sex',
+      selected: false,
+      color: COLORS.textLight,
+      size: 16,
+    },
+  ]);
+
+  const onPressRadioButton = (radioButtonsArray) => {
+    radioButtonsArray.map((radio) => {
+      if (radio.selected) {
+        handleSelectedOption(radio.value);
+        radio.color = isPeriodDay ? COLORS.fireEngineRed : COLORS.primary;
+      } else {
+        radio.color = COLORS.textLight;
+      }
+    });
+    setRadioButtons(radioButtonsArray);
+  };
 
   const getCalendar = async function () {
     const womanClient = await getWomanClient();
@@ -413,15 +440,6 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
     });
   };
 
-  const showEdit = function (cancel = false) {
-    if (cancel === true) {
-      setEdit(!edit);
-      return;
-    }
-    showGuide();
-    setEdit(!edit);
-  };
-
   const submitNewDates = async function () {
     if (!selectedOption) {
       showGuide();
@@ -441,11 +459,6 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
     }
   };
 
-  const navigateToEditCycles = () => {
-    closeModal();
-    navigation.navigate('EditCycles');
-  };
-
   useEffect(() => {
     userCalendar && handleCurrentMarkedDates([...userCalendar]);
     getFromAsyncStorage('fullInfo').then((res) => {
@@ -462,115 +475,63 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
   }, [updateCal]);
 
   return (
-    <Modal
-      testID={'modal'}
-      isVisible={visible}
-      coverScreen={true}
-      hasBackdrop={true}
-      backdropOpacity={0.5}
-      backdropTransitionOutTiming={1}
-      backdropTransitionInTiming={0}
-      animationOutTiming={0}
-      animationInTiming={0}
-      animationIn="slideInUp"
-      onBackdropPress={isUpdating ? null : closeModal}
-      style={styles.modal}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Pressable
-            onPress={isUpdating ? null : closeModal}
-            hitSlop={7}
-            style={{ marginLeft: 'auto' }}>
-            <Ionicons
-              name="close"
-              size={32}
-              color={COLORS.icon}
-              style={styles.closeIcon}
-            />
-          </Pressable>
-        </View>
-        {edit === true ? (
-          <CalendarList
-            jalali
-            markedDates={newMarkedDates}
-            hideExtraDays={true}
-            disableMonthChange={true}
-            firstDay={6}
-            hideDayNames={false}
-            showWeekNumbers={false}
-            style={styles.calendar}
-            theme={CALENDAR_THEME}
-            markingType="simple"
-            horizontal={true}
-            pagingEnabled={false}
-            onDayPress={
-              selectedOption
-                ? (day, localDay) => {
-                    handleNewMarkedDates(day);
-                  }
-                : () => showGuide()
-            }
-          />
-        ) : currentMarkedDates.length !== 0 ? (
-          <CalendarList
-            jalali
-            markedDates={currentMarkedDates}
-            hideExtraDays={true}
-            markingType="simple"
-            disableMonthChange={false}
-            firstDay={7}
-            hideDayNames={false}
-            showWeekNumbers={false}
-            style={styles.calendar}
-            theme={CALENDAR_THEME}
-            horizontal={true}
-            pagingEnabled={false}
-            onDayPress={() => {}}
-          />
-        ) : (
-          <ActivityIndicator
-            size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-          />
-        )}
+    <BackgroundView>
+      <ScreenHeader title="ویرایش دوره ها" />
 
-        <CalendarInfo
-          showBtns={edit}
-          selectedOption={selectedOption}
-          handleSelectedOption={handleSelectedOption}
+      <View style={{ marginTop: rh(6), width: '100%' }}>
+        <CalendarList
+          jalali
+          markedDates={newMarkedDates}
+          hideExtraDays={true}
+          disableMonthChange={true}
+          firstDay={6}
+          hideDayNames={false}
+          showWeekNumbers={false}
+          style={styles.calendar}
+          theme={CALENDAR_THEME}
+          markingType="simple"
+          horizontal={true}
+          pagingEnabled={false}
+          onDayPress={
+            selectedOption
+              ? (day, localDay) => {
+                  handleNewMarkedDates(day);
+                }
+              : () => showGuide()
+          }
         />
 
-        {edit === true ? (
-          <View style={styles.editContainer}>
-            <Button
-              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.borderLinkBtn}
-              title="ثبت تغییرات"
-              mode="contained"
-              style={{ width: '35%', marginRight: 10, height: 40 }}
-              loading={edit && isUpdating ? true : false}
-              disabled={edit && isUpdating ? true : false}
-              onPress={() => submitNewDates()}
-              Icon={null}
-            />
-            <Button
-              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.borderLinkBtn}
-              title="لغو"
-              style={{ width: '35%', height: 40 }}
-              onPress={() => showEdit(true)}
-              Icon={null}
-            />
-          </View>
-        ) : (
-          <Button
-            title="ویرایش دوره ها"
-            Icon={() => <EditIcon style={ICON_SIZE} />}
-            color={COLORS.borderLinkBtn}
-            style={{ ...styles.btn, marginTop: rh(5), marginBottom: rh(4) }}
-            onPress={() => navigateToEditCycles()}
-          />
-        )}
+        <RadioGroup
+          radioButtons={radioButtons}
+          onPress={onPressRadioButton}
+          isPeriodDay={isPeriodDay}
+        />
       </View>
-    </Modal>
+
+      <Button
+        color={COLORS.primary}
+        title="ذخیره"
+        mode="contained"
+        style={{
+          width: rw(80),
+          marginTop: 'auto',
+          marginBottom: rh(3),
+          height: 40,
+        }}
+        loading={edit && isUpdating ? true : false}
+        disabled={edit && isUpdating ? true : false}
+        onPress={() => submitNewDates()}
+        Icon={() => <EnabledCheck style={ICON_SIZE} />}
+      />
+      {snackbar.visible === true ? (
+        <Snackbar
+          message={snackbar.msg}
+          type={snackbar.type}
+          delay={snackbar?.delay}
+          handleVisible={handleVisible}
+        />
+      ) : null}
+    </BackgroundView>
   );
 };
 
@@ -581,8 +542,7 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    width: rw(100),
-    height: rh(80),
+    flex: 1,
     marginTop: 'auto',
     elevation: 5,
     borderTopRightRadius: 30,
@@ -603,7 +563,6 @@ const styles = StyleSheet.create({
 
   calendar: {
     width: '100%',
-    marginTop: 10,
   },
   btn: {
     width: '80%',
@@ -618,4 +577,4 @@ const styles = StyleSheet.create({
     marginBottom: rh(4),
   },
 });
-export default CalendarModal;
+export default EditCyclesScreen;

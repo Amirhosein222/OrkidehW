@@ -42,7 +42,7 @@ const Picker = ({
       }}
       labelStyle={styles.labelStyle}
       listItemLabelStyle={{
-        fontFamily: 'IRANYekanXFaNum-Regular',
+        fontFamily: 'IRANYekanMobileBold',
         color: 'black',
       }}
       arrowColor={COLORS.white}
@@ -61,7 +61,7 @@ const Picker = ({
         backgroundColor: COLORS.mainBg,
       }}
       placeholderStyle={{
-        fontFamily: 'IRANYekanXFaNum-Regular',
+        fontFamily: 'IRANYekanMobileBold',
         color: COLORS.textLight,
       }}
       placeholder={placeholder}
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   labelStyle: {
-    fontFamily: 'IRANYekanXFaNum-Regular',
+    fontFamily: 'IRANYekanMobileBold',
     color: COLORS.textLight,
   },
 });

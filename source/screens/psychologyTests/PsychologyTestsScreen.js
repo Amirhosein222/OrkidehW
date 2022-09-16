@@ -5,7 +5,6 @@ import { View, StatusBar, FlatList, ActivityIndicator } from 'react-native';
 import getLoginClient from '../../libs/api/loginClientApi';
 
 import {
-  Container,
   Snackbar,
   Text,
   ScreenHeader,
@@ -14,8 +13,7 @@ import {
 import { PsychologyTestCard } from '../../components/PsychologyTests';
 
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
-import { showSnackbar } from '../../libs/helpers';
+import { COLORS, rh, rw } from '../../configs';
 
 const PsychologyTestsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -46,7 +44,10 @@ const PsychologyTestsScreen = ({ navigation }) => {
   };
 
   const showAlert = (msg) => {
-    showSnackbar(msg);
+    setSnackbar({
+      msg: msg,
+      visible: true,
+    });
   };
 
   const RenderTests = function ({ item }) {

@@ -8,9 +8,8 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import moment from 'moment-jalaali';
+import * as moment from 'jalali-moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import HorizontalDatePicker from '@logisticinfotech/react-native-horizontal-date-picker';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 import {
@@ -27,6 +26,7 @@ import {
   NoRelation,
   Picker,
   Image,
+  HDatePicker,
 } from '../../components/common';
 import ExpectationCard from '../../components/common/ExpectationCard';
 
@@ -37,14 +37,20 @@ const SymptomsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [expectations, setExpectation] = useState([]);
   const [spouseMoods, setSpouseMoods] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [resetPicker, setResetPicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [selectedDate, setSelectedDate] = useState({
+    jDate: moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
+    dDate: new Date(),
+  });
   const womanInfo = useContext(WomanInfoContext);
 
-  const onDateChange = function (date) {
-    getSpouseMoodsAndExps(date);
+  const onDateChange = function (jDate) {
+    const dDate = moment.from(jDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
+    var dateObj = new Date(dDate + 'T00:00:00');
+    setSelectedDate({ jDate: jDate, dDate: dateObj });
+    getSpouseMoodsAndExps(jDate);
   };
 
   const getSpouseMoodsAndExps = async function (moodDate) {
@@ -158,8 +164,9 @@ const SymptomsScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (womanInfo.activeRel) {
-      setSelectedDate(moment());
-      getSpouseMoodsAndExps(moment().locale('en').format('jYYYY/jMM/jDD'));
+      getSpouseMoodsAndExps(
+        moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
+      );
     }
   }, [womanInfo.activeRel]);
 
@@ -174,6 +181,7 @@ const SymptomsScreen = ({ navigation }) => {
         <Header
           navigation={navigation}
           style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+          setSnackbar={setSnackbar}
         />
 
         {womanInfo.relations.length && womanInfo.activeRel ? (
@@ -183,22 +191,13 @@ const SymptomsScreen = ({ navigation }) => {
               alignItems: 'center',
               width: '100%',
             }}>
-            <HorizontalDatePicker
-              pickerType={'date'}
-              onDateSelected={(date) => onDateChange(date)}
-              minDate={new Date(Date.now() - 12096e5)}
-              maxDate={new Date()}
-              dayFormat="jDD"
-              monthFormat="jMMMM"
-              isShowYear={false}
-              returnDateFormat={'jYYYY/jMM/jDD'}
-              datePickerContainerStyle={{
-                backgroundColor: 'transparent',
-                marginTop: rh(2),
-              }}
-              selectedTextStyle={styles.selectedDate}
-              unSelectedTextStyle={styles.unselectedDate}
+            <HDatePicker
+              style={{ marginTop: rh(2) }}
+              periodStart={null}
+              onDateSelected={onDateChange}
+              isFetching={null}
               isPeriodDay={isPeriodDay}
+              defaultSelected={selectedDate.dDate}
             />
             <Text color={COLORS.grey} medium marginTop={rh(2)}>
               علائم همسر
@@ -310,13 +309,13 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   selectedDate: {
-    fontFamily: 'IRANYekanXFaNum-Regular',
+    fontFamily: 'IRANYekanMobileBold',
     fontSize: 12,
     color: COLORS.white,
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'IRANYekanXFaNum-Regular',
+    fontFamily: 'IRANYekanMobileBold',
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,

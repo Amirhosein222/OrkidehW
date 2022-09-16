@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
 import { View, StatusBar, StyleSheet, Image } from 'react-native';
-import { Button } from 'react-native-paper';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
@@ -21,6 +20,7 @@ import {
   TextInput,
   Snackbar,
   BackgroundView,
+  Button,
 } from '../../../components/common';
 import { COLORS, rh, rw } from '../../../configs';
 
@@ -228,7 +228,7 @@ const LoginScreen = ({ navigation, route }) => {
           placeholder="لطفا شماره موبایل خود را اینجا وارد کنید."
           textColor={COLORS.textLight}
           phColor={COLORS.textLight}
-          style={{ ...styles.input, marginTop: rh(8) }}
+          style={{ ...styles.input, marginTop: rh(6) }}
           editedText={phoneNumber}
           keyboardType="numeric"
           testID="pinput"
@@ -237,9 +237,6 @@ const LoginScreen = ({ navigation, route }) => {
           fontWeight="bold"
         />
 
-        {/* <Text medium color="#fe0294">
-          رمز عبور
-        </Text> */}
         <TextInput
           placeholder="لطفا رمز عبور خود را اینجا وارد کنید."
           textColor={COLORS.textLight}
@@ -250,43 +247,47 @@ const LoginScreen = ({ navigation, route }) => {
           inputName="password"
           fontWeight="bold"
         />
+        <View style={{ width: rw(80) }}>
+          <Text
+            small
+            color={COLORS.borderLinkBtn}
+            alignSelf="flex-end"
+            marginRight={rw(2)}>
+            رمز عبور خود را فراموش کرده ام
+          </Text>
+        </View>
+
         <View
           style={{
             flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'center',
+            width: rw(75),
+            justifyContent: 'space-between',
+            marginTop: rh(4),
+            marginBottom: rh(2),
           }}>
           <Button
+            title="ورود کاربر"
             color={COLORS.primary}
-            mode="outlined"
-            style={[styles.btn, { width: rw(35) }]}
-            testID="loginBtn"
+            style={{ width: rw(35) }}
             loading={isSending ? true : false}
             disabled={isSending ? true : false}
-            onPress={() => onPressLogin()}>
-            <Text color={COLORS.textDark}>ورود کاربر</Text>
-          </Button>
+            onPress={() => onPressLogin()}
+          />
           <Button
+            title="ورود با اثر انگشت"
             color={COLORS.primary}
-            mode="outlined"
-            style={[styles.btn, { width: rw(35) }]}
-            testID="loginBtn"
-            onPress={() => showAuthenticationDialog()}>
-            <Text color={COLORS.textDark} small>
-              ورود با اثر انگشت
-            </Text>
-          </Button>
+            style={{ width: rw(35) }}
+            onPress={() => showAuthenticationDialog()}
+          />
         </View>
 
         <Button
+          title="ایجاد حساب کاربری"
           color={COLORS.primary}
-          mode="outlined"
-          style={{ width: rw(76), borderRadius: 40, marginTop: rh(1) }}
-          testID="loginBtn"
+          style={{ width: rw(75), marginBottom: rh(0) }}
           disabled={!settings.data ? true : false}
-          onPress={() => navigation.navigate('Register')}>
-          <Text color={COLORS.textDark}>ایجاد حساب کاربری</Text>
-        </Button>
+          onPress={() => navigation.navigate('Register')}
+        />
       </View>
 
       {snackbar.visible === true ? (
@@ -314,7 +315,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   btn: {
-    width: '30%',
     height: 40,
     borderRadius: 40,
     margin: 10,

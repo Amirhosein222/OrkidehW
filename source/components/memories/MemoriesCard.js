@@ -1,26 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  SafeAreaView,
-  TextInput,
-  Image,
-} from 'react-native';
+import { View, StyleSheet, Pressable, TextInput, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Comment from './Comment';
-import { Text } from '../common';
+import { Text, ReadMore } from '../common';
 import { COLORS, rh, rw } from '../../configs';
 import {
   convertToFullDate,
   getFromAsyncStorage,
   numberConverter,
 } from '../../libs/helpers';
-import ReadMore from '@fawazahmed/react-native-read-more';
 
 import DelIcon from '../../assets/icons/btns/delete.svg';
 import EnEdit from '../../assets/icons/btns/enabled-edit.svg';
@@ -119,7 +110,7 @@ const MemoriesCard = ({
     },
     separator: {
       width: rw(70),
-      borderBottomWidth: 2,
+      borderBottomWidth: 1,
       borderBottomColor: COLORS.textLight,
       marginVertical: rh(2),
     },
@@ -132,7 +123,7 @@ const MemoriesCard = ({
       fontFamily: 'IRANYekanXFaNum-Regular',
       textAlign: 'right',
       textAlignVertical: 'top',
-      fontSize: 14,
+      fontSize: 11,
     },
     cmInputContainer: {
       flexDirection: 'row',
@@ -190,28 +181,31 @@ const MemoriesCard = ({
         <View style={styles.nameContainer}>
           {myMemory && info ? (
             <View style={{ marginRight: rw(1) }}>
-              <Text
-                marginRight="10"
-                alignSelf="flex-end"
-                color={COLORS.textDark}>
+              <Text small alignSelf="flex-end" color={COLORS.textDark} bold>
                 {info.display_name}
               </Text>
               <Text
                 alignSelf="flex-end"
-                marginRight="10"
+                marginRight={rw(0.6)}
+                mini
+                bold
                 color={COLORS.textLight}>
-                {numberConverter(convertToFullDate(memory.created_at))}
+                {convertToFullDate(memory.created_at)}
               </Text>
             </View>
           ) : (
             <View style={{ marginRight: rw(1) }}>
-              <Text>
+              <Text small color={COLORS.textDark} bold>
                 {memory.hasOwnProperty('user')
                   ? memory.user.display_name
                   : 'نگار قاسمی'}
               </Text>
-              <Text alignSelf="flex-end" marginRight="10">
-                {numberConverter(convertToFullDate(memory.created_at))}
+              <Text
+                alignSelf="flex-end"
+                marginRight={rw(0.6)}
+                mini
+                color={COLORS.textLight}>
+                {convertToFullDate(memory.created_at)}
               </Text>
             </View>
           )}
@@ -227,25 +221,9 @@ const MemoriesCard = ({
           </View>
         </View>
       </View>
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.root}>
-          <ReadMore
-            numberOfLines={3}
-            seeMoreText="بیشتر بخوانید ..."
-            seeMoreStyle={styles.moreLess}
-            seeLessStyle={styles.moreLess}
-            wrapperStyle={{ flexDirection: 'column' }}
-            ellipsis="..."
-            style={{
-              color: COLORS.textCommentCal,
-              fontFamily: 'IRANYekanXFaNum-Regular',
-              textAlign: 'right',
-            }}
-            seeLessText="بستن">
-            {numberConverter(memory.text)}
-          </ReadMore>
-        </View>
-      </SafeAreaView>
+      <View style={styles.root}>
+        <ReadMore>{memory.text}</ReadMore>
+      </View>
       <View style={styles.separator} />
       {/* Comments Section */}
       {/* <Comment comment={memory} /> */}
@@ -273,7 +251,7 @@ const MemoriesCard = ({
               style={{ margin: 0, justifyContent: 'center' }}>
               <Icon
                 name="hearto"
-                size={20}
+                size={18}
                 color={liked.liked ? COLORS.primary : COLORS.icon}
               />
             </Pressable>
@@ -289,7 +267,7 @@ const MemoriesCard = ({
               marginRight: myMemory ? 'auto' : 0,
             }}>
             <Pressable style={{ margin: 0, justifyContent: 'center' }}>
-              <CmIcon style={ICON_SIZE} />
+              <CmIcon style={{ width: 20, height: 20 }} />
             </Pressable>
             <Text style={{ marginLeft: 5 }} color={COLORS.textLight}>
               {numberConverter(0)}
@@ -308,14 +286,14 @@ const MemoriesCard = ({
                 style={{ margin: 0, justifyContent: 'center' }}>
                 <MaterialCommunityIcons
                   name="shield-alert-outline"
-                  size={20}
+                  size={18}
                   color={COLORS.icon}
                 />
               </Pressable>
             </View>
           )}
 
-          <Text small style={{ marginLeft: 10 }} color={COLORS.textLight}>
+          <Text bold mini style={{ marginLeft: 10 }} color={COLORS.textLight}>
             10 روز پیش
           </Text>
         </View>

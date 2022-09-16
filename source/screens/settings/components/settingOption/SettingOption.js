@@ -84,7 +84,6 @@ const SettingOption = ({
               : COLORS.textDark
           }
           bold
-          small
           marginRight={rw(2)}>
           {title}
         </Text>

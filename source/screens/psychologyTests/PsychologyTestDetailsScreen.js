@@ -24,7 +24,6 @@ import {
 } from '../../components/PsychologyTests';
 
 import { COLORS, ICON_SIZE, rh, rw } from '../../configs';
-import { showSnackbar } from '../../libs/helpers';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 import EnabledCheck from '../../assets/icons/btns/enabled-check.svg';
@@ -81,7 +80,10 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   const sendTestAnswers = async function () {
     setShowResultModal(true);
     if (selectedChoices.option_id.length < testDetails[0].questions.length) {
-      showSnackbar('لطفا به تمام سوالات پاسخ دهید.');
+      setSnackbar({
+        msg: 'لطفا به تمام سوالات پاسخ دهید.',
+        visible: true,
+      });
       return;
     } else {
       const loginClient = await getLoginClient();

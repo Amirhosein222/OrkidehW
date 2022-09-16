@@ -13,7 +13,6 @@ import Header from './Header';
 import TabBar from './TabBar';
 import CommentModal from './CommentModal';
 import ExitModal from './ExitModal';
-import UpdateModal from './UpdateRelModal';
 import TopTabBar from './TopTabBar';
 import Snackbar from './Snackbar';
 import NoRelation from './NoRelation';
@@ -25,6 +24,7 @@ import { DeleteModal, ReportModal } from './Modals';
 import ScreenHeader from './screenHeader';
 import BackgroundView from './backgroundView/BackgroundView';
 import HDatePicker from './HDatePicker';
+import ReadMore from './ReadMore';
 
 export {
   Text,
@@ -43,7 +43,6 @@ export {
   CommentModal,
   ExitModal,
   TopTabBar,
-  UpdateModal,
   Snackbar,
   NoRelation,
   PeriodDayTabBar,
@@ -55,4 +54,5 @@ export {
   ScreenHeader,
   BackgroundView,
   HDatePicker,
+  ReadMore,
 };

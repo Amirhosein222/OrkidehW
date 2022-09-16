@@ -90,6 +90,10 @@ const AllGapsScreen = ({ navigation }) => {
             data={allMemories}
             keyExtractor={(item) => String(item.id)}
             renderItem={RenderMemory}
+            contentContainerStyle={{
+              paddingBottom: rh(29),
+            }}
+            showsVerticalScrollIndicator={false}
           />
         ) : null}
         {showReportModal && (

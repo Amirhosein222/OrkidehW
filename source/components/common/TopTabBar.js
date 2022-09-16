@@ -1,8 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, StatusBar } from 'react-native';
 
-import { Text, Header, BackgroundView } from '../../components/common';
+import {
+  Text,
+  Header,
+  BackgroundView,
+  Snackbar,
+} from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
@@ -10,6 +15,7 @@ import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 const TopTabBar = ({ state, descriptors, navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const { routes, index } = state;
+  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
   const handleTabColors = (focused) => {
     if (isPeriodDay) {
@@ -17,6 +23,12 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
     } else {
       return focused ? COLORS.primary : COLORS.textLight;
     }
+  };
+
+  const handleVisible = () => {
+    setSnackbar({
+      visible: !snackbar.visible,
+    });
   };
 
   return (
@@ -31,6 +43,7 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
       <Header
         navigation={navigation}
         style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+        setSnackbar={setSnackbar}
       />
       <View style={styles.container}>
         {routes.map((route, index) => {
@@ -63,6 +76,13 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
           );
         })}
       </View>
+      {snackbar.visible === true ? (
+        <Snackbar
+          message={snackbar.msg}
+          type={snackbar.type}
+          handleVisible={handleVisible}
+        />
+      ) : null}
     </BackgroundView>
   );
 };

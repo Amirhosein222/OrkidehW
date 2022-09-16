@@ -61,7 +61,7 @@ const SCROLL_VIEW_CONTAINER = {
 const SNACKBAR_OPTIONS = {
   duration: Snackbar.LENGTH_LONG,
   rtl: true,
-  fontFamily: 'IRANYekanXFaNum-Regular',
+  fontFamily: 'IRANYekanMobileBold',
   backgroundColor: COLORS.red,
 };
 
@@ -77,9 +77,9 @@ const CALENDAR_THEME = {
   selectedDotColor: '#ffffff',
   arrowColor: COLORS.primary,
   monthTextColor: COLORS.primary,
-  textDayFontFamily: 'IRANYekanXFaNum-Regular',
-  textMonthFontFamily: 'IRANYekanXFaNum-Regular',
-  textDayHeaderFontFamily: 'IRANYekanXFaNum-Regular',
+  textDayFontFamily: 'IRANYekanMobileBold',
+  textMonthFontFamily: 'IRANYekanMobileBold',
+  textDayHeaderFontFamily: 'IRANYekanMobileBold',
   textMonthFontWeight: 'bold',
   textDayFontSize: 14,
   textMonthFontSize: 14,

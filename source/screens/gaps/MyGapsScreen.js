@@ -13,7 +13,7 @@ import { useIsPeriodDay } from '../../libs/hooks';
 
 const MyGapsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
-  const [myMemories, setMyMemories] = useState({});
+  const [myMemories, setMyMemories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showAddMemoryModal, setShowAddMemoryModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState({
@@ -92,11 +92,17 @@ const MyGapsScreen = ({ navigation }) => {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <FlatList
-        data={myMemories}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={RenderMemory}
-      />
+      {myMemories.length ? (
+        <FlatList
+          data={myMemories}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={RenderMemory}
+          contentContainerStyle={{
+            paddingBottom: rh(29),
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : null}
 
       <Pressable
         onPress={onAdd}
@@ -115,6 +121,7 @@ const MyGapsScreen = ({ navigation }) => {
           title={null}
           closeModal={() => setShowAddMemoryModal(false)}
           edit={edit}
+          setSnackbar={setSnackbar}
         />
       )}
       {showDeleteModal.show && (

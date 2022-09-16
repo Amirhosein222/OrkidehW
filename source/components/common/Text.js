@@ -19,13 +19,13 @@ const Text = styled.Text`
       case small:
         return 'font-size: 12px';
       case mini:
-        return 'font-size: 11px';
+        return 'font-size: 10px';
       default:
         break;
     }
   }}
   font-family: ${(props) =>
-    props.bold ? 'IRANYekanXFaNum-Bold' : 'IRANYekanXFaNum-Regular'};
+    props.bold ? 'IRANYekanMobileBold' : 'IRANYekanMobileMedium'};
   align-self: ${(props) => (props.alignSelf ? props.alignSelf : 'center')};
   text-align: ${(props) => (props.textAlign ? props.textAlign : 'center')};
   margin: ${(props) => (props.margin ? props.margin : 0)}px;

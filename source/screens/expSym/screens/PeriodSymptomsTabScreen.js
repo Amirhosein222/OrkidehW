@@ -126,6 +126,7 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
             closeModal={onCloseModal}
             sign={signId}
             signDate={signDate.jDate}
+            setSnackbar={setSnackbar}
           />
         ) : null}
         {selectedSymp.current && (

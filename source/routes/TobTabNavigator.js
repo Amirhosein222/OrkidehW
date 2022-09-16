@@ -29,7 +29,7 @@ export function MemoryTabs() {
           backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'IRANYekanXFaNum-Regular',
+          fontFamily: 'IRANYekanMobileBold',
         },
       }}>
       <Tab.Screen
@@ -62,7 +62,7 @@ export function PeriodTabs() {
           backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'IRANYekanXFaNum-Regular',
+          fontFamily: 'IRANYekanMobileBold',
         },
       }}>
       <Tab.Screen

@@ -30,7 +30,7 @@ const ScreenHeader = ({ title, disableBack = false, style }) => {
         onPress={() => navigation.goBack()}>
         <Back style={{ width: 28, height: 28 }} />
       </Pressable>
-      <Text medium bold color={COLORS.textLight}>
+      <Text large bold color={COLORS.textLight}>
         {title}
       </Text>
     </View>

@@ -18,11 +18,16 @@ import { Text } from '../../../components/common';
 
 import { useIsPeriodDay } from '../../../libs/hooks';
 import getLoginClient from '../../../libs/api/loginClientApi';
-import { showSnackbar } from '../../../libs/helpers';
 
 import { baseUrl, COLORS, rh, rw } from '../../../configs';
 
-const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
+const SympDegreeModal = ({
+  visible,
+  closeModal,
+  sign,
+  signDate,
+  setSnackbar,
+}) => {
   const isPeriodDay = useIsPeriodDay();
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
@@ -64,10 +69,17 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
 
         setChoosedRadio(false);
         if (response.data.is_successful) {
-          showSnackbar('با موفقیت ثبت شد', 'success');
+          setSnackbar({
+            msg: 'با موفقیت ثبت شد',
+            visible: true,
+            type: 'success',
+          });
           closeModal();
         } else {
-          showSnackbar(response.data.message);
+          setSnackbar({
+            msg: response.data.message,
+            visible: true,
+          });
           closeModal();
         }
       });
@@ -85,9 +97,16 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
       loginClient.post('store/sign', moodObj).then((response) => {
         setChoosedRadio(false);
         if (response.data.is_successful) {
-          showSnackbar('با موفقیت ثبت شد', 'success');
+          setSnackbar({
+            msg: 'با موفقیت ثبت شد',
+            visible: true,
+            type: 'success',
+          });
         } else {
-          showSnackbar(response.data.message);
+          setSnackbar({
+            msg: response.data.message,
+            visible: true,
+          });
           closeModal();
         }
       });
@@ -112,7 +131,10 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
             setCheckbox(items);
             if (item.sign_id === sign.id && sign.is_multiple === 0) {
               setChoosedRadio(true);
-              showSnackbar('شما در این تاریخ این علامت را ثبت کرده اید!');
+              setSnackbar({
+                msg: 'شما در این تاریخ این علامت را ثبت کرده اید!',
+                visible: true,
+              });
               closeModal();
             } else {
               getSymptomsMood();
@@ -122,7 +144,10 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
           getSymptomsMood();
         }
       } else {
-        showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید');
+        setSnackbar({
+          msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+          visible: true,
+        });
         closeModal();
       }
     });

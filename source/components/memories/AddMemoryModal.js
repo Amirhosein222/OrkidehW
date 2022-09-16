@@ -6,9 +6,8 @@ import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import getLoginClient from '../../libs/api/loginClientApi';
-import { showSnackbar } from '../../libs/helpers';
 
-import { InputRow, Text, Button, Snackbar } from '../../components/common';
+import { InputRow, Text, Button } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, rw } from '../../configs';
@@ -22,6 +21,7 @@ const AddMemoryModal = ({
   closeModal,
   handleNewMemory,
   edit = null,
+  setSnackbar,
   id,
 }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -29,7 +29,6 @@ const AddMemoryModal = ({
   const [mtitle, setMTitle] = useState(null);
   const [memoryText, setMemoryText] = useState(null);
   const [isSending, setIsSending] = useState(false);
-  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
   const validateInfo = function () {
     if (!mtitle) {
@@ -72,11 +71,19 @@ const AddMemoryModal = ({
         setMemoryText(null);
         setIsSending(false);
         if (response.data.is_successful) {
-          showSnackbar('با موفقیت ثبت شد', 'success');
+          setSnackbar({
+            msg: 'خاطره شما ثبت شد',
+            visible: true,
+            type: 'success',
+          });
           handleNewMemory();
           closeModal();
         } else {
-          showSnackbar('متاسفانه مشکلی پیش آمد، مجدد تلاش کنید.');
+          setSnackbar({
+            msg: 'متاسفانه مشکلی پیش آمد، مجدد تلاش کنید.',
+            visible: true,
+          });
+          closeModal();
         }
       });
     }
@@ -91,23 +98,22 @@ const AddMemoryModal = ({
       loginClient.post('update/memory', memory).then((response) => {
         setIsSending(false);
         if (response.data.is_successful) {
-          showSnackbar('خاطره شما با موفقیت ویرایش شد.', 'success');
+          setSnackbar({
+            msg: 'خاطره شما با موفقیت ویرایش شد.',
+            visible: true,
+            type: 'success',
+          });
           handleNewMemory();
+          closeModal();
         } else {
-          showSnackbar(
-            response.data.message.category_id
-              ? response.data.message.category_id[0]
-              : response.data.message,
-          );
+          setSnackbar({
+            msg: 'متاسفانه مشکلی بوجود آمده است، مجدد تلاش کنید',
+            visible: true,
+          });
+          closeModal();
         }
       });
     }
-  };
-
-  const handleVisible = () => {
-    setSnackbar({
-      visible: !snackbar.visible,
-    });
   };
 
   useEffect(() => {
@@ -199,13 +205,6 @@ const AddMemoryModal = ({
           onPress={edit.isEdit ? () => updateMemory() : () => addMemory()}
         />
       </View>
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null}
     </Modal>
   );
 };
@@ -256,7 +255,7 @@ const styles = StyleSheet.create({
     width: rw(81),
     borderRadius: 10,
     color: COLORS.textLight,
-    fontFamily: 'IRANYekanXFaNum-Regular',
+    fontFamily: 'IRANYekanMobileBold',
     textAlign: 'right',
     textAlignVertical: 'top',
     fontSize: 14,

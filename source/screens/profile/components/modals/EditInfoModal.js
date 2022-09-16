@@ -14,7 +14,6 @@ import { rw, rh, COLORS, ICON_SIZE } from '../../../../configs';
 import getLoginClient from '../../../../libs/api/loginClientApi';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { showSnackbar } from '../../../../libs/helpers';
 
 import Close from '../../../../assets/icons/btns/close.svg';
 import EnableCheck from '../../../../assets/icons/btns/enabled-check.svg';
@@ -60,7 +59,11 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
               'fullInfo',
               JSON.stringify(response.data.data),
             );
-            showSnackbar('اطلاعات شما با موفقیت ویرایش شد', 'success');
+            setSnackbar({
+              msg: 'اطلاعات شما با موفقیت ویرایش شد',
+              visible: true,
+              type: 'success',
+            });
             closeModal();
           } else {
             setSnackbar({

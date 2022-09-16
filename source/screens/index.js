@@ -10,7 +10,7 @@ import LoveNotificationScreen from './main/loveNotificationScreen';
 
 import { SpouseExpectationsTabScreen, PeriodSymptomsTabScreen } from './expSym';
 
-import { AddGapScreen, MyGapsScreen, AllGapsScreen } from './gaps';
+import { MyGapsScreen, AllGapsScreen } from './gaps';
 
 import PsychologyTestsScreen from './psychologyTests/PsychologyTestsScreen';
 import PsychologyTestDetailsScreen from './psychologyTests/PsychologyTestDetailsScreen';
@@ -32,6 +32,8 @@ import PrivacyScreen from './informations/privacy';
 import RemindersScreen from './informations/reminders';
 import EditMobileScreen from './informations/editMobile';
 
+import { EditCyclesScreen } from './calendar';
+
 export {
   LoginScreen,
   VerificationScreen,
@@ -45,7 +47,6 @@ export {
   FullPostScreen,
   PeriodSymptomsTabScreen,
   SpouseExpectationsTabScreen,
-  AddGapScreen,
   MyGapsScreen,
   AllGapsScreen,
   PsychologyTestsScreen,
@@ -67,4 +68,5 @@ export {
   RelationsScreen,
   AddRelScreen,
   UpdateRelScreen,
+  EditCyclesScreen,
 };
