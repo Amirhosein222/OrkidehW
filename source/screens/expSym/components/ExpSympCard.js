@@ -1,57 +1,82 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
-
-import { Text } from '../../../components/common';
+import { StyleSheet, View, Image, Pressable, Text } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import { baseUrl, COLORS } from '../../../configs';
 import { rw, rh } from '../../../configs';
 
-const ExpSympCard = ({ item, onPress, onReadMore, isExp = false }) => {
+const ExpSympCard = ({
+  item,
+  onPress,
+  onReadMore,
+  isExp = false,
+  alreadySelected,
+}) => {
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => onPress(item)} disabled={isExp.storing}>
-        {isExp.storing && isExp.exId === item.id ? (
-          <View
-            style={{ height: rh(13.2), width: 100, justifyContent: 'center' }}>
-            <ActivityIndicator color={COLORS.primary} size="large" />
-          </View>
-        ) : (
-          <Image
-            source={
-              item.image
-                ? { uri: baseUrl + item.image }
-                : require('../../../assets/images/icons8-heart-100.png')
-            }
-            style={styles.icon}
-          />
-        )}
+    <View
+      style={{
+        ...styles.container,
+        backgroundColor: alreadySelected ? COLORS.lightPink : COLORS.cardBg,
+      }}>
+      {alreadySelected && (
+        <AntDesign
+          name="checkcircle"
+          color={COLORS.primary}
+          size={32}
+          style={styles.selectedBadge}
+        />
+      )}
+
+      <Pressable onPress={() => onPress(item)}>
+        <Image
+          source={
+            item.image
+              ? { uri: baseUrl + item.image }
+              : require('../../../assets/images/icons8-heart-100.png')
+          }
+          style={styles.icon}
+          resizeMode="contain"
+        />
       </Pressable>
 
       <View style={styles.titleContainer}>
         <Text
-          small
-          bold
-          color={COLORS.expSympTitle}
-          textAlign="right"
-          alignSelf="flex-end">
+          style={[styles.text, { color: COLORS.textCommentCal, fontSize: 12 }]}>
           {item.title}
         </Text>
-        <Pressable onPress={() => onReadMore(item)} hitSlop={5}>
-          <Text
-            small
-            color="#B7AFB9"
-            textAlign="right"
-            alignSelf="flex-end"
-            marginTop={rh(0.2)}>
-            بیشتر بخوانید...
-          </Text>
-        </Pressable>
+        {alreadySelected && !isExp ? (
+          <View style={styles.degreeContainer}>
+            <Text
+              style={[
+                styles.text,
+                { color: COLORS.textLight, fontSize: 10.5 },
+              ]}>
+              میزان {item.title} امروز شما :{' '}
+              <Text
+                style={[
+                  {
+                    color: COLORS.primary,
+                    fontSize: 10.5,
+                  },
+                ]}>
+                {alreadySelected.mood.title}
+              </Text>
+            </Text>
+          </View>
+        ) : (
+          <Pressable onPress={() => onReadMore(item)} hitSlop={5}>
+            <Text
+              style={{
+                ...styles.text,
+                color: '#B7AFB9',
+                marginTop: rh(0.2),
+                fontSize: 10,
+              }}>
+              بیشتر بخوانید...
+            </Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -60,18 +85,21 @@ const ExpSympCard = ({ item, onPress, onReadMore, isExp = false }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     width: rw(39),
-    borderRadius: 23,
+    borderRadius: 20,
     elevation: 5,
     marginVertical: rh(2),
     marginHorizontal: rw(3),
-    paddingBottom: rh(2),
+    paddingBottom: rh(1.5),
   },
   icon: {
     width: 100,
     height: 100,
     marginTop: rh(1),
+  },
+  text: {
+    flexShrink: 1,
+    fontFamily: 'IRANYekanMobileBold',
   },
   titleContainer: {
     alignItems: 'flex-end',
@@ -83,6 +111,17 @@ const styles = StyleSheet.create({
     borderRightColor: COLORS.expSympReadMore,
     paddingRight: rw(3),
     marginTop: rh(2),
+  },
+  selectedBadge: {
+    ...StyleSheet.absoluteFillObject,
+    top: rh(-1.5),
+    left: rw(-3),
+    // zIndex: 1,
+  },
+  degreeContainer: {
+    flexDirection: 'row',
+    width: '90%',
+    flexShrink: 1,
   },
 });
 

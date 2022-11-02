@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import RenderHtml from 'react-native-render-html';
 
 import Swiper from 'react-native-swiper';
 
@@ -20,13 +21,12 @@ import { VideoPlayerModal } from '../../components/learningBank';
 import getLoginClient from '../../libs/api/loginClientApi';
 
 import {
-  Container,
-  IconWithBg,
-  Divider,
   Text,
   CommentModal,
   TextInput,
   Snackbar,
+  BackgroundView,
+  ScreenHeader,
 } from '../../components/common';
 
 import {
@@ -66,7 +66,7 @@ const FullPostScreen = ({ navigation, route }) => {
     const loginClient = await getLoginClient();
     loginClient
       .get(`show/post/detail?id=${params.post.id}&gender=woman`)
-      .then((response) => {
+      .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
           setPost(response.data.data);
@@ -116,7 +116,7 @@ const FullPostScreen = ({ navigation, route }) => {
       formData.append('parent_id', '');
       formData.append('gender', 'woman');
       const loginClient = await getLoginClient();
-      loginClient.post('comment/store', formData).then((response) => {
+      loginClient.post('comment/store', formData).then(response => {
         setBtnPressed(false);
         if (response.data.is_successful) {
           setNewComment('');
@@ -141,7 +141,7 @@ const FullPostScreen = ({ navigation, route }) => {
     setShowModal(!showModal);
   };
 
-  const onPlayVideo = (vid) => {
+  const onPlayVideo = vid => {
     video.current = vid;
     setVideoModalVisible(true);
   };
@@ -156,72 +156,42 @@ const FullPostScreen = ({ navigation, route }) => {
     getFullPost();
   }, [params]);
 
+  const tagsStyles = {
+    body: {
+      whiteSpace: 'normal',
+      color: 'gray',
+    },
+    a: {
+      color: 'green',
+    },
+    p: {
+      fontSize: '12px',
+      // fontFamily: ''
+    },
+  };
+
   if (isLoading) {
     return (
-      <Container>
-        <View
-          style={{ flex: 1, width: '100%', marginTop: STATUS_BAR_HEIGHT + 5 }}>
-          <Text
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-            large>
-            بانک آموزشی
-          </Text>
-          <Divider
-            width="100%"
-            color={COLORS.dark}
-            style={{ alignSelf: 'center' }}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
+      <BackgroundView>
+        <ScreenHeader title="بانک آموزشی" />
+
+        <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <ActivityIndicator
             size="large"
             color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           />
         </View>
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container justifyContent="flex-start">
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <View style={styles.header}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <IconWithBg
-              bgColor={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-              width="40px"
-              height="40px"
-              borderRadius="20px"
-              icon="chevron-left"
-              iconSize={30}
-              marginTop="20px"
-              marginLeft="10px"
-              marginBottom="10px"
-              alignSelf="flex-start"
-            />
-          </Pressable>
-
-          <View style={{ flex: 1, marginRight: 20 }}>
-            <Text
-              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-              large>
-              بانک آموزشی
-            </Text>
-          </View>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <MaterialCommunityIcons
-              name="menu"
-              color={COLORS.grey}
-              size={28}
-              style={{ marginRight: 10 }}
-            />
-          </Pressable>
-        </View>
-
-        <Divider width="100%" color={COLORS.dark} />
+        <ScreenHeader title="بانک آموزشی" />
 
         <ScrollView
           style={{ flex: 1 }}
@@ -230,7 +200,7 @@ const FullPostScreen = ({ navigation, route }) => {
             medias.length ? (
               <View style={styles.mediaContainer}>
                 <Swiper width={WIDTH} height={rh(40)} showsButtons={true}>
-                  {medias.map((item) => {
+                  {medias.map(item => {
                     return item.hasOwnProperty('image') ? (
                       <Image
                         source={{ uri: baseUrl + item.image }}
@@ -271,17 +241,23 @@ const FullPostScreen = ({ navigation, route }) => {
                   marginTop="20">
                   {numberConverter(post[0].title)}
                 </Text>
-                <Text
+                <RenderHtml
+                  contentWidth={rw(90)}
+                  source={{ html: post[0].text }}
+                  tagsStyles={tagsStyles}
+                />
+
+                {/* <Text
                   color={COLORS.dark}
                   medium
                   textAlign="right"
                   alignSelf="center">
                   {numberConverter(post[0].text.replace(/(<([^>]+)>)/gi, ''))}
-                </Text>
+                </Text> */}
               </View>
 
               <View style={styles.commentSection}>
-                {comments.map((comment) => {
+                {comments.map(comment => {
                   return (
                     <View style={styles.commentContainer}>
                       <View style={styles.comment}>
@@ -311,7 +287,7 @@ const FullPostScreen = ({ navigation, route }) => {
                           height="20px"
                         />
                       </View>
-                      {comment.replies.map((reply) => {
+                      {comment.replies.map(reply => {
                         return (
                           <View
                             style={{
@@ -402,7 +378,7 @@ const FullPostScreen = ({ navigation, route }) => {
           video={video.current}
           closeModal={closeModal}
         />
-      </Container>
+      </BackgroundView>
     );
   }
 };

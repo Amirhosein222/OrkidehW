@@ -1,10 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
-import { rh, rw } from '../../../configs';
+import { COLORS, rh, rw } from '../../../configs';
 
-const PeriodDaysChart = () => {
+import { Text } from '../../common';
+
+const PeriodDaysChart = ({ chartData }) => {
   const barData = [
     {
       value: 40,
@@ -54,12 +56,7 @@ const PeriodDaysChart = () => {
             marginTop: rh(1),
           }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
-              style={{
-                width: 60,
-                height: 16,
-                color: 'lightgray',
-              }}>
+            <Text size={10} color={COLORS.textLight} marginRight={4}>
               شما
             </Text>
             <View
@@ -68,17 +65,12 @@ const PeriodDaysChart = () => {
                 width: 12,
                 borderRadius: 6,
                 backgroundColor: '#177AD5',
-                marginRight: 8,
+                // marginRight: 8,
               }}
             />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
-              style={{
-                width: 60,
-                height: 16,
-                color: 'lightgray',
-              }}>
+            <Text size={10} color={COLORS.textLight} marginRight={4}>
               همسالان
             </Text>
             <View
@@ -100,12 +92,15 @@ const PeriodDaysChart = () => {
     <View
       style={{
         paddingBottom: 10,
+        marginTop: rh(3),
+        // backgroundColor: 'yellow',
+        width: '100%',
       }}>
       <BarChart
-        data={barData}
-        width={rw(65)}
+        data={chartData}
+        width={rw(64)}
         barWidth={8}
-        spacing={24}
+        spacing={22}
         roundedTop
         roundedBottom
         hideRules
@@ -115,8 +110,19 @@ const PeriodDaysChart = () => {
         noOfSections={3}
         maxValue={75}
         yAxisLabelTexts={['لکه بینی', 'کم', 'متوسط', 'زیاد']}
+        yAxisLabelWidth={rw(15)}
       />
       {renderTitle()}
+      <View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          left: rh(-24),
+          top: rh(28.5),
+        }}>
+        <Text size={11} color={COLORS.textLight}>
+          روز
+        </Text>
+      </View>
     </View>
   );
 };

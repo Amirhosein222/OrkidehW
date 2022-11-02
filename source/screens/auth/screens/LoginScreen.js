@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StatusBar, StyleSheet, Image } from 'react-native';
+import { View, StatusBar, StyleSheet, Image, Pressable } from 'react-native';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
@@ -84,7 +84,7 @@ const LoginScreen = ({ navigation, route }) => {
       isBiometric
         ? formData.append('isBiometric', true)
         : formData.append('password', password);
-      authApi.post('login', formData).then(async (response) => {
+      authApi.post('login', formData).then(async response => {
         setIsSending(false);
         if (response.data.is_successful) {
           await AsyncStorage.setItem('logedOut', 'false');
@@ -92,10 +92,7 @@ const LoginScreen = ({ navigation, route }) => {
             'userToken',
             JSON.stringify(response.data.data.token),
           );
-          await AsyncStorage.setItem(
-            'fullInfo',
-            JSON.stringify(response.data.data.user),
-          );
+
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -154,7 +151,7 @@ const LoginScreen = ({ navigation, route }) => {
           );
           FingerprintScanner.release();
         })
-        .catch((error) => {
+        .catch(error => {
           FingerprintScanner.release();
           // console.log('Authentication error is => ', error);
         });
@@ -166,26 +163,26 @@ const LoginScreen = ({ navigation, route }) => {
   useEffect(() => {
     setSettings();
     FingerprintScanner.isSensorAvailable()
-      .then((bioType) => {
+      .then(bioType => {
         setBiometryType(bioType);
       })
-      .catch((error) =>
+      .catch(error =>
         setSnackbar({
           msg: 'دستگاه شما از قابلیت اسکن اثر انگشت برخوردار نمی باشد.',
           visible: true,
         }),
       );
-    getFromAsyncStorage('userToken').then((res) => {
+    getFromAsyncStorage('userToken').then(res => {
       if (res) {
         setHasToken(true);
       }
     });
-    getFromAsyncStorage('mobile').then((res) => {
+    getFromAsyncStorage('mobile').then(res => {
       if (res) {
         setPhoneNumber(res);
       }
     });
-    getFromAsyncStorage('isFingerActive').then((res) => {
+    getFromAsyncStorage('isFingerActive').then(res => {
       if (res) {
         setIsFingerActive(true);
       }
@@ -195,7 +192,7 @@ const LoginScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (settings.data && settings.data.is_successful) {
       const result = settings.data.data.find(
-        (e) => e.key === 'app_image_login_page',
+        e => e.key === 'app_image_login_page',
       );
       result && setLoginSettings(result);
       const settingsObj = settings.data.data.reduce(
@@ -247,15 +244,19 @@ const LoginScreen = ({ navigation, route }) => {
           inputName="password"
           fontWeight="bold"
         />
-        <View style={{ width: rw(80) }}>
+        <Pressable
+          onPress={() =>
+            navigation.navigate('Register', { resetPassword: true })
+          }
+          style={{ width: rw(80) }}>
           <Text
-            small
+            size={10}
             color={COLORS.borderLinkBtn}
             alignSelf="flex-end"
             marginRight={rw(2)}>
             رمز عبور خود را فراموش کرده ام
           </Text>
-        </View>
+        </Pressable>
 
         <View
           style={{
@@ -286,7 +287,9 @@ const LoginScreen = ({ navigation, route }) => {
           color={COLORS.primary}
           style={{ width: rw(75), marginBottom: rh(0) }}
           disabled={!settings.data ? true : false}
-          onPress={() => navigation.navigate('Register')}
+          onPress={() =>
+            navigation.navigate('Register', { resetPassword: false })
+          }
         />
       </View>
 

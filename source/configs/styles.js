@@ -1,4 +1,5 @@
 import Snackbar from 'react-native-snackbar';
+import { rh, rw } from './dimensions';
 
 export const PALETTE = {
   white: '#FDFCFC',
@@ -39,7 +40,7 @@ const COLORS = {
   lightRed: '#fca09f',
   darkRed: '#D40707',
   orange: '#F9741B',
-  lightPink: 'rgba(254, 2, 148, 0.2)',
+  lightPink: '#FAEDF4',
   lightWhite: 'rgba(220,220,220, 0.9)',
   grey: '#ACAFBC',
   lightGrey: 'rgba(240, 240, 240, 1)',
@@ -51,6 +52,7 @@ const COLORS = {
   expSympReadMore: '#B7AFB9',
   tabBarBg: '#F4EDED',
   plusIconBg: '#E27FB4',
+  pmsCircle: '#9A8AC2',
 };
 
 const SCROLL_VIEW_CONTAINER = {
@@ -88,10 +90,15 @@ const CALENDAR_THEME = {
 
 const ICON_SIZE = { width: 25, height: 25 };
 
+const TAB_BIG_ICON_SIZE = { width: 25, height: 25 };
+const TAB_SMALL_ICON_SIZE = { width: 25, height: 25 };
+
 export {
   SCROLL_VIEW_CONTAINER,
   COLORS,
   SNACKBAR_OPTIONS,
   CALENDAR_THEME,
   ICON_SIZE,
+  TAB_BIG_ICON_SIZE,
+  TAB_SMALL_ICON_SIZE,
 };

@@ -22,8 +22,9 @@ import { Text, Snackbar, InputRow } from '../../../components/common';
 import getLoginClient from '../../../libs/api/loginClientApi';
 import { getFromAsyncStorage } from '../../../libs/helpers';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
-
 import { COLORS, rw, rh } from '../../../configs';
+
+import AddMemoriesIcon from '../../../assets/icons/btns/add-memories.svg';
 
 const PersonalInfo = ({
   goToNextStage,
@@ -44,13 +45,9 @@ const PersonalInfo = ({
   const [showPictureModal, setShowPictureModal] = useState(false);
   const [isNameEntered, setIsNameEntered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [info, setInfo] = useState(null);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [fromDefaultImages, setFromDefaultImages] = useState(false);
 
-  const handleTextInput = function (text) {
-    name.current = text;
-    setTestName(text);
-  };
   const handleVisible = () => {
     setSnackbar({
       visible: !snackbar.visible,
@@ -58,6 +55,7 @@ const PersonalInfo = ({
   };
 
   const selectPicture = function (remove = false, camera = false) {
+    setFromDefaultImages(false);
     if (remove) {
       setShowPictureModal(false);
       setPicture(null);
@@ -68,7 +66,7 @@ const PersonalInfo = ({
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image);
       });
@@ -77,11 +75,22 @@ const PersonalInfo = ({
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image);
       });
     }
+  };
+
+  const onDefaultImagePress = () => {
+    setShowPictureModal(false);
+    navigation.navigate('DefaultImages', {
+      atEnterInfo: true,
+      updateImage: setPicture,
+      isUpdating: null,
+      handleDefaultImage: setFromDefaultImages,
+      setShowPictureModal,
+    });
   };
 
   // const handleLayoutAnimation = () => {
@@ -109,9 +118,16 @@ const PersonalInfo = ({
     const formData = new FormData();
     if (picture) {
       formData.append('image', {
-        uri: picture.path,
-        type: `image/${picture.type}`,
-        name: 'profileImg.' + picture.type,
+        uri: fromDefaultImages ? picture : picture.path,
+        type: `image/${
+          fromDefaultImages
+            ? picture[picture.search(/\.(gif|jpe?g|tiff?|png|jfif|webp|bmp)$/i)]
+            : picture.type
+        }`,
+        name:
+          'profileImg.' + fromDefaultImages
+            ? picture[picture.search(/\.(gif|jpe?g|tiff?|png|jfif|webp|bmp)$/i)]
+            : picture.type,
       });
     }
     formData.append('display_name', username);
@@ -124,13 +140,12 @@ const PersonalInfo = ({
     formData.append('gender', 'woman');
     loginClient
       .post('complete/profile', formData)
-      .then((response) => {
+      .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
           setNameAndPicAndBirth({
             name: testName,
           });
-          AsyncStorage.setItem('fullInfo', JSON.stringify(response.data.data));
           goToNextStage(1);
         } else {
           setSnackbar({
@@ -139,7 +154,7 @@ const PersonalInfo = ({
           });
         }
       })
-      .catch((e) => {
+      .catch(e => {
         // console.log(e);
       });
   };
@@ -147,11 +162,6 @@ const PersonalInfo = ({
   useEffect(() => {
     name.current = editName;
     setTestName(editName);
-    getFromAsyncStorage('fullInfo').then((res) => {
-      if (res) {
-        setInfo(JSON.parse(res));
-      }
-    });
   }, []);
 
   useEffect(() => {
@@ -175,14 +185,14 @@ const PersonalInfo = ({
     <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
       <View style={styles.content}>
         <View style={{ marginTop: rh(0) }}>
-          <Text large color={COLORS.textDark}>
+          <Text size={16} bold color={COLORS.textDark} marginTop={rh(1)}>
             اطلاعات شخصی
           </Text>
         </View>
         <View style={styles.userIconContainer}>
           {picture ? (
             <Image
-              source={{ uri: picture.path }}
+              source={{ uri: fromDefaultImages ? picture : picture.path }}
               style={{ width: 90, height: 90, borderRadius: 50 }}
             />
           ) : (
@@ -195,10 +205,7 @@ const PersonalInfo = ({
             style={styles.plusIconContainer}
             hitSlop={7}
             onPress={() => setShowPictureModal(true)}>
-            <Image
-              source={require('../../../assets/icons/btns/add-memories.png')}
-              style={{ width: 20, height: 20 }}
-            />
+            <AddMemoriesIcon style={{ width: 20, height: 20 }} />
           </Pressable>
         </View>
         <View>
@@ -211,7 +218,7 @@ const PersonalInfo = ({
             tipText="وارد کردن نام نمایشی الزامی است"
           />
           <Text
-            small
+            size={10}
             color={COLORS.primary}
             alignSelf="flex-end"
             marginRight={rw(4)}>
@@ -228,7 +235,7 @@ const PersonalInfo = ({
             tipText="وارد کردن نام الزامی است"
           />
           <Text
-            small
+            size={10}
             color={COLORS.primary}
             alignSelf="flex-end"
             marginRight={rw(4)}>
@@ -258,7 +265,7 @@ const PersonalInfo = ({
               </Text>
             </View>
             <View style={{ width: rw(27) }}>
-              <Text color={COLORS.textLight} bold alignSelf="flex-end">
+              <Text size={11} color={COLORS.textLight} alignSelf="flex-end">
                 تاریخ تولد
               </Text>
             </View>
@@ -271,7 +278,7 @@ const PersonalInfo = ({
                 right: rw(10.1),
                 marginTop: rh(0.3),
               }}>
-              <Text color={COLORS.error} small alignSelf="flex-end">
+              <Text color={COLORS.error} size={8} bold alignSelf="flex-end">
                 وارد کردن تاریخ تولد الزامی است
               </Text>
             </View>
@@ -360,6 +367,7 @@ const PersonalInfo = ({
             closeModal={() => setShowPictureModal(false)}
             openPicker={() => selectPicture()}
             openCamera={() => selectPicture(true)}
+            openDefaultImages={onDefaultImagePress}
             removePic={() => setPicture(false)}
             showDelete={picture ? true : false}
           />

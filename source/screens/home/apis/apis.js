@@ -13,8 +13,6 @@ export const getCalendarApi = async function () {
 };
 
 export const getPregnancyPercentApi = async function (activeRel) {
-  console.log('activeRel ', activeRel);
-
   try {
     const loginClient = await getLoginClient();
     const formData = new FormData();
@@ -47,8 +45,6 @@ export const getRelationsApi = async function () {
     const res = await loginClient.get(
       'index/relation?include_man=1&include_woman=1&gender=woman',
     );
-    console.log('rels res ', res.data);
-
     return res.data;
   } catch (error) {
     // console.log('e ', error.response);

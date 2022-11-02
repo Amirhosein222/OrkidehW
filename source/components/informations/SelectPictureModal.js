@@ -9,20 +9,28 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 import { Text } from '../common';
-import { rw, rh, COLORS } from '../../configs';
+import { rw, rh, COLORS, ICON_SIZE } from '../../configs';
 
-const SelectPictureModal = ({
-  visible,
-  closeModal,
-  openPicker,
-  openCamera,
-  showDelete = true,
-  removePic,
-  isUpdating = false,
-}) => {
+import ImagesIcon from '../../assets/icons/profilePrivacy/images.svg';
+import DisabledBack from '../../assets/icons/btns/disabled-back.svg';
+import Camera from '../../assets/icons/profilePrivacy/camera.svg';
+import Gallery from '../../assets/icons/profilePrivacy/gallery.svg';
+import Close from '../../assets/icons/btns/close.svg';
+import Delete from '../../assets/icons/btns/delete.svg';
+
+const SelectPictureModal = (props) => {
+  const {
+    visible,
+    closeModal,
+    openPicker,
+    openCamera,
+    showDelete = true,
+    removePic,
+    isUpdating = false,
+    openDefaultImages,
+  } = props;
   return (
     <Modal
       testID={'modal'}
@@ -47,55 +55,37 @@ const SelectPictureModal = ({
             onPress={isUpdating ? () => {} : closeModal}
             hitSlop={7}
             style={{ marginLeft: 'auto' }}>
-            <Image
-              source={require('../../assets/icons/btns/close.png')}
-              style={styles.closeIcon}
-            />
+            <Close style={{ ...ICON_SIZE, marginRight: rw(5) }} />
           </Pressable>
         </View>
 
-        <Pressable style={{ ...styles.row, marginTop: rh(4) }}>
-          <Image
-            source={require('../../assets/icons/btns/disabled-back.png')}
-            style={{ width: 25, height: 25 }}
-          />
+        <Pressable
+          onPress={openDefaultImages}
+          style={{ ...styles.row, marginTop: rh(4) }}>
+          <DisabledBack style={ICON_SIZE} />
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text marginRight={rw(2)}>انتخاب از بین عکس های پیشفرض</Text>
-            <Image
-              source={require('../../assets/icons/profilePrivacy/images.png')}
-              style={{ width: 25, height: 25 }}
-            />
+            <ImagesIcon style={ICON_SIZE} />
           </View>
         </Pressable>
         <Pressable
           onPress={isUpdating ? () => {} : openPicker}
           style={styles.row}>
-          <Image
-            source={require('../../assets/icons/btns/disabled-back.png')}
-            style={{ width: 25, height: 25 }}
-          />
+          <DisabledBack style={ICON_SIZE} />
+
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text marginRight={rw(2)}>انتخاب عکس از گالری</Text>
-            <Image
-              source={require('../../assets/icons/profilePrivacy/gallery.png')}
-              style={{ width: 25, height: 25 }}
-            />
+            <Gallery style={ICON_SIZE} />
           </View>
         </Pressable>
         <Pressable
           close
           onPress={isUpdating ? () => {} : openCamera}
           style={styles.row}>
-          <Image
-            source={require('../../assets/icons/btns/disabled-back.png')}
-            style={{ width: 25, height: 25 }}
-          />
+          <DisabledBack style={ICON_SIZE} />
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text marginRight={rw(2)}>باز کردن دوربین</Text>
-            <Image
-              source={require('../../assets/icons/profilePrivacy/camera.png')}
-              style={{ width: 25, height: 25 }}
-            />
+            <Camera style={ICON_SIZE} />
           </View>
         </Pressable>
         {isUpdating && (
@@ -112,7 +102,7 @@ const SelectPictureModal = ({
             <Text marginRight={rw(1)} color={COLORS.error}>
               حذف عکس فعلی
             </Text>
-            <Ionicons name="trash-outline" size={20} color={COLORS.error} />
+            <Delete style={ICON_SIZE} />
           </Pressable>
         )}
       </View>
@@ -130,8 +120,8 @@ const styles = StyleSheet.create({
     height: rh(45),
     marginTop: 'auto',
     elevation: 5,
-    borderTopRightRadius: 30,
-    borderTopLeftRadius: 30,
+    borderTopRightRadius: 35,
+    borderTopLeftRadius: 35,
     backgroundColor: COLORS.mainBg,
   },
   header: {

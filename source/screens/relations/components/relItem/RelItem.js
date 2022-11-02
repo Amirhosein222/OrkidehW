@@ -54,7 +54,7 @@ const RelItem = ({
             {isVerifying ? (
               <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
             ) : (
-              <Text small color={COLORS.borderLinkBtn} textAlign="right">
+              <Text size={10} color={COLORS.borderLinkBtn} textAlign="right">
                 تایید رابطه
               </Text>
             )}
@@ -64,13 +64,14 @@ const RelItem = ({
       <View style={styles.avatarNameContainer}>
         <View style={styles.nameContainer}>
           <Text
-            medium
+            size={14}
+            bold
             color={COLORS.textDark}
             textAlign="right"
             alignSelf="flex-end">
             {rel.man_name}
           </Text>
-          <Text color={COLORS.textLight} alignSelf="flex-end">
+          <Text size={12} bold color={COLORS.textLight} alignSelf="flex-end">
             {numberConverter(convertToFullDate(rel.man.birth_date))}
           </Text>
         </View>
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
+    overflow: 'hidden',
   },
   nameContainer: {
     marginRight: rw(2),

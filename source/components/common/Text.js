@@ -3,27 +3,12 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import { COLORS } from '../../configs';
+import { adjust } from '../../libs/helpers';
 
 const Text = styled.Text`
   color: ${(props) => (props.color ? props.color : COLORS.textDark)};
-  ${({ title, large, medium, small, xl, mini }) => {
-    switch (true) {
-      case xl:
-        return 'font-size:60px';
-      case title:
-        return 'font-size:28px';
-      case large:
-        return 'font-size: 20px';
-      case medium:
-        return 'font-size: 16px';
-      case small:
-        return 'font-size: 12px';
-      case mini:
-        return 'font-size: 10px';
-      default:
-        break;
-    }
-  }}
+  font-size: ${(props) =>
+    props.size ? `${adjust(props.size)}px` : `${adjust(11.5)}px`};
   font-family: ${(props) =>
     props.bold ? 'IRANYekanMobileBold' : 'IRANYekanMobileMedium'};
   align-self: ${(props) => (props.alignSelf ? props.alignSelf : 'center')};

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import { COLORS, rh, rw } from '../../../configs';
 
-const ReadMore = ({ children }) => {
+const ReadMore = ({ children, textStyle }) => {
   const [numberOfLines, SetNumberOfLines] = useState(null);
   const [textShown, setTextShown] = useState(false); //To show ur remaining Text
   const [lengthMore, setLengthMore] = useState(false); //to show the "Read more & Less Line"
@@ -22,7 +22,7 @@ const ReadMore = ({ children }) => {
       <Text
         onTextLayout={onTextLayout}
         numberOfLines={textShown ? undefined : 4}
-        style={styles.text}>
+        style={{ ...styles.text, ...textStyle }}>
         {children}
       </Text>
 
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   text: {
     marginTop: rh(1),
     lineHeight: 21,
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: 'IRANYekanMobileBold',
     paddingRight: rw(4),
     paddingLeft: rw(4),
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   showMoreLess: {
     lineHeight: 21,
     marginTop: rh(1),
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: 'IRANYekanMobileBold',
     color: COLORS.textLight,
     alignSelf: 'flex-end',

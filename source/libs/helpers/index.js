@@ -8,6 +8,12 @@ import getAccessToken from './getAccessToken';
 import numberConverter from './numberConverter';
 import convertToFullDate from './converToFullDate';
 import { initPusher } from './notification';
+import adjust from './adjust';
+
+function validateEmail(email) {
+  var re = /\S+@\S+\.\S+/;
+  return re.test(email);
+}
 
 export {
   getFromAsyncStorage,
@@ -20,4 +26,6 @@ export {
   numberConverter,
   initPusher,
   convertToFullDate,
+  validateEmail,
+  adjust,
 };

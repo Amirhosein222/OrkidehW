@@ -1,8 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useContext } from 'react';
-import { View, StyleSheet, Pressable, Image } from 'react-native';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 
 import SelectPictureModal from '../../components/informations/SelectPictureModal';
@@ -14,22 +12,26 @@ import {
   ScreenHeader,
   BackgroundView,
 } from '../../components/common';
+import SelectPicture from './components/selectPicture';
 
-import { validatePhoneNumber } from '../../libs/helpers';
+import { addRelApi } from './apis';
 import { rw, rh, COLORS, ICON_SIZE } from '../../configs';
-import getLoginClient from '../../libs/api/loginClientApi';
-
+import { useApi, useIsPeriodDay } from '../../libs/hooks';
+import { verifyInfo } from './helpers';
 import EnabledCheck from '../../assets/icons/btns/enabled-check.svg';
 
 const AddRelScreen = ({ navigation, route }) => {
+  const isPeriodDay = useIsPeriodDay();
   const params = route.params || {};
 
   const [partner, setPartner] = useState('');
   const [partnerMobile, setPartnerMobile] = useState('');
   const [picture, setPicture] = useState('');
-  const [isAdding, setIsAdding] = useState(false);
   const [showPictureModal, setShowPictureModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [addRel, setAddRel] = useApi(() =>
+    addRelApi(partnerMobile, picture, partner),
+  );
 
   const handleVisible = () => {
     setSnackbar({
@@ -37,66 +39,21 @@ const AddRelScreen = ({ navigation, route }) => {
     });
   };
 
-  const verifyInfo = function () {
-    if (!partner || !partnerMobile) {
-      setSnackbar({
-        msg: 'فیلد های نام و شماره تلفن همراه الزامی می باشند!',
-        visible: true,
-      });
-      return false;
+  const onSubmitRel = () => {
+    if (verifyInfo(partner, partnerMobile, setSnackbar)) {
+      setAddRel();
     }
-    if (!validatePhoneNumber(partnerMobile)) {
-      setSnackbar({
-        msg: 'فرمت تلفن همراه معتبر نیست.',
-        visible: true,
-      });
-      return false;
-    }
-    return true;
   };
 
-  const onSubmitRel = async () => {
-    if (verifyInfo()) {
-      setIsAdding(true);
-      const loginClient = await getLoginClient();
-      const formData = new FormData();
-      formData.append('mobile', partnerMobile);
-      if (picture) {
-        formData.append('man_image', {
-          uri: picture,
-          name: 'spouseImg.png',
-          type: 'image/png',
-        });
-      }
-      formData.append('man_name', partner);
-      formData.append('gender', 'woman');
-      loginClient
-        .post('store/relation', formData)
-        .then((response) => {
-          setIsAdding(false);
-          if (response.data.is_successful) {
-            setSnackbar({
-              msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
-              visible: true,
-              type: 'success',
-            });
-            setPartner('');
-            setPartnerMobile('');
-            setPicture('');
-            params.handleUpdateRels();
-            navigation.goBack();
-          } else {
-            setSnackbar({
-              msg: response.data.message,
-              visible: true,
-            });
-          }
-        })
-        .catch((e) => {
-          setIsAdding(false);
-          // console.log('Error at Adding Spouse ', e.response.data);
-        });
-    }
+  const onDefaultImagePress = () => {
+    setShowPictureModal(false);
+
+    navigation.navigate('DefaultImages', {
+      atEnterInfo: false,
+      updateImage: setPicture,
+      isUpdating: null,
+      setShowPictureModal,
+    });
   };
 
   const selectPicture = function (camera = false) {
@@ -121,36 +78,39 @@ const AddRelScreen = ({ navigation, route }) => {
     }
   };
 
+  useEffect(() => {
+    if (addRel.data && addRel.data.is_successful) {
+      setSnackbar({
+        msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
+        visible: true,
+        type: 'success',
+      });
+      setPartner('');
+      setPartnerMobile('');
+      setPicture('');
+      params.handleUpdateRels();
+      navigation.goBack();
+    }
+    addRel.data &&
+      !addRel.data.is_successful &&
+      setSnackbar({
+        msg: addRel.data.message,
+        visible: true,
+      });
+  }, [addRel]);
+
   return (
     <BackgroundView>
       <View style={styles.content}>
-        <ScreenHeader title="افزودن پارتنر جدید" disableBack={isAdding} />
+        <ScreenHeader
+          title="افزودن پارتنر جدید"
+          disableBack={addRel.isFetching}
+        />
+        <SelectPicture
+          picture={picture}
+          setShowPictureModal={setShowPictureModal}
+        />
 
-        <View
-          style={{
-            ...styles.avatarBorderdContainer,
-            width: 110,
-            height: 110,
-            marginTop: rh(2),
-          }}>
-          {picture ? (
-            <Image
-              source={{ uri: picture }}
-              style={{ width: 100, height: 100, borderRadius: 50 }}
-            />
-          ) : (
-            <View style={styles.avatarBorderdContainer}>
-              <FontAwesome5 name="camera" size={55} color={COLORS.textDark} />
-            </View>
-          )}
-
-          <Pressable
-            style={styles.plusIconContainer}
-            hitSlop={7}
-            onPress={() => setShowPictureModal(true)}>
-            <FontAwesome5 name="plus" size={20} color={COLORS.white} />
-          </Pressable>
-        </View>
         <Divider
           width={rw(80)}
           color={COLORS.textDark}
@@ -175,12 +135,12 @@ const AddRelScreen = ({ navigation, route }) => {
         </View>
 
         <Button
-          disabled={isAdding}
-          loading={isAdding}
+          disabled={addRel.isFetching}
+          loading={addRel.isFetching}
           title="ثبت اطلاعات"
           Icon={() => <EnabledCheck style={ICON_SIZE} />}
-          color={COLORS.primary}
-          onPress={() => onSubmitRel()}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          onPress={onSubmitRel}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
         />
       </View>
@@ -190,6 +150,7 @@ const AddRelScreen = ({ navigation, route }) => {
           closeModal={() => setShowPictureModal(false)}
           openPicker={() => selectPicture()}
           openCamera={() => selectPicture(true)}
+          openDefaultImages={onDefaultImagePress}
           removePic={() => setPicture(false)}
           showDelete={picture ? true : false}
         />
@@ -211,21 +172,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.mainBg,
   },
-  avatarBorderdContainer: {
-    backgroundColor: COLORS.inputTabBarBg,
-    width: 90,
-    height: 90,
-    borderRadius: 55,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'white',
-  },
   content: {
     flex: 1,
     alignItems: 'center',
     width: rw(100),
-    // backgroundColor: COLORS.mainBg,
   },
   header: {
     flexDirection: 'row',
@@ -239,17 +189,7 @@ const styles = StyleSheet.create({
     marginRight: rw(5),
   },
   input: {
-    marginTop: rh(2),
-  },
-  plusIconContainer: {
-    width: rw(9.5),
-    height: rh(4.5),
-    borderRadius: 30,
-    backgroundColor: COLORS.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...StyleSheet.absoluteFillObject,
-    top: rh(9),
+    marginTop: rh(1),
   },
 });
 export default AddRelScreen;

@@ -1,36 +1,46 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Pressable } from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Switch } from 'react-native-paper';
 
-import { Text, InputRow } from '../../../../../components/common';
+import { Text } from '../../../../../components/common';
 import { COLORS, rh, rw } from '../../../../../configs';
 
-const Reminder = ({ name = 'default', title, icon, onPress, data }) => {
-  const [beforeP, setBeforeP] = useState(false);
-  const navigation = useNavigation();
+const Reminder = ({ title, type, disable, onSwitch, handleDefaultValue }) => {
+  const [status, setStatus] = useState();
 
-  const onToggleSwitch = () => setBeforeP(!beforeP);
+  const onToggleSwitch = stat => {
+    setStatus(stat);
+    onSwitch({ type, status: stat });
+  };
+
+  useEffect(() => {
+    const defaultValue = handleDefaultValue(type);
+    setStatus(defaultValue);
+
+    return () => setStatus();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: rw(82),
-          justifyContent: 'space-between',
-        }}>
-        <Switch
-          value={beforeP}
-          onValueChange={onToggleSwitch}
-          color={COLORS.borderLinkBtn}
-        />
-        <Text color={COLORS.textDark}>{title} :</Text>
+    console.log('status ', status),
+    (
+      <View style={styles.container}>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: rw(82),
+            justifyContent: 'space-between',
+          }}>
+          <Switch
+            disabled={disable}
+            value={status}
+            onValueChange={val => onToggleSwitch(val)}
+            color={COLORS.borderLinkBtn}
+          />
+          <Text color={COLORS.textDark}>{title} :</Text>
+        </View>
       </View>
-    </View>
+    )
   );
 };
 

@@ -22,7 +22,7 @@ import {
 } from '../../configs';
 import { convertToFullDate, numberConverter } from '../../libs/helpers';
 
-import CalendarModal from '../calendar/CalendarModal';
+import { CalendarModal } from '../../screens/calendar/components';
 
 import CalendarIcon from '../../assets/icons/drawerSettings/calendar-menu.svg';
 import SympMenu from '../../assets/icons/drawerSettings/symptoms-menu.svg';
@@ -51,7 +51,7 @@ const DrawerUi = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', value);
     formData.append('gender', 'woman');
-    loginClient.post('active/relation', formData).then((response) => {
+    loginClient.post('active/relation', formData).then(response => {
       if (response.data.is_successful) {
         AsyncStorage.setItem(
           'lastActiveRelId',
@@ -90,7 +90,7 @@ const DrawerUi = ({ navigation }) => {
     });
   };
 
-  const onSelectSpouse = (spouse) => {
+  const onSelectSpouse = spouse => {
     setActiveSpouse(spouse);
   };
 
@@ -112,26 +112,25 @@ const DrawerUi = ({ navigation }) => {
             <View style={styles.avatarContainer}>
               <View style={styles.nameContainer}>
                 <Text
-                  medium
+                  size={13}
                   bold
                   color={COLORS.textDark}
                   textAlign="right"
                   alignSelf="flex-end">
                   {womanInfo.fullInfo.display_name}
                 </Text>
-                <Text bold color={COLORS.textLight} alignSelf="flex-end">
+                <Text
+                  size={11}
+                  bold
+                  color={COLORS.textLight}
+                  alignSelf="flex-end">
                   {numberConverter(
                     convertToFullDate(womanInfo.fullInfo.birth_date),
                   )}
                 </Text>
               </View>
               {womanInfo.fullInfo.image ? (
-                <View
-                  style={{
-                    ...styles.avatarBorderdContainer,
-                    width: 110,
-                    height: 110,
-                  }}>
+                <View style={styles.avatarBorderdContainer}>
                   <Image
                     source={{ uri: baseUrl + womanInfo.fullInfo.image }}
                     style={styles.avatar}
@@ -139,16 +138,11 @@ const DrawerUi = ({ navigation }) => {
                   />
                 </View>
               ) : (
-                <View
-                  style={{
-                    ...styles.avatarBorderdContainer,
-                    width: 110,
-                    height: 110,
-                  }}>
-                  <View style={styles.avatarBorderdContainer}>
+                <View style={styles.avatarBorderdContainer}>
+                  <View style={styles.avatarDefaultBorderd}>
                     <Image
                       source={require('../../assets/vectors/profile/woman-1.png')}
-                      style={{ ...styles.avatar, width: 90, height: 90 }}
+                      style={styles.avatarDefault}
                       resizeMode="contain"
                     />
                   </View>
@@ -159,26 +153,25 @@ const DrawerUi = ({ navigation }) => {
               <View style={styles.avatarContainer}>
                 <View style={styles.nameContainer}>
                   <Text
-                    medium
+                    size={13}
                     bold
                     color={COLORS.textDark}
                     textAlign="right"
                     alignSelf="flex-end">
                     {womanInfo.activeRel.label}
                   </Text>
-                  <Text bold color={COLORS.textLight} alignSelf="flex-end">
+                  <Text
+                    size={11}
+                    bold
+                    color={COLORS.textLight}
+                    alignSelf="flex-end">
                     {numberConverter(
                       convertToFullDate(womanInfo.activeRel.birthday),
                     )}
                   </Text>
                 </View>
                 {womanInfo.activeRel.image ? (
-                  <View
-                    style={{
-                      ...styles.avatarBorderdContainer,
-                      width: 110,
-                      height: 110,
-                    }}>
+                  <View style={styles.avatarBorderdContainer}>
                     <Image
                       source={{ uri: baseUrl + womanInfo.activeRel.image }}
                       style={styles.avatar}
@@ -189,13 +182,11 @@ const DrawerUi = ({ navigation }) => {
                   <View
                     style={{
                       ...styles.avatarBorderdContainer,
-                      width: 110,
-                      height: 110,
                     }}>
-                    <View style={styles.avatarBorderdContainer}>
+                    <View style={styles.avatarDefaultBorderd}>
                       <Image
                         source={require('../../assets/vectors/profile/man-1.png')}
-                        style={{ ...styles.avatar, width: 90, height: 90 }}
+                        style={styles.avatarDefault}
                         resizeMode="contain"
                       />
                     </View>
@@ -227,13 +218,15 @@ const DrawerUi = ({ navigation }) => {
         <Pressable
           onPress={() => setShowCalendarModal(true)}
           style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             تقویم
           </Text>
           <CalendarIcon style={{ width: 25, height: 25 }} />
         </Pressable>
-        <Pressable style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
-          <Text small bold marginRight="15">
+        <Pressable
+          onPress={() => navigation.navigate('PeriodTabs')}
+          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+          <Text size={11} bold marginRight="15">
             علائم من
           </Text>
           <SympMenu style={{ width: 25, height: 25 }} />
@@ -241,7 +234,7 @@ const DrawerUi = ({ navigation }) => {
         <Pressable
           onPress={() => navigate('MemoriesTab')}
           style={{ ...styles.itemContainer, marginLeft: rw(2) }}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             خاطرات من
           </Text>
           <MemMenu style={{ width: 25, height: 25 }} />
@@ -249,7 +242,7 @@ const DrawerUi = ({ navigation }) => {
         <Pressable
           onPress={() => navigate('PeriodTabs')}
           style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             دلبر
           </Text>
           <SweetHeartMenu style={{ width: 25, height: 25 }} />
@@ -257,7 +250,7 @@ const DrawerUi = ({ navigation }) => {
         <Pressable
           onPress={() => navigate('PsychologyTests')}
           style={styles.itemContainer}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             تست های روانشناسی
           </Text>
           <PsycheTestMenu style={{ width: 25, height: 25 }} />
@@ -265,16 +258,16 @@ const DrawerUi = ({ navigation }) => {
         <Pressable
           onPress={() => navigate('Charts')}
           style={styles.itemContainer}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             نمودار وضعیت من
           </Text>
           <ChartMenu style={{ width: 25, height: 25 }} />
         </Pressable>
 
         <Pressable
-          onPress={() => navigate('ContactCounselor')}
+          onPress={() => navigate('LearningBank')}
           style={styles.itemContainer}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             مجله
           </Text>
           <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
@@ -288,7 +281,7 @@ const DrawerUi = ({ navigation }) => {
         <Pressable
           onPress={() => navigate('Settings')}
           style={styles.itemContainer}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             تنظیمات
           </Text>
           <SettingMenu style={{ width: 25, height: 25 }} />
@@ -296,7 +289,7 @@ const DrawerUi = ({ navigation }) => {
         <Pressable
           onPress={() => navigate('ContactCounselor')}
           style={styles.itemContainer}>
-          <Text small bold marginRight="15">
+          <Text size={11} bold marginRight="15">
             {' '}
             تماس با کارشناس
           </Text>
@@ -367,10 +360,21 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.inputTabBarBg,
     width: 100,
     height: 100,
-    borderRadius: 55,
+    borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
+    borderColor: 'white',
+    overflow: 'hidden',
+  },
+  avatarDefaultBorderd: {
+    backgroundColor: COLORS.inputTabBarBg,
+    width: 90,
+    height: 90,
+    borderRadius: 90 / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
     borderColor: 'white',
   },
   nameContainer: {
@@ -379,8 +383,9 @@ const styles = StyleSheet.create({
   avatar: {
     width: 100,
     height: 100,
-    borderRadius: 90,
+    borderRadius: 100,
   },
+  avatarDefault: { width: 70, height: 70 },
 });
 
 export default DrawerUi;

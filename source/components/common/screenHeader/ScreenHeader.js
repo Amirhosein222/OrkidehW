@@ -9,7 +9,12 @@ import { rw, rh, COLORS, STATUS_BAR_HEIGHT } from '../../../configs';
 
 import Back from '../../../assets/icons/btns/back.svg';
 
-const ScreenHeader = ({ title, disableBack = false, style }) => {
+const ScreenHeader = ({
+  title,
+  disableBack = false,
+  style,
+  customOnPress = null,
+}) => {
   const navigation = useNavigation();
 
   return (
@@ -27,10 +32,12 @@ const ScreenHeader = ({ title, disableBack = false, style }) => {
       <Pressable
         disabled={disableBack}
         hitSlop={5}
-        onPress={() => navigation.goBack()}>
+        onPress={
+          customOnPress ? () => customOnPress() : () => navigation.goBack()
+        }>
         <Back style={{ width: 28, height: 28 }} />
       </Pressable>
-      <Text large bold color={COLORS.textLight}>
+      <Text size={16.5} bold color={COLORS.textLight}>
         {title}
       </Text>
     </View>

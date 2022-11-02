@@ -38,7 +38,9 @@ const Button = ({
         <ActivityIndicator size="large" color={COLORS.textLight} />
       ) : (
         <View style={styles.content}>
-          <Text color={disabled ? COLORS.textLight : color}>{title}</Text>
+          <Text size={10.5} bold color={disabled ? COLORS.textLight : color}>
+            {title}
+          </Text>
           {handleIcon()}
         </View>
       )}
@@ -49,6 +51,7 @@ const Button = ({
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
+    alignItems: 'center',
     width: rw(83.5),
     height: rh(5.5),
     backgroundColor: COLORS.mainBg,

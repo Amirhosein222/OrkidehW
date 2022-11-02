@@ -5,6 +5,8 @@ import {
   SCROLL_VIEW_CONTAINER,
   SNACKBAR_OPTIONS,
   ICON_SIZE,
+  TAB_BIG_ICON_SIZE,
+  TAB_SMALL_ICON_SIZE,
 } from './styles';
 import { HEIGHT, WIDTH, STATUS_BAR_HEIGHT, rh, rw } from './dimensions';
 import { faLocale } from './calendarLocaleConfig';
@@ -30,4 +32,6 @@ export {
   PALETTE,
   PUSHER_INSTANCE_ID,
   ICON_SIZE,
+  TAB_BIG_ICON_SIZE,
+  TAB_SMALL_ICON_SIZE,
 };

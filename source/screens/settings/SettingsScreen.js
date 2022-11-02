@@ -57,8 +57,9 @@ const SettingsScreen = ({ navigation }) => {
         />
         <Divider
           color={COLORS.textDark}
-          width="82%"
-          style={{ marginTop: rh(2) }}
+          width={rw(77)}
+          borderWidth={0.5}
+          style={{ marginBottom: rh(1), marginTop: rh(3) }}
         />
         <SettingOption
           title="سیکل قاعدگی"
@@ -86,8 +87,9 @@ const SettingsScreen = ({ navigation }) => {
         />
         <Divider
           color={COLORS.textDark}
-          width="82%"
-          style={{ marginTop: rh(2) }}
+          width={rw(77)}
+          borderWidth={0.5}
+          style={{ marginVertical: rh(1.5) }}
         />
         <SettingOption
           title="راهنما"
@@ -103,8 +105,9 @@ const SettingsScreen = ({ navigation }) => {
         />
         <Divider
           color={COLORS.textDark}
-          width="82%"
-          style={{ marginTop: rh(2) }}
+          width={rw(77)}
+          borderWidth={0.5}
+          style={{ marginVertical: rh(1.5) }}
         />
         <SettingOption
           title="امتیاز به ارکیده"
@@ -118,7 +121,8 @@ const SettingsScreen = ({ navigation }) => {
         />
         <Divider
           color={COLORS.textDark}
-          width="82%"
+          width={rw(77)}
+          borderWidth={0.5}
           style={{ marginTop: rh(2) }}
         />
         <Pressable onPress={handleExitModal}>
@@ -132,6 +136,7 @@ const SettingsScreen = ({ navigation }) => {
         <Image
           source={require('../../assets/images/orkideh-logo.png')}
           style={styles.image}
+          resizeMode="contain"
         />
         <Text marginTop={rh(1)} color={COLORS.textLight}>
           نسخه 0.0.2
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
     paddingBottom: rh(4),
   },
   image: {
-    width: rw(30),
+    width: rw(31),
     height: rh(12),
     marginTop: rh(2),
   },

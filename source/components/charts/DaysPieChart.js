@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Dimensions } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { Text } from '../common';
@@ -18,6 +18,7 @@ const chartConfig = {
   barPercentage: 0.5,
   useShadowColorFromDataset: false, // optional
 };
+
 const pieData = [
   {
     name: 'Toronto',
@@ -38,10 +39,11 @@ const pieData = [
 
 const DaysPieChart = ({ chartData, route }) => {
   const isPeriodDay = useIsPeriodDay();
+
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
       <PieChart
-        data={pieData}
+        data={chartData}
         width="100%"
         style={{ justifyContent: 'center' }}
         height={250}
@@ -67,20 +69,20 @@ const DaysPieChart = ({ chartData, route }) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text small color={COLORS.primary} bold marginLeft={rw(1)}>
-            5 دفعه
+          <Text size={11} color={chartData[0].color} bold marginLeft={rw(1)}>
+            {chartData[0].population} دفعه
           </Text>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <Text small color={COLORS.textLight} bold>
+            <Text size={11} color={COLORS.textLight} bold>
               تعداد کل دفعات پریود شما :
             </Text>
             <MaterialCommunityIcons
               name="circle"
-              color={COLORS.primary}
+              color={chartData[0].color}
               style={{ marginLeft: rh(1) }}
               size={20}
             />
@@ -93,8 +95,8 @@ const DaysPieChart = ({ chartData, route }) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text small color={COLORS.darkYellow} bold marginLeft={rw(1)}>
-            5 روز
+          <Text size={11} color={chartData[1].color} bold marginLeft={rw(1)}>
+            {chartData[1].population} روز
           </Text>
           <View
             style={{
@@ -102,12 +104,12 @@ const DaysPieChart = ({ chartData, route }) => {
               alignItems: 'center',
               marginVertical: rh(1),
             }}>
-            <Text small color={COLORS.textLight} bold>
+            <Text size={11} color={COLORS.textLight} bold>
               تعداد روزهای تخمک گذاری شما :
             </Text>
             <MaterialCommunityIcons
               name="circle"
-              color={COLORS.darkYellow}
+              color={chartData[1].color}
               style={{ marginLeft: rh(1) }}
               size={20}
             />
@@ -120,20 +122,20 @@ const DaysPieChart = ({ chartData, route }) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text small color="purple" bold marginLeft={rw(1)}>
-            3 روز
+          <Text size={10} color={chartData[2].color} bold marginLeft={rw(1)}>
+            {chartData[2].population} روز
           </Text>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <Text small color={COLORS.textLight} bold>
+            <Text size={10} color={COLORS.textLight} bold>
               تعداد روز های PMS (سندروم پیش از قائدگی):
             </Text>
             <MaterialCommunityIcons
               name="circle"
-              color="purple"
+              color={chartData[2].color}
               style={{ marginLeft: rh(1) }}
               size={20}
             />

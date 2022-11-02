@@ -2,12 +2,18 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { View, StatusBar, ActivityIndicator, Pressable } from 'react-native';
+import {
+  View,
+  Image,
+  StatusBar,
+  ActivityIndicator,
+  Pressable,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment-jalaali';
 
 import { Pregnancy } from '../components';
-import CalendarModal from '../../../components/calendar';
+import CalendarModal from '../../calendar/components/calendarModal';
 
 import {
   getCalendarApi,
@@ -32,10 +38,10 @@ import { getFromAsyncStorage } from '../../../libs/helpers';
 import {
   BackgroundView,
   Text,
-  Image,
   Header,
   Snackbar,
   HDatePicker,
+  ShowLovePopup,
 } from '../../../components/common';
 
 import { COLORS, STATUS_BAR_HEIGHT, rw, rh } from '../../../configs';
@@ -46,11 +52,11 @@ const HomeScreen = ({ navigation, route }) => {
   const womanInfo = useContext(WomanInfoContext);
   const {
     saveFullInfo,
-    fullInfo,
     handleUserPeriodDays,
     handleUserCalendar,
     settings,
     saveSettings,
+    saveAllSettings,
   } = useContext(WomanInfoContext);
 
   const storePDate = useRef(null);
@@ -62,6 +68,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [periodStart, setPeriodStart] = useState(null);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showLove, setShowLove] = useState(false);
 
   const [loginWomanInfo, setLoginWomanInfo] = useApi(() => getWomanInfo());
   const [getCalendar, setGetCalendar] = useApi(() => getCalendarApi());
@@ -106,15 +113,8 @@ const HomeScreen = ({ navigation, route }) => {
     setGetRelations();
   };
 
-  const handlePusherInit = () => {
-    getFromAsyncStorage('pusherUid')
-      .then(async (res) => {
-        if (!res) {
-          initPusher(pusher.data.pusher_user_id, pusher.data.token);
-          await AsyncStorage.setItem('pusherUid', pusher.data.pusher_user_id);
-        }
-      })
-      .catch((e) => console.log(e));
+  const handlePusherInit = async () => {
+    initPusher(pusher.data.pusher_user_id, pusher.data.token);
   };
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    getFromAsyncStorage('periodStart').then((res) => {
+    getFromAsyncStorage('periodStart').then(res => {
       if (res) {
         const convertedDate = moment(res, 'jYYYY/jM/jD')
           .locale('en')
@@ -141,29 +141,26 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     !settings && setSetts();
-    getFromAsyncStorage('fullInfo').then((res) => {
-      if (res) {
-        saveFullInfo(JSON.parse(res));
-      }
-    });
+    setLoginWomanInfo();
     setPusher();
   }, []);
 
   useEffect(() => {
-    if (pusher.data && fullInfo) {
+    if (pusher.data) {
       handlePusherInit();
     }
   }, [pusher]);
 
   useEffect(() => {
     if (setts.data && setts.data.is_successful) {
-      const result = setts.data.data.find((e) => e.key === 'app_text_ads');
+      const result = setts.data.data.find(e => e.key === 'app_text_ads');
       result && setAdsSetting(result);
       const settingsObj = setts.data.data.reduce(
         (acc, cur) => ({ ...acc, [cur.key]: cur }),
         {},
       );
       saveSettings(settingsObj);
+      saveAllSettings(setts.data.data);
     }
   }, [setts]);
 
@@ -176,18 +173,12 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (loginWomanInfo.data && loginWomanInfo.data.is_successful) {
       saveFullInfo(loginWomanInfo.data.data[0]);
-      AsyncStorage.setItem(
-        'fullInfo',
-        JSON.stringify(loginWomanInfo.data.data[0]),
-      );
     }
   }, [loginWomanInfo]);
 
   useEffect(() => {
     if (getCalendar.data && getCalendar.data.is_successful) {
-      const periodDays = getCalendar.data.data.filter(
-        (d) => d.type === 'period',
-      );
+      const periodDays = getCalendar.data.data.filter(d => d.type === 'period');
       handleUserCalendar(getCalendar.data.data);
       handleUserPeriodDays(periodDays);
     }
@@ -209,7 +200,7 @@ const HomeScreen = ({ navigation, route }) => {
         onGetPregnancyPercent();
         return;
       }
-      getRelations.data.data.map((rel) => {
+      getRelations.data.data.map(rel => {
         rels.push({
           label: rel.man_name ? rel.man_name : 'بدون نام',
           value: rel.id,
@@ -274,7 +265,13 @@ const HomeScreen = ({ navigation, route }) => {
     storePeriodAuto.data &&
       !storePeriodAuto.data.is_successful &&
       setSnackbar({
-        msg: storePeriodAuto.data.message,
+        msg: JSON.stringify(
+          storePeriodAuto.data.message[0].period_message
+            ? storePeriodAuto.data.message[0].period_message
+            : storePeriodAuto.data.message[0].cycle_message
+            ? storePeriodAuto.data.message[0].cycle_message
+            : 'خطا در ثبت روز پریود!',
+        ),
         visible: true,
       });
   }, [storePeriodAuto]);
@@ -289,7 +286,7 @@ const HomeScreen = ({ navigation, route }) => {
       <Header
         navigation={navigation}
         style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
-        setSnackbar={setSnackbar}
+        setShowLovePopup={setShowLove}
       />
 
       <View style={{ alignItems: 'center' }}>
@@ -300,6 +297,7 @@ const HomeScreen = ({ navigation, route }) => {
           <Text
             marginBottom={rh(1.5)}
             textAlign="right"
+            medium
             color={COLORS.textLight}>
             {/* {adsSettings && adsSettings.value} */}
             متن تست تبلیغات متن تست تبلیغات
@@ -319,19 +317,26 @@ const HomeScreen = ({ navigation, route }) => {
 
       <Pressable
         onPress={() => onStorePeriodAuto('today')}
-        style={{ marginTop: rh(4) }}
+        style={{ marginTop: rh(2) }}
         disabled={storePeriodAuto.isFetching}>
         {storePeriodAuto.isFetching ? (
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator
+            size="large"
+            color={COLORS.primary}
+            style={{ marginTop: rh(4) }}
+          />
         ) : (
           <Image
-            imageSource={
+            source={
               isPeriodDay
                 ? require('../../../assets/icons/home/period.png')
                 : require('../../../assets/icons/home/not-period.png')
             }
-            width="95px"
-            height="70px"
+            style={{
+              width: rw(28),
+              height: rh(14),
+            }}
+            resizeMode="contain"
           />
         )}
       </Pressable>
@@ -349,6 +354,9 @@ const HomeScreen = ({ navigation, route }) => {
           type={snackbar.type}
           handleVisible={handleVisible}
         />
+      ) : null}
+      {showLove ? (
+        <ShowLovePopup handleVisible={() => setShowLove(false)} />
       ) : null}
     </BackgroundView>
   );

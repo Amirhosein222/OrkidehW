@@ -4,23 +4,17 @@ import React, { useState, useContext } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import CalendarModal from '../calendar/CalendarModal';
-
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../configs';
 
 import MenuIcon from '../../assets/icons/home/menu.svg';
 
-const Header = ({ navigation, style, setSnackbar }) => {
-  const { isPeriodDay } = useContext(WomanInfoContext);
-  const [showCalendarModal, setShowCalendarModal] = useState(false);
+const Header = ({ navigation, style, setShowLovePopup }) => {
+  const { isPeriodDay, settings } = useContext(WomanInfoContext);
 
   const onSendLove = () => {
-    setSnackbar({
-      msg: 'با موفقیت ارسال شد',
-      visible: true,
-      type: 'success',
-    });
+    // settings.app_heart_content_notification.value -> send it to api.
+    setShowLovePopup(true);
   };
 
   return (
@@ -45,7 +39,7 @@ const Header = ({ navigation, style, setSnackbar }) => {
             }}>
             <MaterialCommunityIcons
               name="heart-outline"
-              size={30}
+              size={26}
               color={COLORS.white}
             />
           </Pressable>
@@ -54,12 +48,6 @@ const Header = ({ navigation, style, setSnackbar }) => {
         <Pressable onPress={() => navigation.openDrawer()}>
           <MenuIcon style={{ width: 25, height: 25, marginRight: rw(4) }} />
         </Pressable>
-        {showCalendarModal && (
-          <CalendarModal
-            visible={showCalendarModal}
-            closeModal={() => setShowCalendarModal(false)}
-          />
-        )}
       </View>
     </View>
   );
@@ -88,9 +76,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: rw(12.3),
-    height: rh(5.9),
-    borderRadius: 35,
+    width: 45,
+    height: 45,
+    borderRadius: 45 / 2,
   },
 });
 

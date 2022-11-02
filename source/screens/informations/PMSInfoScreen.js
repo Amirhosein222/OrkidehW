@@ -1,29 +1,94 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { View, StatusBar, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import React, { useCallback } from 'react';
+import { StatusBar, FlatList } from 'react-native';
 
-import {
-  Container,
-  Divider,
-  Text,
-  Image,
-  RowContainer,
-} from '../../components/common';
-import { Bars } from '../../components/charts';
+import { Container, Divider, Text } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, rw } from '../../configs';
 import PMSCard from '../../components/periodInfo/PMSCard';
 
-import muscleten from '../../assets/vectors/charts/muscleten.png';
-import backpain from '../../assets/vectors/charts/backpain.png';
 import headache from '../../assets/vectors/charts/headache.png';
-import dep from '../../assets/vectors/charts/dep.png';
 
-const PMSInfoScreen = ({}) => {
+const PMSInfoScreen = ({ data }) => {
   const isPeriodDay = useIsPeriodDay();
+
+  const testData = [
+    {
+      id: 15,
+      is_multiple: 0,
+      title: 'دفع',
+      type: 'woman',
+      created_at: 1622671580,
+      updated_at: 1622671580,
+      image: null,
+      aveElseUsers: 1,
+      countAuthUser: 4,
+    },
+    {
+      id: 10,
+      is_multiple: 0,
+      title: 'پوست',
+      type: 'woman',
+      created_at: 1622671295,
+      updated_at: 1622671295,
+      image: null,
+      aveElseUsers: 1,
+      countAuthUser: 2,
+    },
+    {
+      id: 1,
+      is_multiple: 1,
+      title: 'احساسات',
+      type: 'woman',
+      created_at: 1666854588,
+      updated_at: 1622670634,
+      image: '/uploads/photos/1/_____1_20141004_1211342767.jpg',
+      aveElseUsers: 1,
+      countAuthUser: 7,
+    },
+    {
+      id: 5,
+      is_multiple: 0,
+      title: 'خواب',
+      type: 'woman',
+      created_at: 1666854588,
+      updated_at: 1622671089,
+      image: null,
+      aveElseUsers: 1,
+      countAuthUser: null,
+    },
+  ];
+
+  const RenderPms = useCallback(({ item }) => {
+    return (
+      <PMSCard
+        info={{
+          title: item.title,
+          count: item.countAuthUser,
+          image: item.image,
+        }}
+        icon={headache}
+      />
+    );
+  }, []);
+
+  const RenderPmsDiff = useCallback(({ item }) => {
+    return (
+      <PMSCard
+        info={{
+          title: item.title,
+          count: item.countAuthUser,
+          othersCount: item.aveElseUsers,
+          image: item.image,
+        }}
+        hasBar={true}
+        icon={headache}
+      />
+    );
+  }, []);
+
   return (
     <Container
       justifyContent="flex-start"
@@ -38,33 +103,16 @@ const PMSInfoScreen = ({}) => {
         اطلاعات PMS در شش دوره اخیر شما
       </Text>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          width: rw(84),
-          alignItems: 'center',
-          alignSelf: 'center',
-          justifyContent: 'space-between',
-          marginVertical: rh(2),
-        }}>
-        <PMSCard info={{ title: 'سردرد', count: 3 }} icon={headache} />
-        <PMSCard info={{ title: 'حس افسردگی', count: 2 }} icon={dep} />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: rw(84),
-          alignItems: 'center',
-          alignSelf: 'center',
-          justifyContent: 'space-between',
-          marginVertical: rh(2),
-        }}>
-        <PMSCard
-          info={{ title: 'درد کمر، پا، دست یا زانو', count: 4 }}
-          icon={backpain}
-        />
-        <PMSCard info={{ title: 'گرفتگی ماهیچه', count: 2 }} icon={muscleten} />
-      </View>
+      <FlatList
+        data={testData}
+        keyExtractor={item => item.id.toString()}
+        renderItem={RenderPms}
+        numColumns={2}
+        contentContainerStyle={{
+          marginVertical: rh(1),
+          paddingVertical: rh(1),
+        }}
+      />
       <Divider
         color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}
         width={rw(82)}
@@ -83,64 +131,18 @@ const PMSInfoScreen = ({}) => {
         مقایسه علائم PMS شما و همسالان شما
       </Text>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          width: rw(85),
-          alignItems: 'center',
-          alignSelf: 'center',
-          justifyContent: 'space-between',
-          marginVertical: rh(2),
-        }}>
-        <PMSCard
-          info={{ title: 'سردرد', count: 3 }}
-          hasBar={true}
-          icon={headache}
-        />
-        <PMSCard
-          info={{ title: 'حس افسردگی', count: 2 }}
-          hasBar={true}
-          icon={dep}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: rw(87),
-          alignItems: 'center',
-          alignSelf: 'center',
-          justifyContent: 'space-between',
-          marginVertical: rh(2),
-        }}>
-        <PMSCard
-          info={{ title: 'درد کمر، پا، دست یا زانو', count: 4 }}
-          icon={backpain}
-          hasBar={true}
-        />
-        <PMSCard
-          info={{ title: 'گرفتگی ماهیچه', count: 2 }}
-          hasBar={true}
-          icon={muscleten}
-        />
-      </View>
+      <FlatList
+        data={data.pmsDiff}
+        keyExtractor={item => item.id.toString()}
+        renderItem={RenderPmsDiff}
+        numColumns={2}
+        contentContainerStyle={{
+          marginVertical: rh(1),
+          paddingVertical: rh(1),
+        }}
+      />
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  content: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  imgContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  pmsInfoCont: {
-    margin: 5,
-  },
-});
 
 export default PMSInfoScreen;

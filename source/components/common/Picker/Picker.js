@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { COLORS, rh, rw } from '../../../configs';
 
@@ -43,9 +44,23 @@ const Picker = ({
       labelStyle={styles.labelStyle}
       listItemLabelStyle={{
         fontFamily: 'IRANYekanMobileBold',
-        color: 'black',
+        color: COLORS.textDark,
+        fontSize: 12,
       }}
-      arrowColor={COLORS.white}
+      ArrowDownIconComponent={() => (
+        <MaterialIcons
+          name="arrow-drop-down"
+          size={28}
+          color={COLORS.textLight}
+        />
+      )}
+      ArrowUpIconComponent={() => (
+        <MaterialIcons
+          name="arrow-drop-up"
+          size={28}
+          color={COLORS.textLight}
+        />
+      )}
       containerStyle={styles.pickerContainer}
       style={{
         backgroundColor: COLORS.inputTabBarBg,

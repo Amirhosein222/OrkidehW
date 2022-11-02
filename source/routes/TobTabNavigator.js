@@ -6,6 +6,8 @@ import {
   AllGapsScreen,
   PeriodSymptomsTabScreen,
   SpouseExpectationsTabScreen,
+  PartnerMoodsTabScreen,
+  PartnerExpsTabScreen,
 } from '../screens';
 import { TopTabBar } from '../components/common';
 
@@ -17,7 +19,7 @@ export function MemoryTabs() {
   return (
     <Tab.Navigator
       initialRouteName="AllGaps"
-      tabBar={(props) => <TopTabBar {...props} />}
+      tabBar={props => <TopTabBar {...props} />}
       tabBarOptions={{
         contentContainerStyle: {
           backgroundColor: 'red',
@@ -54,7 +56,7 @@ export function PeriodTabs() {
   return (
     <Tab.Navigator
       initialRouteName="PeriodSymptomsTab"
-      tabBar={(props) => <TopTabBar {...props} />}
+      tabBar={props => <TopTabBar {...props} />}
       tabBarOptions={{
         activeTintColor: COLORS.primary,
         inactiveTintColor: COLORS.textLight,
@@ -67,17 +69,54 @@ export function PeriodTabs() {
       }}>
       <Tab.Screen
         options={{
-          tabBarLabel: 'حال و احوالت توی این روز چطوره؟',
+          tabBarLabel: 'حال و احوال امروزت',
         }}
         name="PeriodSymptomsTab"
         component={PeriodSymptomsTabScreen}
       />
       <Tab.Screen
         options={{
-          tabBarLabel: 'همسرت چیکار کنه خوشحال بشی؟',
+          tabBarLabel: 'چیکار کنه خوشحال بشی',
         }}
         name="SpouseExpectationsTab"
         component={SpouseExpectationsTabScreen}
+      />
+    </Tab.Navigator>
+  );
+}
+
+export function PartnerMoodsExpsTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="PartnerMoodsTab"
+      tabBar={props => <TopTabBar {...props} />}
+      tabBarOptions={{
+        contentContainerStyle: {
+          backgroundColor: 'red',
+          width: '100%',
+        },
+        activeTintColor: COLORS.primary,
+        inactiveTintColor: COLORS.textLight,
+        indicatorStyle: {
+          backgroundColor: COLORS.primary,
+        },
+        labelStyle: {
+          fontFamily: 'IRANYekanMobileBold',
+        },
+      }}>
+      <Tab.Screen
+        options={{
+          tabBarLabel: 'حال و احوال امروزش',
+        }}
+        name="PartnerMoodsTab"
+        component={PartnerMoodsTabScreen}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: 'چیکار کنی خوشحال بشه',
+        }}
+        name="PartnerExpsTab"
+        component={PartnerExpsTabScreen}
       />
     </Tab.Navigator>
   );

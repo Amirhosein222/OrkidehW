@@ -84,6 +84,7 @@ const SettingOption = ({
               : COLORS.textDark
           }
           bold
+          size={10.5}
           marginRight={rw(2)}>
           {title}
         </Text>
@@ -106,11 +107,11 @@ export default SettingOption;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    width: rw(81),
-    marginTop: rh(1.5),
+    width: rw(79),
+    marginTop: rh(1.2),
     marginVertical: rh(0.5),
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: rw(1),
+    paddingHorizontal: rw(0),
   },
 });

@@ -33,12 +33,19 @@ import {
 
 import { useApi } from '../../../libs/hooks';
 import { checkCodeApi, sendCodeApi } from '../apis';
-import { COLORS, PALETTE, rh, rw, STATUS_BAR_HEIGHT } from '../../../configs';
+import {
+  COLORS,
+  ICON_SIZE,
+  PALETTE,
+  rh,
+  rw,
+  STATUS_BAR_HEIGHT,
+} from '../../../configs';
 
 import verifyBg from '../../../assets/vectors/register/verify.png';
 import back from '../../../assets/icons/btns/back.png';
-import enableCheck from '../../../assets/icons/btns/enabled-check.png';
-import disableCheck from '../../../assets/icons/btns/disabled-check.png';
+import EnableCheck from '../../../assets/icons/btns/enabled-check.svg';
+import { numberConverter } from '../../../libs/helpers';
 
 const CELL_COUNT = 4;
 
@@ -46,22 +53,23 @@ const VerificationScreen = ({ navigation, route }) => {
   const params = route.params || {};
   const { saveFullInfo, settings } = useContext(WomanInfoContext);
 
-  const [code, setCode] = useState('');
+  const [value, setValue] = useState('');
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  });
   const [resendCode, setResendCode] = useState(false);
   const [timer, setTimer] = useState(60);
-  const ref = useBlurOnFulfill({ code, cellCount: CELL_COUNT });
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
-    code,
-    setCode,
-  });
+
   const [checkCode, setCheckCode] = useApi(() =>
-    checkCodeApi(params.mobile, code),
+    checkCodeApi(params.mobile, value),
   );
   const [sendCode, setSendCode] = useApi(() => sendCodeApi(params.mobile));
 
   const validateInput = function () {
-    if (code.length !== 4) {
+    if (value.length !== 4) {
       setSnackbar({
         msg: 'لطفا کد را وارد کنید!',
         visible: true,
@@ -90,7 +98,6 @@ const VerificationScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (checkCode.data && checkCode.data.is_successful) {
-      console.log('checkCode.data.data.user ', checkCode.data.data.user.mobile);
       saveFullInfo(null);
       saveWomanRelations([]);
       saveActiveRel(null);
@@ -99,10 +106,6 @@ const VerificationScreen = ({ navigation, route }) => {
         'userToken',
         JSON.stringify(checkCode.data.data.token),
       );
-      AsyncStorage.setItem(
-        'fullInfo',
-        JSON.stringify(checkCode.data.data.user),
-      );
       const periodStart = AsyncStorage.getItem('periodStart');
       periodStart && AsyncStorage.removeItem('periodStart');
       params.isNew
@@ -110,6 +113,18 @@ const VerificationScreen = ({ navigation, route }) => {
             CommonActions.reset({
               index: 0,
               routes: [{ name: 'EnterInfo' }],
+            }),
+          )
+        : params.resetPassword
+        ? navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'SetPassword',
+                  params: { info: checkCode.data.data.user },
+                },
+              ],
             }),
           )
         : navigation.dispatch(
@@ -133,7 +148,7 @@ const VerificationScreen = ({ navigation, route }) => {
         msg: sendCode.data.data,
         visible: true,
       });
-      setCode('');
+      setValue('');
       setResendCode(!resendCode);
       setTimer(60 * 2);
     }
@@ -170,20 +185,32 @@ const VerificationScreen = ({ navigation, route }) => {
           />
         </Pressable>
 
-        <Image source={verifyBg} style={styles.image} />
+        <Image
+          source={
+            settings?.app_image_verification_code_page
+              ? { uri: settings.app_image_verification_code_page.value }
+              : verifyBg
+          }
+          style={styles.image}
+        />
         <View style={{ marginTop: rh(3), width: rw(83) }}>
-          <Text large bold color={COLORS.dark}>
+          <Text size={16} bold color={COLORS.dark}>
             کد تایید
           </Text>
-          <Text color={COLORS.textLight} marginTop={rh(3)}>
-            کد تایید به شماره {params.mobile} ارسال شده
+          <Text size={10} color={COLORS.textLight} marginTop={rh(3)}>
+            کد تایید به شماره :
+            <Text bold color={COLORS.textDark}>
+              {' '}
+              {params.mobile}
+            </Text>{' '}
+            ارسال شده
           </Text>
         </View>
         <CodeField
           ref={ref}
           {...props}
-          value={code}
-          onChangeText={setCode}
+          value={value}
+          onChangeText={setValue}
           cellCount={CELL_COUNT}
           rootStyle={styles.codeFieldRoot}
           keyboardType="number-pad"
@@ -209,7 +236,10 @@ const VerificationScreen = ({ navigation, route }) => {
                 backgroundColor: '#FFF',
               }}
               digitTxtStyle={{ color: COLORS.textDark }}
-              timeLabelStyle={{ color: 'red', fontWeight: 'bold' }}
+              timeLabelStyle={{
+                color: 'red',
+                fontFamily: 'IRANYekanMobileBold',
+              }}
               separatorStyle={{ color: COLORS.textDark }}
               timeToShow={['M', 'S']}
               timeLabels={{ m: null, s: null }}
@@ -227,7 +257,7 @@ const VerificationScreen = ({ navigation, route }) => {
           </Pressable>
         </View>
         <Button
-          icons={[disableCheck, enableCheck]}
+          Icon={() => <EnableCheck style={ICON_SIZE} />}
           title="تایید کد"
           name="check"
           color={COLORS.primary}

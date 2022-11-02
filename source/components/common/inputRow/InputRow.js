@@ -4,6 +4,7 @@ import { View, StyleSheet, TextInput } from 'react-native';
 import { Text } from '../index';
 
 import { COLORS, rh, rw } from '../../../configs';
+import { adjust } from '../../../libs/helpers';
 
 const InputRow = ({
   handleTextInput,
@@ -41,14 +42,14 @@ const InputRow = ({
           value={editedText}
         />
         {isValid === false || required ? (
-          <Text small color={COLORS.error} bold alignSelf="flex-end">
+          <Text size={8} color={COLORS.error} bold alignSelf="flex-end">
             {tipText}
           </Text>
         ) : null}
       </View>
 
       <View style={{ width: rw(27), ...textStyle }}>
-        <Text color={COLORS.textLight} bold alignSelf="flex-end">
+        <Text size={11} color={COLORS.textLight} alignSelf="flex-end">
           {title}
         </Text>
       </View>
@@ -66,10 +67,10 @@ const styles = StyleSheet.create({
   },
   input: {
     width: rw(55),
-    height: rh(5.5),
+    height: rh(5.3),
     backgroundColor: COLORS.inputTabBarBg,
     borderRadius: 5,
-    fontSize: 13,
+    fontSize: adjust(10),
     fontFamily: 'IRANYekanMobileBold',
     color: COLORS.textLight,
   },

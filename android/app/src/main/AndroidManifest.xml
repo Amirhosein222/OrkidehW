@@ -32,7 +32,6 @@
           <data android:scheme="orkidehw" />
         </intent-filter>
       </activity>
-      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <meta-data
         android:name="pushe_token"
         android:value="OGVwNjdwNncwMzIwMW00ZEBvdXNANzcxMjYwMDM2NTQ0" />

@@ -6,7 +6,7 @@ import {
   LoginScreen,
   RegisterScreen,
   VerificationScreen,
-  SetAlarmScreen,
+  SetPassword,
   SymptomsScreen,
   PMSInfoScreen,
   EnterInfoScreen,
@@ -20,6 +20,7 @@ import {
   AddRelScreen,
   UpdateRelScreen,
 } from '../screens';
+import DefaultImages from '../components/common/defaultImages/DefaultImages';
 
 import DrawerNavigator from './DrawerNavigation';
 import { ActivityIndicator } from 'react-native';
@@ -73,7 +74,7 @@ export default function MainStackNavigator({ isLoggedin, showAuth }) {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          initialParams={{ editNumber: false }}
+          initialParams={{ editNumber: false, resetPassword: false }}
         />
         <Stack.Screen name="Verification" component={VerificationScreen} />
         <Stack.Screen
@@ -82,7 +83,6 @@ export default function MainStackNavigator({ isLoggedin, showAuth }) {
           initialParams={{ editProfile: false, reEnter: false }}
         />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="SetAlarm" component={SetAlarmScreen} />
         <Stack.Screen name="PMSInfo" component={PMSInfoScreen} />
         <Stack.Screen name="Symptoms" component={SymptomsScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -93,6 +93,8 @@ export default function MainStackNavigator({ isLoggedin, showAuth }) {
         <Stack.Screen name="Relations" component={RelationsScreen} />
         <Stack.Screen name="AddRel" component={AddRelScreen} />
         <Stack.Screen name="UpdateRel" component={UpdateRelScreen} />
+        <Stack.Screen name="DefaultImages" component={DefaultImages} />
+        <Stack.Screen name="SetPassword" component={SetPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );

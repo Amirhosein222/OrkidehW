@@ -4,11 +4,21 @@ import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { TabBar } from '../components/common';
-import { HomeScreen, SymptomsScreen } from '../screens';
+import { HomeScreen } from '../screens';
 
-import { MemoryTabs, PeriodTabs } from './TobTabNavigator';
+import {
+  MemoryTabs,
+  PeriodTabs,
+  PartnerMoodsExpsTabs,
+} from './TobTabNavigator';
 
-import { COLORS, rh, rw } from '../configs';
+import {
+  COLORS,
+  rh,
+  rw,
+  TAB_BIG_ICON_SIZE,
+  TAB_SMALL_ICON_SIZE,
+} from '../configs';
 import { WomanInfoContext } from '../libs/context/womanInfoContext';
 
 import BigSweet from '../assets/icons/home/big-sweetheart.svg';
@@ -30,14 +40,6 @@ export function BottomTabs() {
     };
   };
 
-  const iconsBorderStyle = (focused) => {
-    return {
-      borderBottomWidth: focused ? 2 : 0,
-      paddingBottom: focused ? 5 : 0,
-      borderBottomColor: COLORS.textLight,
-    };
-  };
-
   return (
     <Tab.Navigator
       initialRouteName="HomeScreen"
@@ -51,42 +53,36 @@ export function BottomTabs() {
         upperCaseLabel: false,
       }}>
       <Tab.Screen
-        name="PeriodTabs"
+        name="PartnerMoodsExpsTabs"
         options={{
           title: 'دلبر',
           tabBarIcon: ({ tintColor, focused }) => (
             <View
               style={[
                 handleTabsStyle(focused),
-                iconsBorderStyle(focused),
-                { marginLeft: rw(4) },
+                { marginLeft: rw(0) },
                 { marginTop: rw(1) },
               ]}>
               {focused ? (
-                <BigSweet style={{ width: 25, height: 25 }} />
+                <BigSweet style={TAB_BIG_ICON_SIZE} />
               ) : (
-                <SmallSweet style={{ width: 25, height: 25 }} />
+                <SmallSweet style={TAB_SMALL_ICON_SIZE} />
               )}
             </View>
           ),
         }}
-        component={PeriodTabs}
+        component={PartnerMoodsExpsTabs}
       />
       <Tab.Screen
         name="MemoriesTab"
         options={{
           title: 'خاطرات',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View
-              style={[
-                handleTabsStyle(focused),
-                iconsBorderStyle(focused),
-                { marginTop: rw(1) },
-              ]}>
+            <View style={[handleTabsStyle(focused), { marginTop: rw(1) }]}>
               {focused ? (
-                <BigMem style={{ width: 25, height: 25 }} />
+                <BigMem style={TAB_BIG_ICON_SIZE} />
               ) : (
-                <SmallMem style={{ width: 25, height: 25 }} />
+                <SmallMem style={TAB_SMALL_ICON_SIZE} />
               )}
             </View>
           ),
@@ -98,16 +94,11 @@ export function BottomTabs() {
         options={{
           title: 'خانه',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View
-              style={[
-                handleTabsStyle(focused),
-                iconsBorderStyle(focused),
-                { marginTop: rw(1) },
-              ]}>
+            <View style={[handleTabsStyle(focused), { marginTop: rw(1) }]}>
               {focused ? (
-                <BigHome style={{ width: 25, height: 25 }} />
+                <BigHome style={TAB_BIG_ICON_SIZE} />
               ) : (
-                <SmallHome style={{ width: 25, height: 25 }} />
+                <SmallHome style={TAB_SMALL_ICON_SIZE} />
               )}
             </View>
           ),
@@ -115,20 +106,20 @@ export function BottomTabs() {
         component={HomeScreen}
       />
       <Tab.Screen
-        name="Symptoms"
+        name="PeriodTabs"
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
             <SympIcon
               style={{
-                width: 25,
-                height: 25,
-                marginTop: rh(1),
+                width: rw(7.5),
+                height: rh(4.2),
+                marginTop: rh(1.1),
                 marginLeft: rw(1),
               }}
             />
           ),
         }}
-        component={SymptomsScreen}
+        component={PeriodTabs}
       />
     </Tab.Navigator>
   );

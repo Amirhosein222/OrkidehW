@@ -96,7 +96,7 @@ const PeriodInfo = ({
           width: rw(100),
           justifyContent: 'center',
         }}>
-        <Text medium color={COLORS.textDark} bold marginTop={rh(2)}>
+        <Text size={16} color={COLORS.textDark} bold marginTop={rh(2)}>
           {registerStage === 1
             ? 'تاریخ آخرین پریودتان'
             : registerStage === 2

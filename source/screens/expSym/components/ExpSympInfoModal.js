@@ -1,16 +1,64 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  View,
+  Pressable,
+  ActivityIndicator,
+  StyleSheet,
+  ScrollView,
+  Image,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import { Text } from '../../../components/common';
 
-import { useIsPeriodDay } from '../../../libs/hooks';
+import { storeExpectationApi } from '../apis';
+import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 import { baseUrl, COLORS, rh, rw } from '../../../configs';
+import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 
-const ExpSympInfoModal = ({ item, visible, closeModal }) => {
+const ExpSympInfoModal = ({
+  item,
+  visible,
+  closeModal,
+  setSnackbar,
+  updateMyExps,
+  isExp = false,
+}) => {
   const isPeriodDay = useIsPeriodDay();
+  const womanInfo = useContext(WomanInfoContext);
+  const [isSending, setIsSending] = useState(false);
+
+  const [storeExpectation, setStoreExpectation] = useApi(() =>
+    storeExpectationApi(item.id, womanInfo.activeRel.relId),
+  );
+  const onStoreExpectation = async function () {
+    setIsSending(true);
+    setStoreExpectation();
+  };
+
+  useEffect(() => {
+    if (storeExpectation.data && storeExpectation.data.is_successful) {
+      setIsSending(false);
+      setSnackbar({
+        msg: 'با موفقیت ثبت شد.',
+        visible: true,
+        type: 'success',
+      });
+      updateMyExps();
+      closeModal();
+    }
+    if (storeExpectation.data && !storeExpectation.data.is_successful) {
+      setIsSending(false);
+      setSnackbar({
+        msg: storeExpectation.data.message,
+        visible: true,
+      });
+      closeModal();
+    }
+  }, [storeExpectation]);
+
   return (
     <Modal
       isVisible={visible}
@@ -20,9 +68,8 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
       backdropTransitionOutTiming={1}
       animationOutTiming={0}
       animationInTiming={0}
-      onBackdropPress={() => closeModal()}
+      onBackdropPress={isSending ? () => {} : () => closeModal()}
       animationIn="zoomIn"
-      // animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
@@ -31,7 +78,7 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
         }}>
         <View style={styles.header}>
           <AntDesign
-            onPress={() => closeModal()}
+            onPress={isSending ? () => {} : () => closeModal()}
             name="close"
             size={26}
             color={COLORS.expSympReadMore}
@@ -45,17 +92,22 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
                 ? { uri: baseUrl + item.image }
                 : require('../../../assets/images/icons8-heart-100.png')
             }
-            style={styles.icon}
+            style={{
+              width: item.image ? 140 : 100,
+              height: item.image ? 140 : 100,
+            }}
+            resizeMode="contain"
           />
         </View>
 
-        <ScrollView>
-          <Text color={COLORS.expSympTitle} bold large marginTop={rh(2)}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text color={COLORS.expSympTitle} bold medium marginTop={rh(2)}>
             {item.title}
           </Text>
           {item.description ? (
             <Text
-              color={COLORS.dark}
+              bold
+              color={COLORS.textLight}
               marginTop={rh(2)}
               textAlign="right"
               alignSelf="center">
@@ -63,6 +115,19 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
             </Text>
           ) : null}
         </ScrollView>
+        {isExp && (
+          <Pressable
+            onPress={() => onStoreExpectation()}
+            style={styles.submitBtn}>
+            {isSending ? (
+              <ActivityIndicator color={COLORS.primary} size="small" />
+            ) : (
+              <Text bold color={COLORS.primary}>
+                ثبت
+              </Text>
+            )}
+          </Pressable>
+        )}
       </View>
     </Modal>
   );
@@ -83,7 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   closeIcon: {
-    marginRight: rw(2),
+    marginRight: rw(2.5),
   },
   icon: {
     width: 100,
@@ -98,21 +163,23 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: 'center',
   },
-  checkBox: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '40%',
-    alignSelf: 'center',
-    margin: 10,
-  },
   btn: { width: '40%', height: 40, margin: 20, alignSelf: 'center' },
   imageContainer: {
     alignItems: 'center',
     width: rw(71),
     borderRightWidth: 3,
     borderRightColor: COLORS.icon,
+    marginTop: rh(2),
+  },
+  submitBtn: {
+    width: rw(67),
+    backgroundColor: COLORS.white,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
     marginTop: rh(4),
+    borderRadius: 25,
+    height: rh(5.5),
+    justifyContent: 'center',
   },
 });
 

@@ -19,7 +19,10 @@ import {
   WomanInfoContext,
 } from '../../../libs/context/womanInfoContext';
 
-import { getExpectationsFromSpouseApi, storeExpectationApi } from '../apis';
+import {
+  getExpectationsFromSpouseApi,
+  getMyExpectationsFromSpouseApi,
+} from '../apis';
 import { COLORS, rh } from '../../../configs';
 import { useApi } from '../../../libs/hooks';
 
@@ -27,18 +30,19 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
   const selectedExp = useRef(null);
 
-  const [expectations, setExpectations] = useState({});
-  const [isStoring, setIsStoring] = useState({ storing: false, exId: null });
-  const [showModal, setShowModal] = useState(false);
+  const [expectations, setExpectations] = useState([]);
+  const [myExps, setMyExps] = useState([]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [resetPicker, setResetPicker] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+
   const [getExpectationsFromSpouse, setGetExpectationsFromSpouse] = useApi(() =>
     getExpectationsFromSpouseApi(womanInfo.activeRel.relId),
   );
-  const [storeExpectation, setStoreExpectation] = useApi(() =>
-    storeExpectationApi(selectedExp.current.id, womanInfo.activeRel.relId),
+  const [myExpsFromSpouce, setMyExpsFromSpouse] = useApi(() =>
+    getMyExpectationsFromSpouseApi(womanInfo.activeRel.relId),
   );
+
   const onGetExpectationsFromSpouse = async function () {
     if (!womanInfo.activeRel) {
       return;
@@ -50,12 +54,6 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
     setSnackbar({
       visible: !snackbar.visible,
     });
-  };
-
-  const onStoreExpectation = async function (exp) {
-    selectedExp.current = exp;
-    setIsStoring({ storing: true, exId: exp.id });
-    setStoreExpectation();
   };
 
   const setActiveSpouse = async function (value) {
@@ -95,10 +93,6 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
     });
   };
 
-  const handleModal = function () {
-    setShowModal(!showModal);
-  };
-
   const openInfoModal = (exp) => {
     selectedExp.current = exp;
     setShowInfoModal(true);
@@ -109,15 +103,24 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
   };
 
   const RenderExpectations = ({ item }) => {
+    const alreadySelected =
+      (myExps.length &&
+        myExps.some((exp) => exp.expectation_id === item.id && true)) ||
+      false;
     return (
       <ExpSympCard
         item={item}
-        onPress={onStoreExpectation}
         onReadMore={openInfoModal}
-        isExp={isStoring}
+        onPress={openInfoModal}
+        isExp={true}
+        alreadySelected={alreadySelected}
       />
     );
   };
+
+  useEffect(() => {
+    womanInfo.activeRel && setMyExpsFromSpouse();
+  }, [womanInfo.activeRel]);
 
   useEffect(() => {
     onGetExpectationsFromSpouse();
@@ -139,23 +142,16 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
   }, [getExpectationsFromSpouse]);
 
   useEffect(() => {
-    if (storeExpectation.data && storeExpectation.data.is_successful) {
-      setIsStoring({ storing: false, exId: selectedExp.current.id });
-      setSnackbar({
-        msg: 'با موفقیت ثبت شد.',
-        visible: true,
-        type: 'success',
-      });
-      handleModal();
+    if (myExpsFromSpouce.data && myExpsFromSpouce.data.is_successful) {
+      setMyExps(myExpsFromSpouce.data.data);
     }
-    if (storeExpectation.data && !storeExpectation.data.is_successful) {
-      setIsStoring({ storing: false, exId: selectedExp.current.id });
+    myExpsFromSpouce.data &&
+      !myExpsFromSpouce.data.is_successful &&
       setSnackbar({
-        msg: storeExpectation.data.message,
+        msg: myExpsFromSpouce.data.message,
         visible: true,
       });
-    }
-  }, [storeExpectation]);
+  }, [myExpsFromSpouce]);
 
   return (
     <BackgroundView resizeMode="cover">
@@ -192,6 +188,9 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
           visible={showInfoModal}
           closeModal={() => setShowInfoModal(false)}
           item={selectedExp.current}
+          setSnackbar={setSnackbar}
+          updateMyExps={setMyExpsFromSpouse}
+          isExp={true}
         />
       )}
 

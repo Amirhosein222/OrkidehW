@@ -31,16 +31,16 @@ const getLoginClient = async () => {
 
 // Intercept all request
 // loginClient.interceptors.request.use(
-//   (config) => {
+//   config => {
 //     console.log('configs: ', config);
 //     return config;
 //   },
-//   (error) => Promise.reject(error),
+//   error => Promise.reject(error),
 // );
 
 // Intercept all responses
 loginClient.interceptors.response.use(
-  async (response) => {
+  async response => {
     if (response.status === 401) {
       try {
         const value = await AsyncStorage.getItem('userToken');
@@ -55,7 +55,7 @@ loginClient.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  error => {
     console.error(error);
     return Promise.reject(error);
   },

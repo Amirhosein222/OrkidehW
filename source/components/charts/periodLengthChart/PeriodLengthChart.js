@@ -3,24 +3,17 @@ import { StyleSheet, View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
 import { Text } from '../../common';
-import { rh, rw } from '../../../configs';
+import { COLORS, rh, rw } from '../../../configs';
 
-const PeriodLengthChart = () => {
-  const data = [
-    { value: 15, label: 3, hideDataPoint: true },
-    {
-      value: 30,
-      label: 5,
-      hideDataPoint: false,
-      labelTextStyle: { color: 'blue' },
-    },
-    { value: 75, label: 7, hideDataPoint: true },
-    { value: 100, label: 10, hideDataPoint: true },
-    { value: 250, label: 12, hideDataPoint: true },
-  ];
-
+const PeriodLengthChart = ({ chartData }) => {
   return (
-    <View style={{ alignSelf: 'center' }}>
+    <View
+      style={{
+        alignSelf: 'center',
+        paddingBottom: rh(2),
+        marginTop: rh(3),
+        height: rh(32),
+      }}>
       <LineChart
         areaChart
         curved
@@ -28,16 +21,38 @@ const PeriodLengthChart = () => {
         minValue={100}
         noOfSections={3}
         stepValue={100}
-        data={data}
-        startFillColor="rgb(46, 217, 255)"
+        data={chartData}
+        startFillColor={COLORS.primary}
         startOpacity={0.8}
-        endFillColor="rgb(203, 241, 250)"
+        endFillColor={COLORS.white}
         endOpacity={0.3}
-        height={rh(20)}
+        height={rh(22)}
         width={rw(65)}
         showDataPointOnPress={false}
+        dataPointsColor={COLORS.primary}
         adjustToWidth={true}
       />
+      <View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          left: rh(-27),
+          top: rh(27),
+        }}>
+        <Text size={10} color={COLORS.textLight}>
+          طول دوره
+        </Text>
+      </View>
+      <View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          left: rh(-51),
+          top: rh(15),
+          transform: [{ rotate: '90deg' }],
+        }}>
+        <Text size={10} color={COLORS.textLight}>
+          تعداد افراد
+        </Text>
+      </View>
     </View>
   );
 };

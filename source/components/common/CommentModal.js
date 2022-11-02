@@ -10,6 +10,7 @@ import getLoginClient from '../../libs/api/loginClientApi';
 
 import { Text, TextInput, Snackbar } from './index';
 import { COLORS } from '../../configs';
+import { useIsPeriodDay } from '../../libs/hooks';
 
 const CommentModal = ({
   visible,
@@ -18,6 +19,7 @@ const CommentModal = ({
   parent_id,
   updateComments,
 }) => {
+  const isPeriodDay = useIsPeriodDay();
   const [comment, setComment] = useState('');
   const [btnPressed, setBtnPressed] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
@@ -107,7 +109,9 @@ const CommentModal = ({
           style={styles.btn}
           loading={btnPressed ? true : false}
           onPress={() => sendComment()}>
-          <Text color={COLORS.primary}>ارسال نظر</Text>
+          <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+            ارسال نظر
+          </Text>
         </Button>
       </View>
       {snackbar.visible === true ? (

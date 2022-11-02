@@ -17,6 +17,7 @@ const WomanInfoProvider = function ({ children }) {
   const [userPeriodDays, setUserPeriodDays] = useState(null);
   const [isPeriodDay, setIsPeriodDay] = useState(false);
   const [settings, setSettings] = useState(null);
+  const [allSettings, setAllSettings] = useState(null);
 
   saveWomanRelations = function (relations) {
     setRels(relations);
@@ -30,28 +31,32 @@ const WomanInfoProvider = function ({ children }) {
     setActiveRel(rel);
   };
 
-  const saveSettings = (sets) => {
+  const saveSettings = sets => {
     setSettings(sets);
   };
 
-  const handleRegisterStage = (stage) => {
+  const saveAllSettings = sets => {
+    setAllSettings(sets);
+  };
+
+  const handleRegisterStage = stage => {
     setRegisterStage(stage);
   };
 
-  const savePeriodInfo = (info) => {
+  const savePeriodInfo = info => {
     setPeriodInfo(info);
   };
 
-  const handleUserPeriodDays = (pDays) => {
+  const handleUserPeriodDays = pDays => {
     setUserPeriodDays(pDays);
     const today = moment().locale('en').format('YYYY-MM-DD');
     const result = pDays.find(
-      (d) => moment(d.date, 'X').locale('en').format('YYYY-MM-DD') === today,
+      d => moment(d.date, 'X').locale('en').format('YYYY-MM-DD') === today,
     );
     setIsPeriodDay(result ? true : false);
   };
 
-  const handleUserCalendar = (calendar) => {
+  const handleUserCalendar = calendar => {
     setUserCalendar(calendar);
   };
 
@@ -73,6 +78,8 @@ const WomanInfoProvider = function ({ children }) {
         saveSettings,
         periodInfo,
         savePeriodInfo,
+        allSettings,
+        saveAllSettings,
       }}>
       {children}
     </WomanInfoContext.Provider>

@@ -8,16 +8,21 @@ import { COLORS, rh, rw } from '../../configs';
 const PMSCard = ({ info, hasBar, icon }) => {
   return (
     <View style={{ ...styles.container, width: hasBar ? rw(40) : rw(34.8) }}>
-      <Image source={icon} style={{ width: 80, height: 80 }} />
-      <Text small color={COLORS.textLight}>
+      <Image
+        source={info.image ? { uri: info.image } : icon}
+        style={{ width: 80, height: 80 }}
+      />
+      <Text marginTop={rh(1)} bold color={COLORS.textLight}>
         {info.title}
       </Text>
       {!hasBar && (
         <View style={{ flexDirection: 'row', marginTop: rh(0.5) }}>
-          <Text small color={COLORS.textLight} marginRight={rw(1)}>
+          <Text size={10} bold color={COLORS.textLight} marginRight={rw(1)}>
             بار
           </Text>
-          <Text color={COLORS.textDark}>{info.count}</Text>
+          <Text size={14} bold color={COLORS.textDark}>
+            {info.count}
+          </Text>
         </View>
       )}
 
@@ -37,6 +42,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignSelf: 'center',
     marginHorizontal: rw(2),
+    marginVertical: rh(1),
   },
 });
 

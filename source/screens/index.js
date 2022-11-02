@@ -1,20 +1,31 @@
-import { RegisterScreen, VerificationScreen, LoginScreen } from './auth';
+import {
+  RegisterScreen,
+  VerificationScreen,
+  LoginScreen,
+  SetPassword,
+} from './auth';
 
 import HomeScreen from './home';
-import ContactCounselorScreen from './main/ContactCounselorScreen';
-import SetAlarmScreen from './main/SetAlarmScreen';
-import SymptomsScreen from './main/SymptomsScreen';
-import ChartScreen from './main/ChartScreen';
-import LearningBankScreen from './main/LearningBankScreen';
-import LoveNotificationScreen from './main/loveNotificationScreen';
+import {
+  ChartScreen,
+  ContactCounselorScreen,
+  LearningBankScreen,
+  SymptomsScreen,
+  LoveNotificationScreen,
+} from './menu';
 
 import { SpouseExpectationsTabScreen, PeriodSymptomsTabScreen } from './expSym';
+import {
+  PartnerMoodsTabScreen,
+  PartnerExpsTabScreen,
+} from './partnerMoodsExps';
 
 import { MyGapsScreen, AllGapsScreen } from './gaps';
 
-import PsychologyTestsScreen from './psychologyTests/PsychologyTestsScreen';
-import PsychologyTestDetailsScreen from './psychologyTests/PsychologyTestDetailsScreen';
-import TestResultScreen from './psychologyTests/TestResultScreen';
+import {
+  PsychologyTestDetailsScreen,
+  PsychologyTestsScreen,
+} from './psychologyTests';
 
 import { EnterInfoScreen } from './enterInfo';
 import PMSInfoScreen from './informations/PMSInfoScreen';
@@ -38,7 +49,6 @@ export {
   LoginScreen,
   VerificationScreen,
   ContactCounselorScreen,
-  SetAlarmScreen,
   HomeScreen,
   SymptomsScreen,
   ChartScreen,
@@ -51,7 +61,6 @@ export {
   AllGapsScreen,
   PsychologyTestsScreen,
   PsychologyTestDetailsScreen,
-  TestResultScreen,
   PMSInfoScreen,
   EnterInfoScreen,
   AboutUsScreen,
@@ -69,4 +78,7 @@ export {
   AddRelScreen,
   UpdateRelScreen,
   EditCyclesScreen,
+  PartnerMoodsTabScreen,
+  PartnerExpsTabScreen,
+  SetPassword,
 };

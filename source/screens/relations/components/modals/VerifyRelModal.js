@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
+    overflow: 'hidden',
   },
   content: {
     alignItems: 'center',

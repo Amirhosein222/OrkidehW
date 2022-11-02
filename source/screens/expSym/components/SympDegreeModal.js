@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FormData from 'form-data';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import Slider from '@react-native-community/slider';
 import { Checkbox } from 'react-native-paper';
 
@@ -19,7 +18,8 @@ import { Text } from '../../../components/common';
 import { useIsPeriodDay } from '../../../libs/hooks';
 import getLoginClient from '../../../libs/api/loginClientApi';
 
-import { baseUrl, COLORS, rh, rw } from '../../../configs';
+import { baseUrl, COLORS, ICON_SIZE, rh, rw } from '../../../configs';
+import CloseIcon from '../../../assets/icons/btns/close.svg';
 
 const SympDegreeModal = ({
   visible,
@@ -27,18 +27,20 @@ const SympDegreeModal = ({
   sign,
   signDate,
   setSnackbar,
+  updateMySigns,
 }) => {
   const isPeriodDay = useIsPeriodDay();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [fetchingAllMoods, setFetchingAllMoods] = useState(true);
   const [fetchingMyMood, setFetchingMyMood] = useState(true);
-  const [choosedRadio, setChoosedRadio] = useState(false);
   const [checkbox, setCheckbox] = useState(new Map([]));
-  const [moods, setMoods] = useState([]);
-  const [selectedMood, setSelectedMood] = React.useState(null);
+  const moodsRef = useRef([]);
+  const [selectedMood, setSelectedMood] = useState(null);
+  const [allMoods, setAllMoods] = useState([]);
+  const [alreadySelectedMood, setAlreadySelectedMood] = useState(0);
 
   const sliderValueHandler = async (value) => {
-    setSelectedMood(moods[value]);
+    setSelectedMood(allMoods[value]);
   };
   const getSymptomsMood = async function () {
     const loginClient = await getLoginClient();
@@ -46,15 +48,22 @@ const SympDegreeModal = ({
     formData.append('sign_id', sign.id);
     formData.append('gender', 'woman');
     loginClient.post('moods_of_sign', formData).then((response) => {
-      setIsLoading(false);
       if (response.data.is_successful) {
-        setMoods(response.data.data.moods);
+        moodsRef.current = response.data.data.moods;
+        setAllMoods(response.data.data.moods);
+        setFetchingAllMoods(false);
       }
     });
   };
 
+  const handleAlreadySelectedMood = (selectedMoodId) => {
+    const moodIndex = moodsRef.current.findIndex(
+      (m) => m.id === selectedMoodId,
+    );
+    setAlreadySelectedMood(moodIndex);
+  };
+
   const handleSelectedMood = async function (mood) {
-    setChoosedRadio(true);
     if (sign.is_multiple === 0) {
       setIsSending(true);
       const moodObj = {
@@ -66,9 +75,8 @@ const SympDegreeModal = ({
       const loginClient = await getLoginClient();
       loginClient.post('store/sign', moodObj).then((response) => {
         setIsSending(false);
-
-        setChoosedRadio(false);
         if (response.data.is_successful) {
+          updateMySigns();
           setSnackbar({
             msg: 'با موفقیت ثبت شد',
             visible: true,
@@ -95,8 +103,8 @@ const SympDegreeModal = ({
       };
       const loginClient = await getLoginClient();
       loginClient.post('store/sign', moodObj).then((response) => {
-        setChoosedRadio(false);
         if (response.data.is_successful) {
+          updateMySigns();
           setSnackbar({
             msg: 'با موفقیت ثبت شد',
             visible: true,
@@ -130,25 +138,15 @@ const SympDegreeModal = ({
             items.set(item.mood.id);
             setCheckbox(items);
             if (item.sign_id === sign.id && sign.is_multiple === 0) {
-              setChoosedRadio(true);
-              setSnackbar({
-                msg: 'شما در این تاریخ این علامت را ثبت کرده اید!',
-                visible: true,
-              });
-              closeModal();
-            } else {
-              getSymptomsMood();
+              handleAlreadySelectedMood(item.mood.id);
             }
           });
-        } else {
-          getSymptomsMood();
         }
       } else {
         setSnackbar({
           msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
           visible: true,
         });
-        closeModal();
       }
     });
   };
@@ -161,7 +159,6 @@ const SympDegreeModal = ({
           status={checkbox.has(item.id) ? 'checked' : 'unchecked'}
           color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
           onPress={() => handleSelectedMood(item)}
-          disabled={choosedRadio ? true : false}
         />
       </View>
     );
@@ -169,9 +166,15 @@ const SympDegreeModal = ({
 
   useEffect(() => {
     if (visible === true) {
-      getMyMoods();
+      getSymptomsMood();
     }
   }, []);
+
+  useEffect(() => {
+    if (!fetchingAllMoods) {
+      getMyMoods();
+    }
+  }, [fetchingAllMoods]);
 
   return (
     <Modal
@@ -184,13 +187,14 @@ const SympDegreeModal = ({
       animationInTiming={0}
       onBackdropPress={isSending ? null : () => closeModal()}
       animationIn="zoomIn"
+      animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
           ...styles.modalContent,
           backgroundColor: 'white',
         }}>
-        {isLoading || fetchingMyMood ? (
+        {fetchingAllMoods || fetchingMyMood ? (
           <ActivityIndicator
             size="large"
             color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
@@ -202,25 +206,27 @@ const SympDegreeModal = ({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View style={styles.header}>
-              <AntDesign
-                onPress={isSending ? null : () => closeModal()}
-                name="close"
-                size={26}
-                color={COLORS.expSympTitle}
-                style={styles.closeIcon}
+            <Pressable
+              onPress={isSending ? null : () => closeModal()}
+              style={styles.header}>
+              <CloseIcon style={ICON_SIZE} />
+            </Pressable>
+            <View style={styles.imageContainer}>
+              <Image
+                source={
+                  sign.image
+                    ? { uri: baseUrl + sign.image }
+                    : require('../../../assets/images/icons8-heart-100.png')
+                }
+                style={{
+                  width: sign.image ? 140 : 100,
+                  height: sign.image ? 140 : 100,
+                }}
+                resizeMode="contain"
               />
             </View>
-            <Image
-              source={
-                sign.image
-                  ? { uri: baseUrl + sign.image }
-                  : require('../../../assets/images/icons8-heart-100.png')
-              }
-              style={styles.icon}
-            />
-            <Text color={COLORS.dark} large bold>
-              {sign.title}
+            <Text color={COLORS.dark} medium bold>
+              میزان {sign.title} شما در این دوره
             </Text>
             {!sign.is_multiple ? (
               <View
@@ -231,44 +237,53 @@ const SympDegreeModal = ({
                 }}>
                 <Slider
                   style={{
-                    width: rw(82),
+                    width: rw(73),
                     height: 40,
                     marginBottom: rh(1),
                     marginTop: rh(1),
                   }}
+                  value={alreadySelectedMood}
                   minimumValue={0}
-                  maximumValue={moods.length - 1}
+                  maximumValue={allMoods.length - 1}
                   step={1}
                   onValueChange={sliderValueHandler}
-                  minimumTrackTintColor={COLORS.expSympTitle}
+                  minimumTrackTintColor={COLORS.primary}
                   maximumTrackTintColor="#000000"
-                  thumbTintColor={COLORS.expSympTitle}
+                  thumbTintColor="#E6E6E6"
                 />
                 <View
                   style={{
                     flexDirection: 'row',
-                    width: rw(80),
-                    justifyContent: 'space-between',
+                    width: rw(87),
+                    justifyContent: 'space-evenly',
                     paddingHorizontal: rw(2),
                   }}>
-                  {!sign.is_multiple && moods.length
-                    ? moods.map((m) => <Text key={m.id}>{m.title}</Text>)
+                  {!sign.is_multiple && allMoods.length
+                    ? allMoods.map((m) => (
+                        <Text key={m.id} small color={COLORS.textLight}>
+                          {m.title}
+                        </Text>
+                      ))
                     : null}
                 </View>
+                <Text color={COLORS.dark} medium bold marginTop={rh(2)}>
+                  {sign.title}
+                </Text>
                 <Pressable
                   onPress={handleSelectedMood}
-                  disabled={choosedRadio}
                   style={styles.submitBtn}>
                   {isSending ? (
-                    <ActivityIndicator color="white" size="small" />
+                    <ActivityIndicator color={COLORS.primary} size="small" />
                   ) : (
-                    <Text color="white">ثبت</Text>
+                    <Text bold color={COLORS.primary}>
+                      ثبت
+                    </Text>
                   )}
                 </Pressable>
               </View>
             ) : (
               <FlatList
-                data={moods}
+                data={allMoods}
                 keyExtractor={(item) => item.id}
                 renderItem={RenderMoods}
                 style={{
@@ -286,10 +301,13 @@ const SympDegreeModal = ({
 const styles = StyleSheet.create({
   view: {
     justifyContent: 'center',
+    alignItems: 'center',
+    width: rw(100),
+    alignSelf: 'center',
   },
   header: {
     marginTop: rh(0),
-    paddingRight: rw(5),
+    paddingRight: rw(2.5),
     alignItems: 'center',
     flexDirection: 'row',
     alignSelf: 'center',
@@ -297,13 +315,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    width: '100%',
-    backgroundColor: COLORS.primary,
+    alignSelf: 'center',
+    width: '85%',
     borderRadius: 20,
-    justifyContent: 'center',
+    paddingHorizontal: rw(3),
+    paddingVertical: rh(2),
     elevation: 5,
     alignItems: 'center',
-    paddingVertical: rh(2),
   },
   checkBox: {
     flexDirection: 'row',
@@ -312,12 +330,26 @@ const styles = StyleSheet.create({
     marginVertical: rw(1.5),
   },
   submitBtn: {
-    width: '40%',
-    backgroundColor: COLORS.expSympTitle,
+    width: rw(67),
+    backgroundColor: COLORS.white,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
     marginTop: rh(4),
-    borderRadius: 20,
-    height: 35,
+    borderRadius: 25,
+    height: rh(5.5),
     justifyContent: 'center',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    width: rw(71),
+    borderRightWidth: 3,
+    borderRightColor: COLORS.icon,
+    marginTop: rh(2),
+  },
+  icon: {
+    width: 120,
+    height: 120,
+    backgroundColor: 'red',
   },
 });
 

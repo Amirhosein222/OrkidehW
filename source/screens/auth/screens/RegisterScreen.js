@@ -14,23 +14,24 @@ import {
 
 import { registerApi, changeNumberApi } from '../apis';
 import { useApi } from '../../../libs/hooks';
-import { sendActivationCode } from '../../../libs/apiCalls';
-import { validatePhoneNumber, showSnackbar } from '../../../libs/helpers';
+import { getSettings, sendActivationCode } from '../../../libs/apiCalls';
+import { validatePhoneNumber } from '../../../libs/helpers';
 
-import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../../configs';
+import { COLORS, ICON_SIZE, rh, rw, STATUS_BAR_HEIGHT } from '../../../configs';
 
 import loginBg from '../../../assets/vectors/register/login.png';
-import disabledAccept from '../../../assets/icons/btns/disabled-accept.png';
-import enabledAccept from '../../../assets/icons/btns/enabled-accept.png';
+import EnabledAccept from '../../../assets/icons/btns/enabled-accept.svg';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 
 const RegisterScreen = ({ navigation, route }) => {
   const params = route.params;
-  const { settings } = useContext(WomanInfoContext);
+  const { saveSettings } = useContext(WomanInfoContext);
+  const [settings, setSettings] = useApi(() => getSettings(''));
   const [phoneNumber, setPhoneNumber] = useState('');
   const [regentCode, setRegentCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [registerSettings, setRegisterSettings] = useState(null);
 
   const [activeCode, setActiveCode] = useApi(() =>
     sendActivationCode(phoneNumber),
@@ -87,12 +88,17 @@ const RegisterScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    setSettings();
+  }, []);
+
+  useEffect(() => {
     if (activeCode.data && activeCode.data.is_successful) {
       setIsLoading(false);
       navigation.navigate('Verification', {
         mobile: phoneNumber,
         regentCode: '',
         isNew: false,
+        resetPassword: params.resetPassword,
       });
     }
     if (activeCode.data && !activeCode.data.is_successful) {
@@ -109,6 +115,7 @@ const RegisterScreen = ({ navigation, route }) => {
         mobile: register.data.data.mobile,
         regentCode: register.data.data.regent_code,
         isNew: true,
+        resetPassword: params.resetPassword,
       });
     }
     if (register.data && !register.data.is_successful) {
@@ -127,7 +134,6 @@ const RegisterScreen = ({ navigation, route }) => {
         visible: true,
         type: 'success',
       });
-      AsyncStorage.setItem('fullInfo', JSON.stringify(changeNumber.data.data));
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -145,6 +151,20 @@ const RegisterScreen = ({ navigation, route }) => {
     }
   }, [changeNumber]);
 
+  useEffect(() => {
+    if (settings.data && settings.data.is_successful) {
+      const result = settings.data.data.find(
+        e => e.key === 'app_image_register_page',
+      );
+      result && setRegisterSettings(result);
+      const settingsObj = settings.data.data.reduce(
+        (acc, cur) => ({ ...acc, [cur.key]: cur }),
+        {},
+      );
+      saveSettings(settingsObj);
+    }
+  }, [settings]);
+
   return (
     <BackgroundView>
       <StatusBar
@@ -155,17 +175,17 @@ const RegisterScreen = ({ navigation, route }) => {
 
       <View style={styles.content}>
         <Image
-          source={
-            settings?.app_image_register_page
-              ? { uri: settings.app_image_register_page.value }
-              : loginBg
-          }
+          source={registerSettings ? { uri: registerSettings.value } : loginBg}
           style={{
             ...styles.image,
           }}
         />
-        <Text large color={COLORS.textDark} bold marginTop={rh(3)}>
-          {params.editNumber ? 'تغییر شماره تلفن' : 'ورود با شماره تلفن'}
+        <Text size={16} color={COLORS.textDark} bold marginTop={rh(3)}>
+          {params.editNumber
+            ? 'تغییر شماره تلفن'
+            : params.resetPassword
+            ? 'فراموشی رمز عبور'
+            : 'ورود با شماره تلفن'}
         </Text>
         <InputRow
           title="شماره موبایل :"
@@ -177,7 +197,7 @@ const RegisterScreen = ({ navigation, route }) => {
           tipText="فرمت شماره وارد شده صحیح است"
           textStyle={{ width: rw(29) }}
         />
-        {params.editNumber === false ? (
+        {!params.editNumber && !params.resetPassword ? (
           <InputRow
             title="کد معرف :"
             placeholder="کد معرف خود را اینجا وارد کنید"
@@ -187,26 +207,30 @@ const RegisterScreen = ({ navigation, route }) => {
             textStyle={{ width: rw(29) }}
           />
         ) : null}
-        <View
-          style={{
-            width: rw(82),
-            marginBottom: rh(4),
-            paddingHorizontal: rw(0.1),
-          }}>
-          <Text
-            small
-            color={COLORS.textLight}
-            textAlign="right"
-            marginTop={rh(2)}>
-            قبل از تایید شماره تلفنتان از امکان دریافت پیامک به این شماره
-            اطمینان حاصل نمایید
-          </Text>
-        </View>
+        {!params.resetPassword ? (
+          <View
+            style={{
+              width: rw(82),
+              marginBottom: rh(4),
+              paddingHorizontal: rw(0.1),
+            }}>
+            <Text
+              size={10}
+              color={COLORS.textLight}
+              textAlign="right"
+              marginTop={rh(2)}>
+              قبل از تایید شماره تلفنتان از امکان دریافت پیامک به این شماره
+              اطمینان حاصل نمایید
+            </Text>
+          </View>
+        ) : null}
 
         <Button
           title={params.editNumber === false ? 'دریافت کد تایید' : 'ویرایش'}
           color={COLORS.primary}
-          icons={[disabledAccept, enabledAccept]}
+          Icon={() => (
+            <EnabledAccept style={{ ...ICON_SIZE, marginTop: rh(0.5) }} />
+          )}
           loading={
             params.editNumber
               ? changeNumber.isFetching

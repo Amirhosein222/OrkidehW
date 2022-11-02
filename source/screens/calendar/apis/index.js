@@ -1,8 +1,3 @@
-import {
-  registerApi,
-  changeNumberApi,
-  checkCodeApi,
-  sendCodeApi,
-} from './apis';
+import { getDaysGroupedWithCycles } from './apis';
 
-export { registerApi, changeNumberApi, checkCodeApi, sendCodeApi };
+export { getDaysGroupedWithCycles };

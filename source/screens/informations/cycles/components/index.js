@@ -1,3 +1,4 @@
 import CyclesOption from './cyclesOption';
+import { PeriodInfoEditModal } from './modals';
 
-export { CyclesOption };
+export { CyclesOption, PeriodInfoEditModal };

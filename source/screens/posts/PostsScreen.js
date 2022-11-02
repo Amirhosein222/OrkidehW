@@ -8,24 +8,23 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swiper from 'react-native-swiper';
+import RenderHtml from 'react-native-render-html';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
 import {
-  Container,
-  IconWithBg,
-  Divider,
   Text,
   Image,
   CommentModal,
   Snackbar,
+  BackgroundView,
+  ScreenHeader,
 } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, STATUS_BAR_HEIGHT, baseUrl, rh, rw } from '../../configs';
-import { numberConverter } from '../../libs/helpers';
 
 const PostsScreen = ({ navigation, route }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -41,7 +40,7 @@ const PostsScreen = ({ navigation, route }) => {
     const loginClient = await getLoginClient();
     loginClient
       .get(`index/post?category_id=${params.catId}&gender=woman`)
-      .then((response) => {
+      .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
           setPosts(response.data.data);
@@ -71,7 +70,7 @@ const PostsScreen = ({ navigation, route }) => {
         {
           item.images ? (
             <Swiper style={styles.wrapper} showsButtons={true}>
-              {item.images.map((img) => {
+              {item.images.map(img => {
                 <Image
                   imageSource={{ uri: baseUrl + img.image }}
                   width="100%"
@@ -104,11 +103,12 @@ const PostsScreen = ({ navigation, route }) => {
             alignSelf="flex-end"
             marginRight="0"
             marginTop="10">
-            {numberConverter(item.title)}
+            {item.title}
           </Text>
-          <Text color={COLORS.dark} medium textAlign="right" alignSelf="center">
-            {numberConverter(item.text.replace(/(<([^>]+)>)/gi, ''))}
-          </Text>
+          <RenderHtml contentWidth={rw(90)} source={{ html: item.text }} />
+          {/* <Text color={COLORS.dark} medium textAlign="right" alignSelf="center">
+            {item.text.replace(/(<([^>]+)>)/gi, '')}
+          </Text> */}
         </View>
 
         <View style={{ flexDirection: 'row', width: '100%' }}>
@@ -122,38 +122,6 @@ const PostsScreen = ({ navigation, route }) => {
               بیشتر...
             </Text>
           </Pressable>
-          <View style={styles.commentSection}>
-            <View style={styles.commentContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text marginRight="5" color={COLORS.dark} small>
-                  نگار قاسمی
-                </Text>
-                <Image
-                  imageSource={require('../../assets/images/Ellipse.png')}
-                  width="20px"
-                  height="20px"
-                />
-              </View>
-              <Text marginRight="10" small>
-                کامنت کامنت
-              </Text>
-            </View>
-            <View style={styles.commentContainer}>
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Text marginRight="5" color={COLORS.dark} small>
-                  نگار قاسمی
-                </Text>
-                <Image
-                  imageSource={require('../../assets/images/Ellipse.png')}
-                  width="20px"
-                  height="20px"
-                />
-              </View>
-              <Text marginRight="10" small>
-                کامنت کامنت
-              </Text>
-            </View>
-          </View>
         </View>
       </View>
     );
@@ -165,84 +133,30 @@ const PostsScreen = ({ navigation, route }) => {
 
   if (isLoading) {
     return (
-      <Container>
-        <View
-          style={{
-            flex: 1,
-            width: '100%',
-            marginTop: STATUS_BAR_HEIGHT + rh(2.2),
-          }}>
-          <Text
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-            large
-            bold>
-            بانک آموزشی
-          </Text>
-          <Divider
-            width="100%"
-            color={COLORS.dark}
-            style={{ alignSelf: 'center', marginTop: rh(1) }}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
+      <BackgroundView>
+        <ScreenHeader title="بانک آموزشی" />
+
+        <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <ActivityIndicator
             size="large"
             color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           />
         </View>
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container justifyContent="flex-start">
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <View style={styles.header}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <IconWithBg
-              bgColor={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-              width="40px"
-              height="40px"
-              borderRadius="20px"
-              icon="chevron-left"
-              iconSize={30}
-              marginTop="20px"
-              marginLeft="10px"
-              marginBottom="10px"
-              alignSelf="flex-start"
-            />
-          </Pressable>
+        <ScreenHeader title="بانک آموزشی" />
 
-          <View style={{ flex: 1 }}>
-            <Text
-              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-              large
-              marginRight={rh(2)}
-              bold>
-              بانک آموزشی
-            </Text>
-          </View>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <MaterialCommunityIcons
-              name="menu"
-              color={COLORS.grey}
-              size={28}
-              style={{ marginRight: 10 }}
-            />
-          </Pressable>
-        </View>
-
-        <Divider
-          width="100%"
-          color={COLORS.dark}
-          // style={{ marginTop: rh(1) }}
-        />
         <FlatList
           data={posts}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           renderItem={RenderPosts}
           style={{ width: '100%', marginTop: 10 }}
         />
@@ -258,7 +172,7 @@ const PostsScreen = ({ navigation, route }) => {
             handleVisible={handleVisible}
           />
         ) : null}
-      </Container>
+      </BackgroundView>
     );
   }
 };

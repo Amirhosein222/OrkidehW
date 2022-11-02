@@ -7,6 +7,7 @@ import {
   Header,
   BackgroundView,
   Snackbar,
+  ShowLovePopup,
 } from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
@@ -16,6 +17,7 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const { routes, index } = state;
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [showLove, setShowLove] = useState(false);
 
   const handleTabColors = (focused) => {
     if (isPeriodDay) {
@@ -34,7 +36,7 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
   return (
     <BackgroundView
       resizeMode="stretch"
-      style={{ width: rw(100), height: rh(22) }}>
+      style={{ width: rw(100), height: rh(22), zIndex: 1 }}>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -43,7 +45,7 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
       <Header
         navigation={navigation}
         style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT + rh(2) }}
-        setSnackbar={setSnackbar}
+        setShowLovePopup={setShowLove}
       />
       <View style={styles.container}>
         {routes.map((route, index) => {
@@ -69,7 +71,11 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
               }}
               key={route.key}
               onPress={() => onPress()}>
-              <Text marginBottom="5" color={handleTabColors(focused)} bold>
+              <Text
+                medium
+                marginBottom="5"
+                color={handleTabColors(focused)}
+                bold>
                 {options.tabBarLabel}
               </Text>
             </Pressable>
@@ -82,6 +88,9 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
           type={snackbar.type}
           handleVisible={handleVisible}
         />
+      ) : null}
+      {showLove ? (
+        <ShowLovePopup handleVisible={() => setShowLove(false)} />
       ) : null}
     </BackgroundView>
   );

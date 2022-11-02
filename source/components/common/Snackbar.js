@@ -47,6 +47,7 @@ const Snackbar = ({
         style={{
           justifyContent: 'center',
           opacity: opacity,
+          paddingVertical: rh(2.5),
           transform: [
             {
               translateY: opacity.interpolate({
@@ -56,13 +57,13 @@ const Snackbar = ({
             },
           ],
           width: rw(80),
-          height: rh(8),
+          // height: rh(8),
           alignSelf: 'center',
           margin: 10,
           marginBottom: 5,
           backgroundColor: type === 'success' ? COLORS.success : COLORS.error,
           padding: 10,
-          borderRadius: 35,
+          borderRadius: 50,
           shadowColor: 'black',
           shadowOffset: {
             width: 0,

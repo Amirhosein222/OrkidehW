@@ -23,15 +23,15 @@ const Bars = ({ data }) => {
           justifyContent: 'center',
         }}>
         <View style={{ flexDirection: 'row', marginRight: rw(4) }}>
-          <Text small color={COLORS.textLight} marginRight={rw(1)}>
+          <Text bold color={COLORS.textLight} marginRight={rw(1)}>
             بار
           </Text>
-          <Text small color={COLORS.textDark}>
-            {data.count}
+          <Text bold color={COLORS.textDark}>
+            {Math.round(data.count * 10) / 10}
           </Text>
         </View>
         <Text
-          small
+          bold
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}>
           شما :
         </Text>
@@ -43,15 +43,15 @@ const Bars = ({ data }) => {
           justifyContent: 'center',
         }}>
         <View style={{ flexDirection: 'row', marginRight: rw(2) }}>
-          <Text small color={COLORS.textLight} marginRight={rw(1)}>
+          <Text bold color={COLORS.textLight} marginRight={rw(1)}>
             بار
           </Text>
-          <Text small color={COLORS.textDark}>
-            1/4
+          <Text bold color={COLORS.textDark}>
+            {Math.round(data.othersCount * 10) / 10}
           </Text>
         </View>
         <Text
-          small
+          bold
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}>
           همسالان :
         </Text>
@@ -63,7 +63,7 @@ const Bars = ({ data }) => {
             styles.bar,
             styles.points,
             {
-              width: pts,
+              width: Math.round(data.count) * 20,
               backgroundColor: isPeriodDay
                 ? COLORS.fireEngineRed
                 : COLORS.primary,
@@ -76,7 +76,7 @@ const Bars = ({ data }) => {
             styles.bar,
             styles.assists,
             {
-              width: ast,
+              width: Math.round(data.othersCount) * 20,
               marginTop: 5,
               backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.textLight,
             },

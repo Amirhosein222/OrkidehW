@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect, useContext } from 'react';
-import { Pressable, StyleSheet, Alert, View } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, Alert, View } from 'react-native';
 import { CalendarList } from 'react-native-calendars-persian';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import moment from 'moment-jalaali';
@@ -13,52 +13,31 @@ import {
   ScreenHeader,
   Snackbar,
 } from '../../../components/common';
+import DiffDaysModal from '../components/modals/DiffDaysModal';
 
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import getWomanClient from '../../../libs/api/womanApi';
-import {
-  convertToJalaali,
-  getFromAsyncStorage,
-  lastIndexOf,
-  numberConverter,
-} from '../../../libs/helpers';
+import { convertToJalaali, lastIndexOf } from '../../../libs/helpers';
 
 import { COLORS, ICON_SIZE, rh, rw } from '../../../configs';
 import { useIsPeriodDay } from '../../../libs/hooks';
+import { CALENDAR_THEME } from '../theme';
 
 import EnabledCheck from '../../../assets/icons/btns/enabled-check.svg';
 
-const CALENDAR_THEME = {
-  calendarBackground: 'transparent',
-  selectedDayBackgroundColor: '#00adf5',
-  selectedDayTextColor: '#ffffff',
-  todayTextColor: '#00adf5',
-  dayTextColor: COLORS.textLight,
-  textDisabledColor: '#d9e1e8',
-  dotColor: '#00adf5',
-  selectedDotColor: '#ffffff',
-  arrowColor: COLORS.primary,
-  monthTextColor: COLORS.textCommentCal,
-  textDayFontFamily: 'IRANYekanMobileBold',
-  textMonthFontFamily: 'IRANYekanMobileBold',
-  textDayHeaderFontFamily: 'IRANYekanMobileBold',
-  textDayFontSize: 14,
-  textMonthFontSize: 16,
-  textDayHeaderFontSize: 10,
-  textSectionTitleColor: COLORS.textCommentCal,
-};
-
-const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
+const EditCyclesScreen = ({ visible, closeModal }) => {
+  const { fullInfo } = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
   const navigation = useNavigation();
-  const { userCalendar, handleUserCalendar } = useContext(WomanInfoContext);
+  const { userCalendar, handleUserCalendar, handleUserPeriodDays } = useContext(
+    WomanInfoContext,
+  );
   const [currentMarkedDates, setCurrentMarkedDates] = useState([]);
+  const currentMarkedDatesRef = useRef([]);
   const [newMarkedDates, setNewMarkedDates] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [edit, setEdit] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [newDatesForApi, setNewDatesForApi] = useState([]);
-  const [info, setInfo] = useState(null);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [radioButtons, setRadioButtons] = useState([
     {
@@ -78,9 +57,10 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
       size: 16,
     },
   ]);
+  const [showDiffModal, setShowDiffModal] = useState(false);
 
-  const onPressRadioButton = (radioButtonsArray) => {
-    radioButtonsArray.map((radio) => {
+  const onPressRadioButton = radioButtonsArray => {
+    radioButtonsArray.map(radio => {
       if (radio.selected) {
         handleSelectedOption(radio.value);
         radio.color = isPeriodDay ? COLORS.fireEngineRed : COLORS.primary;
@@ -93,10 +73,12 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
 
   const getCalendar = async function () {
     const womanClient = await getWomanClient();
-    womanClient.get('show/calendar').then((response) => {
-      updateCal = false;
+    womanClient.get('show/calendar').then(response => {
       if (response.data.is_successful) {
+        const periodDays = response.data.data.filter(d => d.type === 'period');
+        handleUserPeriodDays(periodDays);
         handleUserCalendar(response.data.data);
+        currentMarkedDatesRef.current = [...response.data.data];
         handleCurrentMarkedDates([...response.data.data]);
       } else {
         setSnackbar({
@@ -128,14 +110,29 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
     const womanClient = await getWomanClient();
     womanClient
       .post('update/calendar', sortedDates)
-      .then((response) => {
+      .then(response => {
         setIsUpdating(false);
         setCurrentMarkedDates([]);
         setNewMarkedDates([]);
         setNewDatesForApi([]);
-        setEdit(false);
-        setSelectedOption(null);
-        getCalendar();
+        setRadioButtons([
+          {
+            id: '1', // acts as primary key, should be unique and non-empty string
+            label: 'علامت زدن به عنوان روز دوره پریود',
+            value: 'period',
+            selected: false,
+            color: COLORS.textLight,
+            size: 16,
+          },
+          {
+            id: '2',
+            label: 'علامت زدن به عنوان رابطه زناشویی  ',
+            value: 'sex',
+            selected: false,
+            color: COLORS.textLight,
+            size: 16,
+          },
+        ]);
         if (response.data.is_successful) {
           if (response.data.data[1].getPeriodInfo === true) {
             navigation.dispatch(
@@ -146,7 +143,7 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
                     name: 'EnterInfo',
                     params: {
                       reEnter: true,
-                      name: info.display_name,
+                      name: fullInfo.display_name,
                       firstDay: response.data.data.first_date,
                     },
                   },
@@ -154,6 +151,7 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
               }),
             );
           } else {
+            getCalendar();
             setSnackbar({
               msg: 'تغییرات با موفقیت اعمال شد.',
               visible: true,
@@ -161,14 +159,22 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
             });
           }
         } else {
+          getCalendar();
           setSnackbar({
-            msg: numberConverter(response.data.message),
+            msg: JSON.stringify(
+              response.data.message[0].period_message
+                ? response.data.message[0].period_message
+                : response.data.message[0].cycle_message
+                ? response.data.message[0].cycle_message
+                : 'خطا در ویرایش دوره!',
+            ),
+
             visible: true,
-            delay: 7000,
+            delay: 5000,
           });
         }
       })
-      .catch((e) => {
+      .catch(e => {
         console.error(e);
       });
   };
@@ -210,7 +216,7 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
     //get last date from user calendar
     const currentDates = Object.entries(currentMarkedDates);
     const periodDates = [];
-    currentDates.map((date) => {
+    currentDates.map(date => {
       if (date[1].type === 'period') {
         periodDates.push(date[0]);
       }
@@ -222,6 +228,14 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
     const b = moment(newDate);
     const diff = b.diff(a, 'days');
     return { diff: diff, lastDate: lastDate, newDate: newDate };
+  };
+
+  const handleUserDiffChoice = choice => {
+    const diffInfo = checkPeriodDaysDiff();
+    const newDates = getDates(diffInfo.lastDate, diffInfo.newDate);
+    choice === 'yes'
+      ? updateCalendar(newDatesForApi)
+      : updateCalendar(newDates);
   };
 
   const checkDatesLength = async function () {
@@ -238,27 +252,7 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
       updateCalendar(newDates);
       return;
     } else if (diffInfo.diff >= 5 && diffInfo.diff <= 12) {
-      Alert.alert(
-        'پیام',
-        'آیا میخواهید روز های بین بازه زمانی انتخاب شده هم به عنوان روز پریود ثبت شوند؟',
-        [
-          {
-            text: 'نه',
-            onPress: () => {
-              updateCalendar(newDatesForApi);
-            },
-            style: 'cancel',
-          },
-          {
-            text: 'اره',
-            onPress: () => {
-              const newDates = getDates(diffInfo.lastDate, diffInfo.newDate);
-              updateCalendar(newDates);
-            },
-          },
-        ],
-        { cancelable: false },
-      );
+      setShowDiffModal(true);
     } else if (diffInfo.diff < 0) {
       updateCalendar(newDatesForApi);
     } else {
@@ -270,7 +264,7 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
   // convert current dates from calendar api, then render on Calendar
   const handleCurrentMarkedDates = function (calendar) {
     const currentDates = {};
-    calendar.map((item) => {
+    calendar.map(item => {
       const convertedDate = moment(item.date, 'X')
         .locale('en')
         .format('YYYY-MM-DD');
@@ -319,7 +313,7 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
         date: jalaaliDate,
         type: selectedOption === 'sex' ? 'sexDelete' : 'delete',
       });
-      removed = removed.filter((d) => d.type !== 'period' && d.type !== 'sex');
+      removed = removed.filter(d => d.type !== 'period' && d.type !== 'sex');
       delete newDates[selectedDate];
       setNewMarkedDates(newDates);
       setNewDatesForApi(removed);
@@ -328,7 +322,11 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
         selected: true,
         marked: true,
         selectedColor:
-          selectedOption === 'period' ? COLORS.primary : COLORS.error,
+          selectedOption === 'period' ? COLORS.primary : COLORS.white,
+        selectedTextColor:
+          selectedOption === 'period' ? COLORS.white : '#B7AFB9',
+        borderColor: selectedOption === 'period' ? null : COLORS.error,
+        type: selectedOption,
       };
       const selectedDates = [...newDatesForApi];
       selectedDates.push({ date: jalaaliDate, type: selectedOption });
@@ -342,30 +340,39 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
     const currentDateskeys = Object.entries(currentMarkedDates);
     if (selectedOpt === 'period') {
       let markedDates = currentDateskeys;
-      currentDateskeys.map((date) => {
+      currentDateskeys.map(date => {
         switch (date[1].type) {
           case 'period':
             markedDates[date[0]] = {
               selected: true,
               marked: true,
               selectedColor: COLORS.primary,
+              selectedTextColor: 'white',
+              type: 'period',
             };
             break;
           case 'sex':
             markedDates[date[0]] = {
               selected: true,
               marked: true,
-              selectedColor: COLORS.error,
+              selectedColor: COLORS.white,
+              selectedTextColor: '#B7AFB9',
               disableTouchEvent: true,
+              borderColor: COLORS.error,
               disabled: true,
+              type: 'sex',
             };
             break;
           case 'period_f':
             markedDates[date[0]] = {
               selected: true,
               marked: true,
-              selectedColor: COLORS.orange,
+              selectedColor: COLORS.white,
+              borderColor: COLORS.primary,
+              selectedTextColor: '#B7AFB9',
               dontDelete: true,
+              type: 'period_f',
+
               // disableTouchEvent: true,
               // disabled: true,
             };
@@ -375,7 +382,23 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
               selected: true,
               marked: true,
               selectedColor: COLORS.darkYellow,
+              textColor: 'red',
+              selectedTextColor: 'white',
               dontDelete: true,
+              type: 'ovulation_f',
+
+              // disableTouchEvent: true,
+              // disabled: true,
+            };
+            break;
+          case 'pms':
+            markedDates[date[0]] = {
+              selectedTextColor: 'white',
+              selected: true,
+              marked: true,
+              selectedColor: COLORS.pmsCircle,
+              dontDelete: true,
+              type: 'pms',
               // disableTouchEvent: true,
               // disabled: true,
             };
@@ -387,40 +410,63 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
       setNewMarkedDates(markedDates);
     } else {
       let markedDates = currentDateskeys;
-      currentDateskeys.map((date) => {
+      currentDateskeys.map(date => {
         switch (date[1].type) {
           case 'period':
             markedDates[date[0]] = {
               selected: true,
               marked: true,
               selectedColor: COLORS.primary,
+              selectedTextColor: 'white',
               disableTouchEvent: true,
               disabled: true,
+              type: 'period',
             };
             break;
           case 'sex':
             markedDates[date[0]] = {
               selected: true,
               marked: true,
-              selectedColor: COLORS.error,
+              selectedColor: COLORS.white,
+              selectedTextColor: '#B7AFB9',
+              borderColor: COLORS.error,
+              type: 'sex',
             };
             break;
           case 'period_f':
             markedDates[date[0]] = {
               selected: true,
               marked: true,
-              selectedColor: COLORS.orange,
+              selectedColor: COLORS.white,
+              borderColor: COLORS.primary,
+              selectedTextColor: '#B7AFB9',
               dontDelete: true,
+              type: 'period_f',
               // disableTouchEvent: true,
               // disabled: true,
             };
             break;
           case 'ovulation_f':
             markedDates[date[0]] = {
+              selectedTextColor: 'white',
               selected: true,
               marked: true,
               selectedColor: COLORS.darkYellow,
               dontDelete: true,
+              type: 'ovulation_f',
+
+              // disableTouchEvent: true,
+              // disabled: true,
+            };
+            break;
+          case 'pms':
+            markedDates[date[0]] = {
+              selectedTextColor: 'white',
+              selected: true,
+              marked: true,
+              selectedColor: COLORS.pmsCircle,
+              dontDelete: true,
+              type: 'pms',
               // disableTouchEvent: true,
               // disabled: true,
             };
@@ -460,31 +506,28 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
   };
 
   useEffect(() => {
-    userCalendar && handleCurrentMarkedDates([...userCalendar]);
-    getFromAsyncStorage('fullInfo').then((res) => {
-      if (res) {
-        setInfo(JSON.parse(res));
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (updateCal === true) {
-      getCalendar();
+    if (userCalendar) {
+      handleCurrentMarkedDates([...userCalendar]);
+      currentMarkedDatesRef.current = [...userCalendar];
     }
-  }, [updateCal]);
+  }, []);
 
   return (
     <BackgroundView>
       <ScreenHeader title="ویرایش دوره ها" />
 
-      <View style={{ marginTop: rh(6), width: '100%' }}>
+      <View
+        style={{
+          marginTop: rh(8),
+          width: '100%',
+          height: rh(60),
+        }}>
         <CalendarList
           jalali
           markedDates={newMarkedDates}
           hideExtraDays={true}
           disableMonthChange={true}
-          firstDay={6}
+          firstDay={7}
           hideDayNames={false}
           showWeekNumbers={false}
           style={styles.calendar}
@@ -509,7 +552,7 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
       </View>
 
       <Button
-        color={COLORS.primary}
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
         title="ذخیره"
         mode="contained"
         style={{
@@ -518,8 +561,8 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
           marginBottom: rh(3),
           height: 40,
         }}
-        loading={edit && isUpdating ? true : false}
-        disabled={edit && isUpdating ? true : false}
+        loading={isUpdating}
+        disabled={isUpdating}
         onPress={() => submitNewDates()}
         Icon={() => <EnabledCheck style={ICON_SIZE} />}
       />
@@ -529,6 +572,13 @@ const EditCyclesScreen = ({ visible, closeModal, updateCal }) => {
           type={snackbar.type}
           delay={snackbar?.delay}
           handleVisible={handleVisible}
+        />
+      ) : null}
+      {showDiffModal ? (
+        <DiffDaysModal
+          visible={showDiffModal}
+          handleUserDiffChoice={handleUserDiffChoice}
+          closeModal={() => setShowDiffModal(false)}
         />
       ) : null}
     </BackgroundView>

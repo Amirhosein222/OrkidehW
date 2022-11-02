@@ -16,13 +16,13 @@ const SelectBirthDayModal = ({
   visible,
   closeModal,
   setBirthday,
-  atProfile = false,
+  atProfile = { profile: false, isPeriodDay: false },
   updateBirthday = null,
   isUpdating = false,
 }) => {
   const birthday = useRef(null);
   const onSelectDate = () => {
-    if (atProfile) {
+    if (atProfile.profile) {
       updateBirthday('', birthday.current);
       return;
     }
@@ -97,7 +97,10 @@ const SelectBirthDayModal = ({
             height: 82,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: COLORS.primary,
+            backgroundColor:
+              atProfile.profile && atProfile.isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
             marginTop: '1.5%',
             marginBottom: 5,
             marginHorizontal: '1.5%',
@@ -114,7 +117,10 @@ const SelectBirthDayModal = ({
             height: `${88 / 4}%`,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: COLORS.primary,
+            backgroundColor:
+              atProfile.profile && atProfile.isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
             marginBottom: '3%',
             borderRadius: 10,
             elevation: 3,
@@ -150,7 +156,11 @@ const SelectBirthDayModal = ({
             alignItems: 'center',
             borderRadius: 100,
           }}
-          selectedDayColor={COLORS.primary}
+          selectedDayColor={
+            atProfile.profile && atProfile.isPeriodDay
+              ? COLORS.fireEngineRed
+              : COLORS.primary
+          }
           dayTextStyle={{
             fontSize: 18,
             fontFamily: 'IRANYekanMobileBold',
@@ -165,12 +175,16 @@ const SelectBirthDayModal = ({
         />
 
         <Button
-          title="انتخاب"
+          title={atProfile.profile ? 'تایید اطلاعات' : 'انتخاب'}
           Icon={[
             () => <DisableCheck style={ICON_SIZE} />,
             () => <EnableCheck style={ICON_SIZE} />,
           ]}
-          color={COLORS.primary}
+          color={
+            atProfile.profile && atProfile.isPeriodDay
+              ? COLORS.fireEngineRed
+              : COLORS.primary
+          }
           onPress={onSelectDate}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
           loading={isUpdating}

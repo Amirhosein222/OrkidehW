@@ -11,10 +11,10 @@ import {
   AboutUsScreen,
   AppGuideScreen,
   FullPostScreen,
-  TestResultScreen,
   LoveNotificationScreen,
   SettingsScreen,
   EditCyclesScreen,
+  LearningBankScreen,
 } from '../screens';
 import { BottomTabs } from './BottomTabNavigator';
 
@@ -25,8 +25,8 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = function () {
   return (
     <Drawer.Navigator
+      edgeWidth={0}
       drawerPosition="right"
-      // initialRouteName="LoveNotification"
       drawerContent={(props) => <DrawerUi {...props} />}
       drawerWidth={200}
       drawerContentOptions={{
@@ -50,7 +50,6 @@ const DrawerNavigator = function () {
         name="PsychologyTestDetails"
         component={PsychologyTestDetailsScreen}
       />
-      <Drawer.Screen name="TestResult" component={TestResultScreen} />
       <Drawer.Screen
         name="ContactCounselor"
         component={ContactCounselorScreen}
@@ -61,6 +60,7 @@ const DrawerNavigator = function () {
       />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="EditCycles" component={EditCyclesScreen} />
+      <Drawer.Screen name="LearningBank" component={LearningBankScreen} />
     </Drawer.Navigator>
   );
 };

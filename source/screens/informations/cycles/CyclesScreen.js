@@ -1,41 +1,58 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import { ScrollView, View, ActivityIndicator } from 'react-native';
 
-import { CyclesOption } from './components';
+import { CyclesOption, PeriodInfoEditModal } from './components';
 import {
   ScreenHeader,
   Divider,
   Text,
   BackgroundView,
+  Snackbar,
 } from '../../../components/common';
 
-import { bleedingText, ovalText, pmsText } from './configs';
+import { bleedingText, ovalText, pmsText, cycles } from './constants';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
-import { baseUrl, COLORS, rh, rw } from '../../../configs';
+import { COLORS, rh, rw } from '../../../configs';
 import { numberConverter } from '../../../libs/helpers';
 import { getCycles } from '../../../libs/apiCalls';
-import { useApi } from '../../../libs/hooks';
+import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 
 const CyclesScreen = ({ navigation }) => {
+  const isPeriodDay = useIsPeriodDay();
   const { periodInfo, savePeriodInfo } = useContext(WomanInfoContext);
-  const [cycles, setCycles] = useApi(() => getCycles());
+
+  const [showEditModal, setShowEditModal] = useState({
+    show: false,
+    title: '',
+  });
+  const [snackbar, setSnackbar] = useState(false);
+
+  const [userCycles, setUserCycles] = useApi(() => getCycles());
+
+  const handleEditModalType = (cyc) => {
+    setShowEditModal({ show: true, selected: cyc });
+  };
+
+  const handleVisible = () => {
+    setSnackbar({
+      visible: !snackbar.visible,
+    });
+  };
 
   useEffect(() => {
     if (!periodInfo) {
-      setCycles();
+      setUserCycles();
     }
   }, []);
 
   useEffect(() => {
-    if (cycles.data && cycles.data.is_successful) {
-      savePeriodInfo(cycles.data.data[0]);
+    if (userCycles.data && userCycles.data.is_successful) {
+      savePeriodInfo(userCycles.data.data[0]);
     }
-  }, [cycles]);
+  }, [userCycles]);
 
   return (
-    // console.log('periodInfo ', periodInfo.newCycle.cycle_length),
     <BackgroundView>
       <ScreenHeader title="سیکل قاعدگی" />
       {periodInfo ? (
@@ -48,13 +65,15 @@ const CyclesScreen = ({ navigation }) => {
           }}>
           <CyclesOption
             icon="undo-alt"
-            title="طول سیکل قاعدگی شما "
+            cycle={cycles[0]}
             data={`${periodInfo.cycle_length} روز `}
+            onPress={handleEditModalType}
           />
           <CyclesOption
             icon="calendar-day"
-            title="روز های خونریزی شما"
+            cycle={cycles[1]}
             data={`${periodInfo.period_length} روز `}
+            onPress={handleEditModalType}
           />
           <View style={{ width: rw(84), marginTop: rh(2) }}>
             <Text color={COLORS.textLight} textAlign="right" small>
@@ -70,8 +89,9 @@ const CyclesScreen = ({ navigation }) => {
           />
           <CyclesOption
             icon="calendar-check"
-            title="شروع تخمک گذاری شما"
-            data="روز 12 دوره"
+            cycle={cycles[2]}
+            data={`${periodInfo.ovulation_length || '_'} روز `}
+            onPress={handleEditModalType}
           />
           <View style={{ width: rw(84), marginTop: rh(2) }}>
             <Text color={COLORS.textLight} textAlign="right" small>
@@ -87,8 +107,9 @@ const CyclesScreen = ({ navigation }) => {
           />
           <CyclesOption
             icon="calendar-minus"
-            title="شروع PMS شما "
+            cycle={cycles[3]}
             data="روز 16 دوره"
+            onPress={handleEditModalType}
           />
           <View style={{ width: rw(84), marginTop: rh(2) }}>
             <Text color={COLORS.textLight} textAlign="right" small>
@@ -99,33 +120,28 @@ const CyclesScreen = ({ navigation }) => {
       ) : (
         <ActivityIndicator
           size="large"
-          color={COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       )}
+      {showEditModal.show ? (
+        <PeriodInfoEditModal
+          visible={showEditModal.show}
+          cycle={showEditModal.selected}
+          closeModal={() => setShowEditModal(false)}
+          setSnackbar={setSnackbar}
+          updateCycles={setUserCycles}
+        />
+      ) : null}
+      {snackbar.visible === true ? (
+        <Snackbar
+          message={snackbar.msg}
+          type={snackbar.type}
+          handleVisible={handleVisible}
+        />
+      ) : null}
     </BackgroundView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.mainBg,
-    alignItems: 'center',
-    width: rw(100),
-  },
-  content: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: rw(100),
-    marginTop: rh(2),
-    paddingBottom: rh(4),
-  },
-  image: {
-    width: 100,
-    height: 100,
-    marginTop: rh(2),
-  },
-});
 
 export default CyclesScreen;

@@ -1,24 +1,25 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar, ActivityIndicator, FlatList } from 'react-native';
+import * as moment from 'jalali-moment';
 
 import {
   BackgroundView,
   Snackbar,
-  HDatePicker,
+  ShowLovePopup,
 } from '../../../components/common';
 import { ExpSympInfoModal, ExpSympCard, SympDegreeModal } from '../components';
-import * as moment from 'jalali-moment';
 
-import { getSymptomsApi } from '../apis';
+import { getSymptomsApi, getMySignsApi } from '../apis';
 import { useApi } from '../../../libs/hooks';
 import { useIsPeriodDay } from '../../../libs/hooks';
 import { COLORS, rh } from '../../../configs';
 
-const PeriodSymptomsTabScreen = ({ navigation }) => {
+const PeriodSymptomsTabScreen = () => {
   const isPeriodDay = useIsPeriodDay();
   const selectedSymp = useRef(null);
   const [symptoms, setSymptoms] = useState(null);
+  const [mySymptoms, setMySymptoms] = useState([]);
   const [signId, setSignId] = useState(null);
   const [signDate, setSignDate] = useState({
     jDate: moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
@@ -27,8 +28,10 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
   const [showModal, setShowModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showLove, setShowLove] = useState(false);
 
   const [getSymptoms, setGetSymptoms] = useApi(() => getSymptomsApi());
+  const [mySigns, setMySigns] = useApi(() => getMySignsApi(signDate.jDate));
 
   const onGetSymptoms = async function () {
     setGetSymptoms();
@@ -61,11 +64,16 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
   };
 
   const RenderItems = ({ item }) => {
+    const alreadySelected =
+      (mySymptoms.length &&
+        mySymptoms.filter((symp) => symp.sign_id === item.id).pop()) ||
+      false;
     return (
       <ExpSympCard
         item={item}
         onPress={onSymptomSelect}
         onReadMore={openInfoModal}
+        alreadySelected={alreadySelected}
       />
     );
   };
@@ -73,6 +81,10 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
   useEffect(() => {
     onGetSymptoms();
   }, []);
+
+  useEffect(() => {
+    setMySigns();
+  }, [signDate]);
 
   useEffect(() => {
     if (getSymptoms.data && getSymptoms.data.is_successful) {
@@ -85,6 +97,18 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
         visible: true,
       });
   }, [getSymptoms]);
+
+  useEffect(() => {
+    if (mySigns.data && mySigns.data.is_successful) {
+      setMySymptoms(mySigns.data.data);
+    }
+    mySigns.data &&
+      !mySigns.data.is_successful &&
+      setSnackbar({
+        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+        visible: true,
+      });
+  }, [mySigns]);
 
   if (getSymptoms.isFetching) {
     return (
@@ -104,31 +128,32 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <HDatePicker
+        {/* <HDatePicker
           style={{ marginTop: rh(2) }}
           periodStart={null}
           onDateSelected={onDateSelected}
           isFetching={null}
           isPeriodDay={isPeriodDay}
           defaultSelected={signDate.dDate}
-        />
+        /> */}
         <FlatList
           data={symptoms}
           keyExtractor={(item) => item.id}
           renderItem={RenderItems}
           numColumns={2}
-          style={{ marginTop: rh(2) }}
+          style={{ marginTop: rh(0) }}
           showsVerticalScrollIndicator={false}
         />
-        {showModal === true ? (
+        {showModal && (
           <SympDegreeModal
             visible={showModal}
-            closeModal={onCloseModal}
+            closeModal={() => setShowModal(false)}
             sign={signId}
             signDate={signDate.jDate}
             setSnackbar={setSnackbar}
+            updateMySigns={setMySigns}
           />
-        ) : null}
+        )}
         {selectedSymp.current && (
           <ExpSympInfoModal
             visible={showInfoModal}
@@ -143,6 +168,9 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
             type={snackbar.type}
             handleVisible={handleVisible}
           />
+        ) : null}
+        {showLove ? (
+          <ShowLovePopup handleVisible={() => setShowLove(false)} />
         ) : null}
       </BackgroundView>
     );

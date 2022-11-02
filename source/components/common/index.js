@@ -25,6 +25,7 @@ import ScreenHeader from './screenHeader';
 import BackgroundView from './backgroundView/BackgroundView';
 import HDatePicker from './HDatePicker';
 import ReadMore from './ReadMore';
+import ShowLovePopup from './showLovePopup';
 
 export {
   Text,
@@ -55,4 +56,5 @@ export {
   BackgroundView,
   HDatePicker,
   ReadMore,
+  ShowLovePopup,
 };

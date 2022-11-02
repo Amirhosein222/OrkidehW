@@ -61,7 +61,7 @@ const EditMobileScreen = ({ navigation, route }) => {
       const formData = new FormData();
       formData.append('mobile', phoneNumber);
       formData.append('gender', 'woman');
-      loginClient.post('change/mobile', formData).then(async (response) => {
+      loginClient.post('change/mobile', formData).then(async response => {
         setIsLoading(false);
         if (response.data.is_successful) {
           setSnackbar({
@@ -69,10 +69,7 @@ const EditMobileScreen = ({ navigation, route }) => {
             visible: true,
             type: 'success',
           });
-          await AsyncStorage.setItem(
-            'fullInfo',
-            JSON.stringify(response.data.data),
-          );
+          saveFullInfo(response.data.data);
         } else {
           setSnackbar({
             msg: response.data.message.hasOwnProperty('mobile')

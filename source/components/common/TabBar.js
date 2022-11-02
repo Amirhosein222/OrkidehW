@@ -16,6 +16,14 @@ const TabBar = ({ state, descriptors, navigation }) => {
       : styles.plusIconContainer;
   };
 
+  const textBorderStyle = (focused) => {
+    return {
+      borderBottomWidth: focused ? 2 : 0,
+      paddingBottom: focused ? rh(0.2) : 0,
+      borderBottomColor: COLORS.textLight,
+    };
+  };
+
   return (
     <View
       style={{
@@ -42,11 +50,15 @@ const TabBar = ({ state, descriptors, navigation }) => {
             <Pressable
               key={route.key}
               onPress={() => onPress()}
-              hitSlop={route.name === 'PeriodTabs' ? 22 : 2}
+              hitSlop={route.name === 'PartnerMoodsExpsTabs' ? 22 : 2}
               style={
-                route.name === 'Symptoms'
+                route.name === 'PeriodTabs'
                   ? handlePeriodTabStyles()
-                  : { alignItems: 'center' }
+                  : {
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      ...textBorderStyle(focused),
+                    }
               }>
               {options.tabBarIcon({
                 tintColor,
@@ -55,20 +67,16 @@ const TabBar = ({ state, descriptors, navigation }) => {
               {route.name !== 'LearningBank' && (
                 <Text
                   color={COLORS.textLight}
-                  small
-                  marginLeft={route.name === 'PeriodTabs' ? rw(2) : 0}>
+                  size={focused ? 9.5 : 8}
+                  marginLeft={
+                    route.name === 'PartnerMoodsExpsTabs' ? rw(0) : 0
+                  }>
                   {options.title}
                 </Text>
               )}
             </Pressable>
           );
         })}
-        {/* <View style={handlePeriodTabStyles()}>
-          <Image
-            source={require('../assets/icons/home/symptoms.png')}
-            style={{ width: 30, height: 30 }}
-          />
-        </View> */}
       </View>
     </View>
   );
@@ -85,16 +93,17 @@ const styles = StyleSheet.create({
     width: rw(86),
     height: rh(8.5),
     borderRadius: 40,
-    paddingLeft: rw(4),
+    paddingLeft: rw(8),
   },
   plusIconContainer: {
-    width: rw(13.5),
-    height: rh(6.5),
-    borderRadius: 30,
+    width: 55,
+    height: 55,
+    borderRadius: 55 / 2,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: rw(2),
+    paddingTop: rh(0.5),
   },
 });
 

@@ -17,8 +17,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Close from '../../../../assets/icons/btns/close.svg';
 import EnableCheck from '../../../../assets/icons/btns/enabled-check.svg';
+import { useIsPeriodDay } from '../../../../libs/hooks';
 
 const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   const { fullInfo, saveFullInfo } = useContext(WomanInfoContext);
   const [name, setName] = useState(displayName ? displayName : '');
   const [username, setUsername] = useState('');
@@ -51,14 +54,10 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
       formData.append('repeat_password', '');
       loginClient
         .post('complete/profile', formData)
-        .then((response) => {
+        .then(response => {
           setIsUpdating(false);
           if (response.data.is_successful) {
             saveFullInfo(response.data.data);
-            AsyncStorage.setItem(
-              'fullInfo',
-              JSON.stringify(response.data.data),
-            );
             setSnackbar({
               msg: 'اطلاعات شما با موفقیت ویرایش شد',
               visible: true,
@@ -72,7 +71,7 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
             });
           }
         })
-        .catch((e) => {
+        .catch(e => {
           // console.log(e);
         });
     } else {
@@ -100,7 +99,9 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={{ width: rw(11) }} />
-          <Text>{title} خود را وارد کنید</Text>
+          <Text color={COLORS.textCommentCal} bold size={14}>
+            {title} خود را وارد کنید
+          </Text>
           <Pressable onPress={isUpdating ? null : closeModal} hitSlop={7}>
             <Close style={{ ...ICON_SIZE, marginRight: rw(5) }} />
           </Pressable>
@@ -128,7 +129,7 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
         <Button
           title="تایید اطلاعات"
           Icon={() => <EnableCheck style={ICON_SIZE} />}
-          color={COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           disabled={isUpdating}
           loading={isUpdating}
           onPress={updateName}
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     width: rw(100),
-    height: rh(40),
+    height: rh(50),
     marginTop: 'auto',
     elevation: 5,
     borderTopRightRadius: 30,
