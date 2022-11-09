@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
-import * as moment from 'jalali-moment';
+import moment from 'jalali-moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import getLoginClient from '../../../libs/api/loginClientApi';
@@ -49,13 +49,16 @@ const PartnerExpsTabScreen = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', womanInfo.activeRel.relId);
     formData.append('gender', 'woman');
-    formData.append('date', moodDate);
+    formData.append(
+      'date',
+      moment(new Date(), 'YYYY/MM/DD').locale('en').format('jYYYY/jMM/jDD'),
+    );
     formData.append('include_sign', 1);
     formData.append('include_mood', 1);
     formData.append('include_expectation', 1);
     loginClient
       .post('show/spouse/moods/and/expectation', formData)
-      .then((response) => {
+      .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
           setExpectation(response.data.data.expects);
@@ -85,7 +88,7 @@ const PartnerExpsTabScreen = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', value);
     formData.append('gender', 'woman');
-    loginClient.post('active/relation', formData).then((response) => {
+    loginClient.post('active/relation', formData).then(response => {
       if (response.data.is_successful) {
         AsyncStorage.setItem(
           'lastActiveRelId',
@@ -113,7 +116,12 @@ const PartnerExpsTabScreen = ({ navigation }) => {
     });
   };
 
-  const onSelectSpouse = (spouse) => {
+  const onSelectSpouse = spouse => {
+    if (spouse === 'newRel') {
+      return navigation.navigate('AddRel', {
+        handleUpdateRels: womanInfo.getAndHandleRels,
+      });
+    }
     setActiveSpouse(spouse);
   };
 
@@ -123,9 +131,7 @@ const PartnerExpsTabScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (womanInfo.activeRel) {
-      getSpouseMoodsAndExps(
-        moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
-      );
+      getSpouseMoodsAndExps();
     }
   }, [womanInfo.activeRel]);
 
@@ -147,7 +153,7 @@ const PartnerExpsTabScreen = ({ navigation }) => {
             {expectations.length ? (
               <FlatList
                 data={expectations}
-                keyExtractor={(item) => String(item.id)}
+                keyExtractor={item => String(item.id)}
                 style={{ flexGrow: 1 }}
                 contentContainerStyle={{
                   justifyContent: 'flex-start',

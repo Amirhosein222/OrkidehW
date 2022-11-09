@@ -62,7 +62,7 @@ const AddRelScreen = ({ navigation, route }) => {
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image.path);
       });
@@ -71,7 +71,7 @@ const AddRelScreen = ({ navigation, route }) => {
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image.path);
       });

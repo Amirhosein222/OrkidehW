@@ -52,3 +52,16 @@ export const reportGapApi = async function (id, text) {
     throw error;
   }
 };
+
+export const getCommentsApi = async function (id) {
+  try {
+    const loginClient = await getLoginClient();
+    const res = await loginClient.get(
+      `comments/memory?gender=woman&memory_id=${id}`,
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

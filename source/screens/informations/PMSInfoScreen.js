@@ -114,7 +114,7 @@ const PMSInfoScreen = ({ data }) => {
         }}
       />
       <Divider
-        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}
+        color={COLORS.textDark}
         width={rw(82)}
         style={{
           marginTop: 5,
@@ -127,7 +127,7 @@ const PMSInfoScreen = ({ data }) => {
         marginRight="20"
         marginTop="20"
         bold
-        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
+        color={COLORS.textDark}>
         مقایسه علائم PMS شما و همسالان شما
       </Text>
 

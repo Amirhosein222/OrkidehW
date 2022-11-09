@@ -10,12 +10,13 @@ import { rw, rh, COLORS, ICON_SIZE } from '../../../configs';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import { FlatList } from 'react-native-gesture-handler';
 import { reportGapApi } from '../../../screens/gaps/apis';
-import { useApi } from '../../../libs/hooks';
+import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 
 import EnSend from '../../../assets/icons/btns/enabled-send.svg';
 import DsSend from '../../../assets/icons/btns/disabled-send.svg';
 
 const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
+  const isPeriodDay = useIsPeriodDay();
   const { settings, allSettings } = useContext(WomanInfoContext);
   const [reportOption, setReportOption] = useState('');
   const [description, setDescription] = useState('');
@@ -46,13 +47,20 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
     return (
       <View style={styles.checkBoxContainer}>
         <Text
-          small
-          color={item === reportOption ? COLORS.primary : COLORS.textLight}>
+          bold
+          size={10.5}
+          color={
+            item === reportOption && isPeriodDay
+              ? COLORS.fireEngineRed
+              : item === reportOption && !isPeriodDay
+              ? COLORS.primary
+              : COLORS.textLight
+          }>
           {item}
         </Text>
         <Checkbox
           uncheckedColor={COLORS.textLight}
-          color={COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           status={item === reportOption ? 'checked' : 'unchecked'}
           onPress={() => {
             setReportOption(item);
@@ -152,6 +160,8 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
         <View style={styles.textInputContainer}>
           <Text
             color={COLORS.textLight}
+            bold
+            size={10.5}
             alignSelf="flex-end"
             marginRight={rw(8)}
             marginBottom={rh(1)}>
@@ -174,9 +184,9 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
             () => <DsSend style={ICON_SIZE} />,
             () => <EnSend style={ICON_SIZE} />,
           ]}
-          color={COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           onPress={onReport}
-          style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(70) }}
+          style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(68) }}
         />
       </View>
     </Modal>
@@ -212,13 +222,13 @@ const styles = StyleSheet.create({
   inputArea: {
     backgroundColor: COLORS.inputTabBarBg,
     height: rh(20),
-    width: rw(70),
+    width: rw(68),
     borderRadius: 10,
     color: COLORS.textLight,
     fontFamily: 'IRANYekanMobileBold',
     textAlign: 'right',
     textAlignVertical: 'top',
-    fontSize: 14,
+    fontSize: 13,
   },
   closeIcon: {
     alignSelf: 'flex-end',

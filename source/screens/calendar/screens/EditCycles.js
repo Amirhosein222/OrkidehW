@@ -143,7 +143,7 @@ const EditCyclesScreen = ({ visible, closeModal }) => {
                     name: 'EnterInfo',
                     params: {
                       reEnter: true,
-                      name: fullInfo.display_name,
+                      name: fullInfo.name,
                       firstDay: response.data.data.first_date,
                     },
                   },

@@ -67,6 +67,7 @@ const MyGapsScreen = ({ navigation }) => {
         handleNewMemory={handleNewMemory}
         handleEdit={onEdit}
         handleDelete={handleDeleteCm}
+        updateGaps={setMyGaps}
       />
     );
   };

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Pressable, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -11,16 +11,10 @@ import getLoginClient from '../../../libs/api/loginClientApi';
 
 import deleteVector from '../../../assets/vectors/register/delete.png';
 import Trash from '../../../assets/icons/btns/delete.svg';
+import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 
-const DeleteModal = ({
-  id,
-  type,
-  title,
-  visible,
-  closeModal,
-  updateData,
-  setSnackbar,
-}) => {
+const DeleteModal = ({ id, type, title, visible, closeModal, setSnackbar }) => {
+  const { getAndHandleRels } = useContext(WomanInfoContext);
   const [isDeleting, setIsDeleting] = useState(false);
   const onDeleteRel = async () => {
     const loginClient = await getLoginClient();
@@ -28,10 +22,10 @@ const DeleteModal = ({
     const formData = new FormData();
     formData.append('gender', 'woman');
     formData.append('relation_id', id);
-    loginClient.post('delete/relation', formData).then((response) => {
+    loginClient.post('delete/relation', formData).then(response => {
       setIsDeleting(false);
       if (response.data.is_successful) {
-        updateData();
+        getAndHandleRels();
         setSnackbar({
           msg: 'رابطه شما با موفقیت حذف شد.',
           visible: true,
@@ -58,7 +52,7 @@ const DeleteModal = ({
         type: 'success',
       });
     closeModal();
-    updateData();
+    getAndHandleRels();
   };
 
   return (
@@ -90,7 +84,7 @@ const DeleteModal = ({
           </Pressable>
         </View>
         <Image source={deleteVector} style={{ width: 150, height: 150 }} />
-        <Text medium color={COLORS.textDark}>
+        <Text bold medium color={COLORS.textCommentCal}>
           حذف {title}
         </Text>
         <Text color={COLORS.textLight} marginTop={rh(2)}>
@@ -107,13 +101,6 @@ const DeleteModal = ({
           style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(62) }}
         />
       </View>
-      {/* {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null} */}
     </Modal>
   );
 };

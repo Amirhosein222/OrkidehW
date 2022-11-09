@@ -65,7 +65,7 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', value);
     formData.append('gender', 'woman');
-    loginClient.post('active/relation', formData).then((response) => {
+    loginClient.post('active/relation', formData).then(response => {
       if (response.data.is_successful) {
         AsyncStorage.setItem(
           'lastActiveRelId',
@@ -93,19 +93,24 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
     });
   };
 
-  const openInfoModal = (exp) => {
+  const openInfoModal = exp => {
     selectedExp.current = exp;
     setShowInfoModal(true);
   };
 
-  const onSelectSpouse = (spouse) => {
+  const onSelectSpouse = spouse => {
+    if (spouse === 'newRel') {
+      return navigation.navigate('AddRel', {
+        handleUpdateRels: womanInfo.getAndHandleRels,
+      });
+    }
     setActiveSpouse(spouse);
   };
 
   const RenderExpectations = ({ item }) => {
     const alreadySelected =
       (myExps.length &&
-        myExps.some((exp) => exp.expectation_id === item.id && true)) ||
+        myExps.some(exp => exp.expectation_id === item.id && true)) ||
       false;
     return (
       <ExpSympCard
@@ -164,7 +169,7 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
       {womanInfo.relations.length && womanInfo.activeRel ? (
         <FlatList
           data={expectations}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           renderItem={RenderExpectations}
           numColumns={2}
           style={{ marginTop: rh(2) }}

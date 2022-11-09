@@ -11,6 +11,8 @@ export const editPeriodInfoApi = async function (
     formData.append('last_period_date', lastPeriodDate);
     formData.append('period_length', periodLength);
     formData.append('cycle_length', cycleLength);
+
+    console.log('formData ', formData);
     const res = await womanClient.post('store/period_info', formData);
 
     return res.data;

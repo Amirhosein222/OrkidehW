@@ -1,3 +1,15 @@
-import { getMyGapsApi, getAllGapsApi, likeGapApi, reportGapApi } from './apis';
+import {
+  getCommentsApi,
+  getMyGapsApi,
+  getAllGapsApi,
+  likeGapApi,
+  reportGapApi,
+} from './apis';
 
-export { getMyGapsApi, getAllGapsApi, likeGapApi, reportGapApi };
+export {
+  getMyGapsApi,
+  getAllGapsApi,
+  likeGapApi,
+  reportGapApi,
+  getCommentsApi,
+};

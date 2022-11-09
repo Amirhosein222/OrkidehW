@@ -34,16 +34,14 @@ const PersonalInfo = ({
   navigation,
 }) => {
   const { registerStage } = useContext(WomanInfoContext);
-  const name = useRef();
 
-  const [testName, setTestName] = useState('');
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [family, setFamily] = useState('');
   const [picture, setPicture] = useState('');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayModal, setShowBirthdayModal] = useState(false);
   const [showPictureModal, setShowPictureModal] = useState(false);
-  const [isNameEntered, setIsNameEntered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [fromDefaultImages, setFromDefaultImages] = useState(false);
@@ -105,7 +103,7 @@ const PersonalInfo = ({
   // Set name and pic in the EnterInfo Screen as informations state.
   // const handleNextStage = function () {
   //   setNameAndPicAndBirth({
-  //     name: testName,
+  //     name: name,
   //     picture: picture,
   //     birthday: birthday,
   //   });
@@ -131,7 +129,7 @@ const PersonalInfo = ({
       });
     }
     formData.append('display_name', username);
-    // formData.append('name', testName);
+    formData.append('name', name);
     formData.append('birth_date', birthday);
     formData.append('is_password_active', 0);
     formData.append('is_finger_active', 0);
@@ -144,7 +142,7 @@ const PersonalInfo = ({
         setIsLoading(false);
         if (response.data.is_successful) {
           setNameAndPicAndBirth({
-            name: testName,
+            name: name,
           });
           goToNextStage(1);
         } else {
@@ -160,8 +158,7 @@ const PersonalInfo = ({
   };
 
   useEffect(() => {
-    name.current = editName;
-    setTestName(editName);
+    setName(editName);
   }, []);
 
   useEffect(() => {
@@ -229,9 +226,9 @@ const PersonalInfo = ({
           <InputRow
             title="نام :"
             placeholder="نام خود را اینجا وارد کنید"
-            handleTextInput={setTestName}
+            handleTextInput={setName}
             name="name"
-            required={!testName ? true : false}
+            required={!name ? true : false}
             tipText="وارد کردن نام الزامی است"
           />
           <Text
@@ -331,7 +328,7 @@ const PersonalInfo = ({
             <Pressable
               hitSlop={7}
               onPress={completeRegister}
-              disabled={!testName && !birthday && !username ? true : false}
+              disabled={!name && !birthday && !username ? true : false}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -341,9 +338,7 @@ const PersonalInfo = ({
               }}>
               <Text
                 color={
-                  !testName || !birthday
-                    ? COLORS.textLight
-                    : COLORS.borderLinkBtn
+                  !name || !birthday ? COLORS.textLight : COLORS.borderLinkBtn
                 }>
                 بعدی
               </Text>
@@ -351,7 +346,7 @@ const PersonalInfo = ({
               {!isLoading && (
                 <Image
                   source={
-                    !testName || !birthday
+                    !name || !birthday
                       ? require('../../../assets/icons/btns/disabled-next.png')
                       : require('../../../assets/icons/btns/enabled-next.png')
                   }

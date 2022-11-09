@@ -5,6 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import { baseUrl, COLORS } from '../../../configs';
 import { rw, rh } from '../../../configs';
+import { useIsPeriodDay } from '../../../libs/hooks';
 
 const ExpSympCard = ({
   item,
@@ -13,6 +14,8 @@ const ExpSympCard = ({
   isExp = false,
   alreadySelected,
 }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   return (
     <View
       style={{
@@ -22,7 +25,7 @@ const ExpSympCard = ({
       {alreadySelected && (
         <AntDesign
           name="checkcircle"
-          color={COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           size={32}
           style={styles.selectedBadge}
         />

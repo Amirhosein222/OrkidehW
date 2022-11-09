@@ -91,6 +91,11 @@ const DrawerUi = ({ navigation }) => {
   };
 
   const onSelectSpouse = spouse => {
+    if (spouse === 'newRel') {
+      return navigation.navigate('AddRel', {
+        handleUpdateRels: womanInfo.getAndHandleRels,
+      });
+    }
     setActiveSpouse(spouse);
   };
 
@@ -117,7 +122,7 @@ const DrawerUi = ({ navigation }) => {
                   color={COLORS.textDark}
                   textAlign="right"
                   alignSelf="flex-end">
-                  {womanInfo.fullInfo.display_name}
+                  {womanInfo.fullInfo.name}
                 </Text>
                 <Text
                   size={11}
@@ -276,7 +281,7 @@ const DrawerUi = ({ navigation }) => {
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
           width="100%"
           style={{ marginVertical: rh(1.5) }}
-          borderWidth={0.8}
+          borderWidth={1.5}
         />
         <Pressable
           onPress={() => navigate('Settings')}
@@ -291,7 +296,7 @@ const DrawerUi = ({ navigation }) => {
           style={styles.itemContainer}>
           <Text size={11} bold marginRight="15">
             {' '}
-            تماس با کارشناس
+            ارتباط با کارشناس
           </Text>
           <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
         </Pressable>
@@ -331,14 +336,15 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginVertical: rh(1),
+    marginRight: rw(4),
   },
   optionsContainer: {
     width: '100%',
     alignItems: 'center',
     backgroundColor: COLORS.mainBg,
     flex: 1,
-    paddingHorizontal: rw(8),
-    marginTop: rh(1),
+    paddingHorizontal: rw(7),
+    marginTop: rh(2),
   },
   userRelationContainer: {
     width: '100%',

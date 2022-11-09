@@ -99,6 +99,7 @@ const RegisterScreen = ({ navigation, route }) => {
         regentCode: '',
         isNew: false,
         resetPassword: params.resetPassword,
+        code: activeCode.data.data.user.activation_code,
       });
     }
     if (activeCode.data && !activeCode.data.is_successful) {
@@ -116,12 +117,13 @@ const RegisterScreen = ({ navigation, route }) => {
         regentCode: register.data.data.regent_code,
         isNew: true,
         resetPassword: params.resetPassword,
+        code: register.data.data.activation_code,
       });
     }
     if (register.data && !register.data.is_successful) {
       setIsLoading(false);
       setSnackbar({
-        msg: register.data.message.mobile[0],
+        msg: JSON.stringify(register.data.message),
         visible: true,
       });
     }

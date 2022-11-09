@@ -64,7 +64,7 @@ const AddMemoryModal = ({
     if (validateInfo()) {
       mergeMemoryDetails();
       setIsSending(true);
-      loginClient.post('store/memory', memory).then((response) => {
+      loginClient.post('store/memory', memory).then(response => {
         memory = {};
         setMTitle(null);
         setMemoryText(null);
@@ -94,7 +94,7 @@ const AddMemoryModal = ({
     if (validateInfo()) {
       mergeMemoryDetails();
       setIsSending(true);
-      loginClient.post('update/memory', memory).then((response) => {
+      loginClient.post('update/memory', memory).then(response => {
         setIsSending(false);
         if (response.data.is_successful) {
           setSnackbar({
@@ -139,7 +139,15 @@ const AddMemoryModal = ({
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={{ marginLeft: 'auto' }} />
-          <Text medium style={{ marginLeft: 'auto', marginRight: rw(2) }}>
+          <Text
+            bold
+            size={12}
+            color={COLORS.textCommentCal}
+            medium
+            style={{
+              marginLeft: 'auto',
+              marginRight: edit.isEdit ? rw(6) : rw(2),
+            }}>
             {edit.isEdit ? 'ویرایش خاطره' : 'خاطره خود را به اشتراک بگذارید'}
           </Text>
           <Pressable

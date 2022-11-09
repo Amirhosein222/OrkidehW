@@ -6,7 +6,14 @@ import { Switch } from 'react-native-paper';
 import { Text } from '../../../../../components/common';
 import { COLORS, rh, rw } from '../../../../../configs';
 
-const Reminder = ({ title, type, disable, onSwitch, handleDefaultValue }) => {
+const Reminder = ({
+  title,
+  type,
+  disable,
+  onSwitch,
+  handleDefaultValue,
+  handleTimeType,
+}) => {
   const [status, setStatus] = useState();
 
   const onToggleSwitch = stat => {
@@ -22,25 +29,22 @@ const Reminder = ({ title, type, disable, onSwitch, handleDefaultValue }) => {
   }, []);
 
   return (
-    console.log('status ', status),
-    (
-      <View style={styles.container}>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: rw(82),
-            justifyContent: 'space-between',
-          }}>
-          <Switch
-            disabled={disable}
-            value={status}
-            onValueChange={val => onToggleSwitch(val)}
-            color={COLORS.borderLinkBtn}
-          />
-          <Text color={COLORS.textDark}>{title} :</Text>
-        </View>
+    <View style={styles.container}>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: rw(82),
+          justifyContent: 'space-between',
+        }}>
+        <Switch
+          disabled={disable}
+          value={status}
+          onValueChange={val => onToggleSwitch(val)}
+          color={COLORS.borderLinkBtn}
+        />
+        <Text color={COLORS.textDark}>{title} :</Text>
       </View>
-    )
+    </View>
   );
 };
 

@@ -8,7 +8,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import * as moment from 'jalali-moment';
+import moment from 'jalali-moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import getLoginClient from '../../../libs/api/loginClientApi';
@@ -43,7 +43,9 @@ const SymptomsScreen = ({ navigation }) => {
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showLove, setShowLove] = useState(false);
   const [selectedDate, setSelectedDate] = useState({
-    jDate: moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
+    jDate: moment(new Date(), 'YYYY/MM/DD')
+      .locale('en')
+      .format('jYYYY/jMM/jDD'),
     dDate: new Date(),
   });
   const womanInfo = useContext(WomanInfoContext);
@@ -70,7 +72,7 @@ const SymptomsScreen = ({ navigation }) => {
     formData.append('include_expectation', 1);
     loginClient
       .post('show/spouse/moods/and/expectation', formData)
-      .then((response) => {
+      .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
           setExpectation(response.data.data.expects);
@@ -101,7 +103,7 @@ const SymptomsScreen = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', value);
     formData.append('gender', 'woman');
-    loginClient.post('active/relation', formData).then((response) => {
+    loginClient.post('active/relation', formData).then(response => {
       if (response.data.is_successful) {
         AsyncStorage.setItem(
           'lastActiveRelId',
@@ -129,7 +131,12 @@ const SymptomsScreen = ({ navigation }) => {
     });
   };
 
-  const onSelectSpouse = (spouse) => {
+  const onSelectSpouse = spouse => {
+    if (spouse === 'newRel') {
+      return navigation.navigate('AddRel', {
+        handleUpdateRels: womanInfo.getAndHandleRels,
+      });
+    }
     setActiveSpouse(spouse);
   };
 
@@ -184,6 +191,7 @@ const SymptomsScreen = ({ navigation }) => {
           navigation={navigation}
           style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
           setShowLovePopup={setShowLove}
+          setSnackbar={setSnackbar}
         />
 
         {womanInfo.relations.length && womanInfo.activeRel ? (
@@ -207,7 +215,7 @@ const SymptomsScreen = ({ navigation }) => {
             {spouseMoods.length ? (
               <FlatList
                 data={spouseMoods}
-                keyExtractor={(item) => String(item.id)}
+                keyExtractor={item => String(item.id)}
                 horizontal
                 renderItem={renderSpouseMoods}
                 contentContainerStyle={{
@@ -244,7 +252,7 @@ const SymptomsScreen = ({ navigation }) => {
             {expectations.length ? (
               <FlatList
                 data={expectations}
-                keyExtractor={(item) => String(item.id)}
+                keyExtractor={item => String(item.id)}
                 style={{ flexGrow: 1 }}
                 contentContainerStyle={{
                   justifyContent: 'flex-start',
@@ -252,7 +260,7 @@ const SymptomsScreen = ({ navigation }) => {
                   width: '100%',
                   height: rh(40),
                 }}
-                renderItem={(item) => {
+                renderItem={item => {
                   return <ExpectationCard exp={item.item} />;
                 }}
               />

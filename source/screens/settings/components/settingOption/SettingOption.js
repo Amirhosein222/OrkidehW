@@ -34,9 +34,12 @@ const SettingOption = ({
   };
 
   const shareCode = function () {
-    Share.open({ message: fullInfo.regent_self, title: 'اشتراک گذاری کد شما' })
-      .then((res) => {})
-      .catch((err) => {
+    Share.open({
+      message: fullInfo.regent_self,
+      title: `اشتراک گذاری کد شما: ${fullInfo.regent_self}`,
+    })
+      .then(res => {})
+      .catch(err => {
         err && console.log(err);
       });
   };

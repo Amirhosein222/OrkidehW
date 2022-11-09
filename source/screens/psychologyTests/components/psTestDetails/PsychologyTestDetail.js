@@ -41,8 +41,8 @@ const PsychologyTestDetail = ({
           flexShrink: 1,
           borderBottomWidth: 1,
           borderBottomColor: COLORS.icon,
-          paddingVertical: rh(2),
-          marginVertical: 10,
+          paddingVertical: rh(1),
+          marginVertical: 5,
           width: '80%',
           alignSelf: 'center',
           borderRadius: 5,
@@ -108,9 +108,23 @@ const PsychologyTestDetail = ({
 
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
-      <Text marginTop={rh(4)} medium bold>
+      <Text color={COLORS.textCommentCal} marginTop={rh(4)} siz2={11} bold>
         {testDetails.title}
       </Text>
+      <View style={{ width: rw(85) }}>
+        <Text
+          size={10}
+          color={COLORS.textLight}
+          marginRight="10"
+          // alignSelf="flex-end"
+          marginTop="5"
+          textAlign="right">
+          {testDetails.description
+            ? testDetails.description.replace(/(<([^>]+)>)/gi, '')
+            : ''}
+        </Text>
+      </View>
+
       <Divider
         color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
         width="80%"

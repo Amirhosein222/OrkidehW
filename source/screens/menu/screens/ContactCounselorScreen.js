@@ -89,6 +89,7 @@ const ContactCounselorScreen = ({ navigation }) => {
       formData.append('message', message);
       formData.append('email', email);
       formData.append('gender', 'woman');
+      console.log('call to admin ', formData);
       loginClient.post('call/to/admin', formData).then(response => {
         setEmail('');
         setMessage('');
@@ -116,7 +117,7 @@ const ContactCounselorScreen = ({ navigation }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <ScreenHeader title="تماس با کارشناس" />
+        <ScreenHeader title="ارتباط با کارشناس" />
         <ScrollView
           style={{ flex: 1, width: '100%', marginTop: rh(4) }}
           contentContainerStyle={{ ...SCROLL_VIEW_CONTAINER, flex: 1 }}>

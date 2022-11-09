@@ -19,24 +19,6 @@ const chartConfig = {
   useShadowColorFromDataset: false, // optional
 };
 
-const pieData = [
-  {
-    name: 'Toronto',
-    population: 20,
-    color: 'purple',
-  },
-  {
-    name: 'Beijing',
-    population: 40,
-    color: COLORS.darkYellow,
-  },
-  {
-    name: 'New York',
-    population: 50,
-    color: COLORS.primary,
-  },
-];
-
 const DaysPieChart = ({ chartData, route }) => {
   const isPeriodDay = useIsPeriodDay();
 

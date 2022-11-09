@@ -7,7 +7,7 @@ import { COLORS, rh, rw } from '../../configs';
 
 const PMSCard = ({ info, hasBar, icon }) => {
   return (
-    <View style={{ ...styles.container, width: hasBar ? rw(40) : rw(34.8) }}>
+    <View style={{ ...styles.container, width: hasBar ? rw(39) : rw(37) }}>
       <Image
         source={info.image ? { uri: info.image } : icon}
         style={{ width: 80, height: 80 }}
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: rw(34.8),
     backgroundColor: COLORS.cardBg,
-    paddingVertical: rh(2),
+    paddingVertical: rh(1.5),
     elevation: 3,
     borderRadius: 12,
     alignSelf: 'center',

@@ -39,7 +39,7 @@ const SympDegreeModal = ({
   const [allMoods, setAllMoods] = useState([]);
   const [alreadySelectedMood, setAlreadySelectedMood] = useState(0);
 
-  const sliderValueHandler = async (value) => {
+  const sliderValueHandler = async value => {
     setSelectedMood(allMoods[value]);
   };
   const getSymptomsMood = async function () {
@@ -47,7 +47,7 @@ const SympDegreeModal = ({
     const formData = new FormData();
     formData.append('sign_id', sign.id);
     formData.append('gender', 'woman');
-    loginClient.post('moods_of_sign', formData).then((response) => {
+    loginClient.post('moods_of_sign', formData).then(response => {
       if (response.data.is_successful) {
         moodsRef.current = response.data.data.moods;
         setAllMoods(response.data.data.moods);
@@ -56,10 +56,8 @@ const SympDegreeModal = ({
     });
   };
 
-  const handleAlreadySelectedMood = (selectedMoodId) => {
-    const moodIndex = moodsRef.current.findIndex(
-      (m) => m.id === selectedMoodId,
-    );
+  const handleAlreadySelectedMood = selectedMoodId => {
+    const moodIndex = moodsRef.current.findIndex(m => m.id === selectedMoodId);
     setAlreadySelectedMood(moodIndex);
   };
 
@@ -73,7 +71,7 @@ const SympDegreeModal = ({
         mood_id: [selectedMood.id],
       };
       const loginClient = await getLoginClient();
-      loginClient.post('store/sign', moodObj).then((response) => {
+      loginClient.post('store/sign', moodObj).then(response => {
         setIsSending(false);
         if (response.data.is_successful) {
           updateMySigns();
@@ -102,7 +100,7 @@ const SympDegreeModal = ({
         mood_id: [mood.id],
       };
       const loginClient = await getLoginClient();
-      loginClient.post('store/sign', moodObj).then((response) => {
+      loginClient.post('store/sign', moodObj).then(response => {
         if (response.data.is_successful) {
           updateMySigns();
           setSnackbar({
@@ -129,12 +127,12 @@ const SympDegreeModal = ({
     formData.append('include_sign', 1);
     formData.append('include_mood', 1);
 
-    loginClient.post('show/my/moods', formData).then((response) => {
+    loginClient.post('show/my/moods', formData).then(response => {
       setFetchingMyMood(false);
       if (response.data.is_successful) {
         const items = new Map([...checkbox]);
         if (response.data.data.length) {
-          response.data.data.map((item) => {
+          response.data.data.map(item => {
             items.set(item.mood.id);
             setCheckbox(items);
             if (item.sign_id === sign.id && sign.is_multiple === 0) {
@@ -225,7 +223,7 @@ const SympDegreeModal = ({
                 resizeMode="contain"
               />
             </View>
-            <Text color={COLORS.dark} medium bold>
+            <Text color={COLORS.textCommentCal} medium bold>
               میزان {sign.title} شما در این دوره
             </Text>
             {!sign.is_multiple ? (
@@ -259,7 +257,7 @@ const SympDegreeModal = ({
                     paddingHorizontal: rw(2),
                   }}>
                   {!sign.is_multiple && allMoods.length
-                    ? allMoods.map((m) => (
+                    ? allMoods.map(m => (
                         <Text key={m.id} small color={COLORS.textLight}>
                           {m.title}
                         </Text>
@@ -284,7 +282,7 @@ const SympDegreeModal = ({
             ) : (
               <FlatList
                 data={allMoods}
-                keyExtractor={(item) => item.id}
+                keyExtractor={item => item.id}
                 renderItem={RenderMoods}
                 style={{
                   marginTop: rh(2),

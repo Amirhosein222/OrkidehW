@@ -47,7 +47,7 @@ async function setUser(userId, token, onError, onSuccess) {
 
 // Handle notifications received
 const handleNotification = notification => {
-  // console.log(notification);
+  console.log(notification);
 };
 
 // Subscribe to an interest

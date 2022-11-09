@@ -37,6 +37,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
       <PsychologyTestCard
         testTitle={item.title}
         description={item.description}
+        testImage={item.image}
         testId={item.id}
         navigation={navigation}
         showAlert={showAlert}

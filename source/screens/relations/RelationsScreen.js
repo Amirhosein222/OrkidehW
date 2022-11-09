@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
   Pressable,
@@ -7,7 +7,6 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { RelItem } from './components';
 import {
@@ -19,20 +18,18 @@ import {
   BackgroundView,
 } from '../../components/common';
 
-import {
-  saveWomanRelations,
-  saveActiveRel,
-} from '../../libs/context/womanInfoContext';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 import { COLORS, rh, rw } from '../../configs';
 import { useApi, useIsPeriodDay } from '../../libs/hooks';
-import { getRelsApi } from './apis';
 import { verifyRelation } from '../../libs/apiCalls';
 
 import AddPerson from '../../assets/icons/drawerSettings/addNewPerson-menu.svg';
 import NextIcon from '../../assets/icons/drawerSettings/nextPage.svg';
 
 const RelationsScreen = ({ navigation }) => {
+  const { relations, getAndHandleRels, fetchingRels } =
+    useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
 
   const verificationCode = useRef(null);
@@ -45,38 +42,11 @@ const RelationsScreen = ({ navigation }) => {
   const [verifyCode, setVerifyCode] = useApi(() =>
     verifyRelation(verificationCode.current),
   );
-  const [rels, setRels] = useApi(() => getRelsApi());
-
-  const handleRels = async function () {
-    const lastActiveRel = await AsyncStorage.getItem('lastActiveRelId');
-    saveActiveRel(null);
-    let relations = [];
-    let activeRel = null;
-    rels.data.data.map(rel => {
-      relations.push({
-        label: rel.man_name ? rel.man_name : 'بدون نام',
-        value: rel.id,
-        is_active: rel.is_active,
-        is_verified: rel.is_verified,
-      });
-      if (rel.is_active === 1 && rel.id === Number(lastActiveRel)) {
-        activeRel = rel;
-      }
-    });
-    if (activeRel) {
-      saveActiveRel({
-        relId: activeRel.id,
-        label: activeRel.man_name,
-        image: activeRel.man_image,
-        mobile: activeRel.man.mobile,
-        birthday: activeRel.man.birth_date,
-      });
-    }
-    AsyncStorage.setItem('rels', JSON.stringify(relations));
-    saveWomanRelations(relations);
-  };
 
   const renderRelations = function ({ item }) {
+    if (item.id === 0) {
+      return null;
+    }
     return (
       <RelItem
         rel={item}
@@ -119,40 +89,28 @@ const RelationsScreen = ({ navigation }) => {
     }
   }, [verifyCode]);
 
-  useEffect(() => {
-    if (rels.data && rels.data.is_successful) {
-      handleRels();
-    }
-    rels.data &&
-      !rels.data.is_successful &&
-      setSnackbar({
-        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
-        visible: true,
-      });
-  }, [rels]);
-
   const handleDeleteRel = id => {
     setShowDeleteModal({ show: true, id: id });
   };
 
   useEffect(() => {
-    setRels();
+    getAndHandleRels();
   }, [shouldUpdate]);
 
   return (
     <BackgroundView>
       <ScreenHeader title="روابط من" />
-      {rels.isFetching && (
+      {fetchingRels && (
         <ActivityIndicator
           size="small"
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           style={{ marginTop: rh(2), marginBottom: rh(2) }}
         />
       )}
-      {rels.data && rels.data.data.length ? (
+      {relations.length ? (
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={rels.data.data}
+          data={relations}
           keyExtractor={item => item.id.toString()}
           renderItem={renderRelations}
           style={{
@@ -162,7 +120,7 @@ const RelationsScreen = ({ navigation }) => {
           }}
         />
       ) : null}
-      {!rels.isFetching && rels.data && !rels.data.data.length ? (
+      {!fetchingRels && !relations.length ? (
         <Text marginTop={rh(2)} marginBottom={rh(2)}>
           شما هیچ رابطه ای ثبت نکرده اید
         </Text>
@@ -208,7 +166,6 @@ const RelationsScreen = ({ navigation }) => {
           visible={showDeleteModal.show}
           closeModal={() => setShowDeleteModal({ show: false, id: null })}
           id={showDeleteModal.id}
-          updateData={setRels}
           setSnackbar={setSnackbar}
         />
       )}

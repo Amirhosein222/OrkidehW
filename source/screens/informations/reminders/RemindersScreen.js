@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import DatePicker from 'react-native-modern-datepicker';
 
 import { Reminder, ReminderTextInput } from './components';
 import {
@@ -13,15 +14,28 @@ import {
 import { setReminderApi, getRemindersApi } from './api';
 import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 import { handleReminderValue } from './helpers/handleReminderValue';
+import { handleReminderDefaultTime } from './helpers/handleReminderDefaultTime';
+import { handleReminderDefaultText } from './helpers/handleReminderDefaultText';
 import { COLORS, rh, rw } from '../../../configs';
 
 const RemindersScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
-  const [reminderText, setReminderText] = useState('');
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [showPicker, setShowPicker] = useState();
+  const [timeType, setTimeType] = useState();
+  const [pTime, setPtime] = useState();
+  const [oTime, setOtime] = useState();
+  const [pmsTime, setPmsTime] = useState();
+  const [dTime, setDtime] = useState();
+  const [pText, setPText] = useState();
+  const [oText, setOText] = useState();
+  const [pmsText, setPmsText] = useState();
+  const [dText, setDText] = useState();
   const selectedReminder = useRef({
     type: '',
     status: '',
+    time: '',
+    description: '',
   });
   const [getReminders, setGetReminder] = useApi(() => getRemindersApi());
   const [reminder, setReminder] = useApi(() =>
@@ -29,17 +43,112 @@ const RemindersScreen = ({ navigation }) => {
   );
 
   const handleReminderStatus = rem => {
-    selectedReminder.current = rem;
+    selectedReminder.current = {
+      ...selectedReminder.current,
+      ...rem,
+      description:
+        rem.type === 'period_f'
+          ? pText
+          : rem.type === 'ovulation_f'
+          ? oText
+          : rem.type === 'pms_f'
+          ? pmsText
+          : dText,
+      time:
+        rem.type === 'period_f'
+          ? pTime
+          : rem.type === 'ovulation_f'
+          ? oTime
+          : rem.type === 'pms_f'
+          ? pmsTime
+          : dTime,
+    };
     setReminder();
+  };
+  const handleReminderText = (type, txt) => {
+    switch (type) {
+      case 'period_f':
+        setPText(txt);
+        break;
+      case 'ovulation_f':
+        setOText(txt);
+        break;
+      case 'pms_f':
+        setPmsText(txt);
+        break;
+      case 'drug':
+        setDText(txt);
+        break;
+      default:
+        break;
+    }
+  };
+  const handleReminderTime = time => {
+    console.log('s time ', time);
+    switch (timeType) {
+      case 'period_f':
+        setPtime(time);
+        break;
+      case 'ovulation_f':
+        setOtime(time);
+        break;
+      case 'pms_f':
+        setPmsTime(time);
+        break;
+      case 'drug':
+        setDtime(time);
+        break;
+      default:
+        break;
+    }
+    setShowPicker(false);
+  };
+  const handleDefaultValue = type => {
+    return handleReminderValue(getReminders.data.data, type);
+  };
+  const handleDefaultTime = type => {
+    return handleReminderDefaultTime(getReminders.data.data, type);
+  };
+  const handleDefaultText = type => {
+    return handleReminderDefaultText(getReminders.data.data, type);
+  };
+
+  const handleOpenPicker = type => {
+    setTimeType(type);
+    setShowPicker(!showPicker);
   };
   const handleVisible = () => {
     setSnackbar({
       visible: !snackbar.visible,
     });
   };
-  const handleDefaultValue = type => {
-    return handleReminderValue(getReminders.data.data, type);
+
+  const handleInitialValues = () => {
+    setPtime(handleReminderDefaultTime(getReminders.data.data, 'period_f'));
+    setOtime(handleReminderDefaultTime(getReminders.data.data, 'ovulation_f'));
+    setPmsTime(handleReminderDefaultTime(getReminders.data.data, 'pms_f'));
+    setDtime(handleReminderDefaultTime(getReminders.data.data, 'drug'));
+    setPText(handleReminderDefaultTime(getReminders.data.data, 'period_f'));
+    setOText(handleReminderDefaultTime(getReminders.data.data, 'ovulation_f'));
+    setPmsText(handleReminderDefaultTime(getReminders.data.data, 'pms_f'));
+    setDText(handleReminderDefaultTime(getReminders.data.data, 'drug'));
   };
+
+  useEffect(() => {
+    setShowPicker(false);
+
+    () => {
+      setShowPicker();
+      setPtime();
+      setOtime();
+      setPmsTime();
+      setDtime();
+      setPText();
+      setOText();
+      setPmsText();
+      setDText();
+    };
+  }, []);
 
   useEffect(() => {
     setGetReminder();
@@ -59,14 +168,14 @@ const RemindersScreen = ({ navigation }) => {
     reminder.data &&
       !reminder.data.is_successful &&
       setSnackbar({
-        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+        msg: JSON.stringify(reminder.data.message),
         visible: true,
       });
   }, [reminder]);
 
   useEffect(() => {
     if (getReminders.data && getReminders.data.is_successful) {
-      // console.log('getReminders.data ', getReminders.data.data[0].type);
+      handleInitialValues();
     }
     getReminders.data &&
       !getReminders.data.is_successful &&
@@ -87,8 +196,17 @@ const RemindersScreen = ({ navigation }) => {
             title="یادآوری چند روز قبل از قاعدگی"
             onSwitch={handleReminderStatus}
             handleDefaultValue={handleDefaultValue}
+            handleTimeType={setTimeType}
           />
-          <ReminderTextInput setText={setReminderText} />
+          <ReminderTextInput
+            handleDefaultTime={handleDefaultTime}
+            handleDefaultText={handleDefaultText}
+            setText={handleReminderText}
+            openPicker={handleOpenPicker}
+            time={pTime}
+            text={pText}
+            type="period_f"
+          />
 
           <Divider
             color={COLORS.textDark}
@@ -102,8 +220,17 @@ const RemindersScreen = ({ navigation }) => {
             title="یادآوری چند روز قبل از تخم گذاری"
             onSwitch={handleReminderStatus}
             handleDefaultValue={handleDefaultValue}
+            handleTimeType={setTimeType}
           />
-          <ReminderTextInput setText={setReminderText} />
+          <ReminderTextInput
+            handleDefaultTime={handleDefaultTime}
+            handleDefaultText={handleDefaultText}
+            setText={handleReminderText}
+            openPicker={handleOpenPicker}
+            time={oTime}
+            text={oText}
+            type="ovulation_f"
+          />
           <Divider
             color={COLORS.textDark}
             width="95%"
@@ -116,8 +243,17 @@ const RemindersScreen = ({ navigation }) => {
             title="یادآوری چند روز قبل از PMS"
             onSwitch={handleReminderStatus}
             handleDefaultValue={handleDefaultValue}
+            handleTimeType={setTimeType}
           />
-          <ReminderTextInput setText={setReminderText} />
+          <ReminderTextInput
+            handleDefaultTime={handleDefaultTime}
+            handleDefaultText={handleDefaultText}
+            setText={handleReminderText}
+            openPicker={handleOpenPicker}
+            time={pmsTime}
+            text={pmsText}
+            type="pms_f"
+          />
           <Divider
             color={COLORS.textDark}
             width="95%"
@@ -130,8 +266,17 @@ const RemindersScreen = ({ navigation }) => {
             title="یادآوری شروع قرص"
             onSwitch={handleReminderStatus}
             handleDefaultValue={handleDefaultValue}
+            handleTimeType={setTimeType}
           />
-          <ReminderTextInput setText={setReminderText} />
+          <ReminderTextInput
+            handleDefaultTime={handleDefaultTime}
+            handleDefaultText={handleDefaultText}
+            setText={handleReminderText}
+            openPicker={handleOpenPicker}
+            time={dTime}
+            text={dText}
+            type="drug"
+          />
         </ScrollView>
       ) : (
         <ActivityIndicator
@@ -146,6 +291,29 @@ const RemindersScreen = ({ navigation }) => {
           message={snackbar.msg}
           type={snackbar.type}
           handleVisible={handleVisible}
+        />
+      ) : null}
+      {showPicker ? (
+        <DatePicker
+          // current={new Date()}
+          isGregorian={false}
+          options={{
+            backgroundColor: COLORS.icon,
+            textHeaderColor: '#FFA25B',
+            textDefaultColor: COLORS.white,
+            selectedTextColor: COLORS.primary,
+            mainColor: COLORS.white,
+            textSecondaryColor: COLORS.textLight,
+            borderColor: 'rgba(122, 146, 165, 0.6)',
+            textFontSize: 20,
+            textHeaderFontSize: 24,
+            defaultFont: 'IRANYekanMobileBold',
+            headerFont: 'IRANYekanMobileBold',
+          }}
+          style={{ height: 200 }}
+          mode="time"
+          minuteInterval={3}
+          onTimeChange={selectedTime => handleReminderTime(selectedTime)}
         />
       ) : null}
     </BackgroundView>

@@ -9,6 +9,7 @@ import {
   Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'jalali-moment';
 
 import {
   BackgroundView,
@@ -19,7 +20,6 @@ import {
   NoRelation,
 } from '../../../components/common';
 import { ExpSympCard } from '../components';
-import * as moment from 'jalali-moment';
 
 import { useIsPeriodDay } from '../../../libs/hooks';
 import { COLORS, rh, rw } from '../../../configs';
@@ -31,36 +31,6 @@ import {
 
 import deleteIcon from '../../../assets/vectors/register/delete.png';
 
-const testData = [
-  {
-    created_at: 1661842138,
-    id: 31,
-    image: '/uploads/photos/1/flower.png',
-    is_multiple: 0,
-    title: 'متئ/مکنئو/کمنئ/متئم/',
-    type: 'woman',
-    updated_at: 1662529944,
-  },
-  {
-    created_at: 1622671874,
-    id: 23,
-    image: '/uploads/photos/1/عکس-پریود-مردان.jpg',
-    is_multiple: 0,
-    title: 'بی حوصلگی',
-    type: 'woman',
-    updated_at: 1623580636,
-  },
-  {
-    created_at: 1622671834,
-    id: 22,
-    image: null,
-    is_multiple: 0,
-    title: 'تحریک پذیری',
-    type: 'woman',
-    updated_at: 1622671834,
-  },
-];
-
 const PartnerMoodsTabScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [spouseMoods, setSpouseMoods] = useState([]);
@@ -68,20 +38,10 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showLove, setShowLove] = useState(false);
-  const [selectedDate, setSelectedDate] = useState({
-    jDate: moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
-    dDate: new Date(),
-  });
+
   const womanInfo = useContext(WomanInfoContext);
 
-  const onDateChange = function (jDate) {
-    const dDate = moment.from(jDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
-    var dateObj = new Date(dDate + 'T00:00:00');
-    setSelectedDate({ jDate: jDate, dDate: dateObj });
-    getSpouseMoodsAndExps(jDate);
-  };
-
-  const getSpouseMoodsAndExps = async function (moodDate) {
+  const getSpouseMoodsAndExps = async function () {
     setSpouseMoods([]);
     setIsLoading(true);
     const loginClient = await getLoginClient();
@@ -89,14 +49,18 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', womanInfo.activeRel.relId);
     formData.append('gender', 'woman');
-    formData.append('date', moodDate);
+    formData.append(
+      'date',
+      moment(new Date(), 'YYYY/MM/DD').locale('en').format('jYYYY/jMM/jDD'),
+    );
     formData.append('include_sign', 1);
     formData.append('include_mood', 1);
     formData.append('include_expectation', 1);
     loginClient
       .post('show/spouse/moods/and/expectation', formData)
-      .then((response) => {
+      .then(response => {
         setIsLoading(false);
+        console.log('partner moods ', response.data);
         if (response.data.is_successful) {
           setSpouseMoods(response.data.data.signs);
         } else {
@@ -125,9 +89,8 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', value);
     formData.append('gender', 'woman');
-    loginClient.post('active/relation', formData).then((response) => {
+    loginClient.post('active/relation', formData).then(response => {
       if (response.data.is_successful) {
-        console.log('here ', response.data);
         AsyncStorage.setItem(
           'lastActiveRelId',
           JSON.stringify(response.data.data.id),
@@ -154,7 +117,12 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
     });
   };
 
-  const onSelectSpouse = (spouse) => {
+  const onSelectSpouse = spouse => {
+    if (spouse === 'newRel') {
+      return navigation.navigate('AddRel', {
+        handleUpdateRels: womanInfo.getAndHandleRels,
+      });
+    }
     setActiveSpouse(spouse);
   };
 
@@ -164,9 +132,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (womanInfo.activeRel) {
-      getSpouseMoodsAndExps(
-        moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
-      );
+      getSpouseMoodsAndExps();
     }
   }, [womanInfo.activeRel]);
 
@@ -192,10 +158,10 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
               isPeriodDay={isPeriodDay}
               defaultSelected={selectedDate.dDate}
             /> */}
-            {testData.length ? (
+            {spouseMoods.length ? (
               <FlatList
-                data={testData}
-                keyExtractor={(item) => item.id}
+                data={spouseMoods}
+                keyExtractor={item => item.id}
                 renderItem={RenderItems}
                 numColumns={2}
                 style={{ marginTop: rh(0) }}

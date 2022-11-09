@@ -12,7 +12,7 @@ const ReadMore = ({ children, textStyle }) => {
     setTextShown(!textShown);
   };
 
-  const onTextLayout = useCallback((e) => {
+  const onTextLayout = useCallback(e => {
     setLengthMore(e.nativeEvent.lines.length > 1); //to check the text is more than 4 lines or not
     // SetNumberOfLines(e.nativeEvent.lines.length);
   }, []);

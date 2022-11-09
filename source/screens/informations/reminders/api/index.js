@@ -9,6 +9,8 @@ export const setReminderApi = async function (reminder) {
     formData.append('type', reminder.type);
     formData.append('send_notif', reminder.status ? 1 : 0);
     formData.append('send_sms', 0);
+    formData.append('time', reminder.time);
+    formData.append('description', reminder.description || null);
 
     const res = await loginClient.post('alarm/setting/update', formData);
 

@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Pressable, View, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Pressable, View, StyleSheet, Image } from 'react-native';
+import Octicons from 'react-native-vector-icons/Octicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { Text } from '../../../../components/common';
 
@@ -13,6 +14,7 @@ import DisabledBack from '../../../../assets/icons/btns/disabled-back.svg';
 const PsychologyTestCard = ({
   testTitle,
   description,
+  testImage,
   navigation,
   testId,
   showAlert,
@@ -21,17 +23,24 @@ const PsychologyTestCard = ({
   const handleNavigation = function () {
     navigation.navigate('PsychologyTestDetails', {
       testId: testId,
+      testImage,
+      description,
       showAlert: showAlert,
     });
   };
 
   return (
     <View style={styles.container}>
-      <Ionicons
-        name="heart"
-        size={100}
-        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-      />
+      {testImage ? (
+        <Image
+          source={{ uri: testImage }}
+          style={{ width: 100, height: 100 }}
+        />
+      ) : (
+        <Octicons name="checklist" size={70} color={COLORS.primary} />
+        // <MaterialIcons name="fact-check" size={70} color={COLORS.primary} />
+      )}
+
       <View
         style={{
           ...styles.badge,
@@ -45,11 +54,15 @@ const PsychologyTestCard = ({
           width: '100%',
           alignItems: 'center',
           paddingHorizontal: rw(4),
-          paddingVertical: rh(1),
+          paddingVertical: rh(1.5),
         }}>
         <Pressable
           onPress={() => handleNavigation()}
-          style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
+          style={{
+            flexDirection: 'row',
+            alignSelf: 'flex-end',
+            marginTop: rh(0.5),
+          }}>
           <DisabledBack style={ICON_SIZE} />
           <Text
             small
@@ -59,11 +72,7 @@ const PsychologyTestCard = ({
             color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
             0
           </Text>
-          <Text
-            small
-            alignSelf="flex-end"
-            bold
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
+          <Text small alignSelf="flex-end" bold color={COLORS.textLight}>
             /100
           </Text>
         </Pressable>
@@ -74,15 +83,17 @@ const PsychologyTestCard = ({
             borderRightWidth: 3,
             borderRightColor: COLORS.textLight,
             alignSelf: 'flex-end',
+            paddingRight: rw(1),
           }}>
           <Text
             marginRight="10"
             alignSelf="flex-end"
             bold
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}>
+            color={COLORS.textCommentCal}>
             {testTitle}
           </Text>
           <Text
+            size={10}
             color={COLORS.textLight}
             marginRight="10"
             alignSelf="flex-end"

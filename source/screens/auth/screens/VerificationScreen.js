@@ -47,7 +47,7 @@ import back from '../../../assets/icons/btns/back.png';
 import EnableCheck from '../../../assets/icons/btns/enabled-check.svg';
 import { numberConverter } from '../../../libs/helpers';
 
-const CELL_COUNT = 4;
+const CELL_COUNT = 5;
 
 const VerificationScreen = ({ navigation, route }) => {
   const params = route.params || {};
@@ -69,7 +69,7 @@ const VerificationScreen = ({ navigation, route }) => {
   const [sendCode, setSendCode] = useApi(() => sendCodeApi(params.mobile));
 
   const validateInput = function () {
-    if (value.length !== 4) {
+    if (value.length !== 5) {
       setSnackbar({
         msg: 'لطفا کد را وارد کنید!',
         visible: true,
@@ -95,6 +95,15 @@ const VerificationScreen = ({ navigation, route }) => {
   const onPressSendCode = function () {
     setSendCode();
   };
+
+  useEffect(() => {
+    setSnackbar({
+      msg: `کد تایید: ${params.code || ''}`,
+      visible: true,
+      type: 'success',
+      delay: 3000,
+    });
+  }, []);
 
   useEffect(() => {
     if (checkCode.data && checkCode.data.is_successful) {
@@ -272,6 +281,7 @@ const VerificationScreen = ({ navigation, route }) => {
         <Snackbar
           message={snackbar.msg}
           type={snackbar.type}
+          delay={snackbar.delay}
           handleVisible={handleVisible}
         />
       ) : null}

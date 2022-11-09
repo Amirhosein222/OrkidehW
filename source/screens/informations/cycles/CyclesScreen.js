@@ -30,7 +30,7 @@ const CyclesScreen = ({ navigation }) => {
 
   const [userCycles, setUserCycles] = useApi(() => getCycles());
 
-  const handleEditModalType = (cyc) => {
+  const handleEditModalType = cyc => {
     setShowEditModal({ show: true, selected: cyc });
   };
 
@@ -81,41 +81,41 @@ const CyclesScreen = ({ navigation }) => {
             </Text>
           </View>
 
-          <Divider
-            color={COLORS.textDark}
-            width="82%"
-            style={{ marginTop: rh(2) }}
-            borderWidth={0.6}
-          />
-          <CyclesOption
-            icon="calendar-check"
-            cycle={cycles[2]}
-            data={`${periodInfo.ovulation_length || '_'} روز `}
-            onPress={handleEditModalType}
-          />
-          <View style={{ width: rw(84), marginTop: rh(2) }}>
-            <Text color={COLORS.textLight} textAlign="right" small>
-              {numberConverter(ovalText)}
-            </Text>
-          </View>
+          {/* <Divider
+              color={COLORS.textDark}
+              width="82%"
+              style={{ marginTop: rh(2) }}
+              borderWidth={0.6}
+            />
+            <CyclesOption
+              icon="calendar-check"
+              cycle={cycles[2]}
+              data={`${periodInfo.ovulation_length || '_'} روز `}
+              onPress={handleEditModalType}
+            />
+            <View style={{ width: rw(84), marginTop: rh(2) }}>
+              <Text color={COLORS.textLight} textAlign="right" small>
+                {numberConverter(ovalText)}
+              </Text>
+            </View>
 
-          <Divider
-            color={COLORS.textDark}
-            width="82%"
-            style={{ marginTop: rh(4) }}
-            borderWidth={0.6}
-          />
-          <CyclesOption
-            icon="calendar-minus"
-            cycle={cycles[3]}
-            data="روز 16 دوره"
-            onPress={handleEditModalType}
-          />
-          <View style={{ width: rw(84), marginTop: rh(2) }}>
-            <Text color={COLORS.textLight} textAlign="right" small>
-              {numberConverter(pmsText)}
-            </Text>
-          </View>
+            <Divider
+              color={COLORS.textDark}
+              width="82%"
+              style={{ marginTop: rh(4) }}
+              borderWidth={0.6}
+            />
+            <CyclesOption
+              icon="calendar-minus"
+              cycle={cycles[3]}
+              data="روز 16 دوره"
+              onPress={handleEditModalType}
+            />
+            <View style={{ width: rw(84), marginTop: rh(2) }}>
+              <Text color={COLORS.textLight} textAlign="right" small>
+                {numberConverter(pmsText)}
+              </Text>
+            </View> */}
         </ScrollView>
       ) : (
         <ActivityIndicator

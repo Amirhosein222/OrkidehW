@@ -1,15 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  StatusBar,
-  ActivityIndicator,
-  FlatList,
-  Image,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { StatusBar, ActivityIndicator, FlatList, Image } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 import {
   Button,
@@ -147,12 +141,14 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
           disableBack={submitAnswers.isFetching}
         />
 
-        <View style={styles.imageContainer}>
+        {params.testImage ? (
           <Image
-            source={require('../../../assets/images/icons8-heart-100.png')}
-            style={styles.image}
+            source={{ uri: params.testImage }}
+            style={{ width: 100, height: 100 }}
           />
-        </View>
+        ) : (
+          <Octicons name="checklist" size={70} color={COLORS.primary} />
+        )}
 
         {details.data && (
           <FlatList
@@ -190,29 +186,5 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  btn: {
-    height: 39,
-    borderRadius: 30,
-    justifyContent: 'center',
-    marginTop: 20,
-    margin: 10,
-    width: '50%',
-    alignSelf: 'center',
-  },
-  imageContainer: {
-    width: rw(90),
-    height: rh(10),
-    alignItems: 'center',
-    marginVertical: rh(3),
-    borderRightWidth: 4,
-    borderRightColor: COLORS.icon,
-  },
-  image: {
-    width: 100,
-    height: 100,
-  },
-});
 
 export default PsychologyTestDetailsScreen;

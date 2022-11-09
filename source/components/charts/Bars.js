@@ -30,9 +30,7 @@ const Bars = ({ data }) => {
             {Math.round(data.count * 10) / 10}
           </Text>
         </View>
-        <Text
-          bold
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}>
+        <Text bold color={COLORS.textLight}>
           شما :
         </Text>
       </View>
@@ -50,9 +48,7 @@ const Bars = ({ data }) => {
             {Math.round(data.othersCount * 10) / 10}
           </Text>
         </View>
-        <Text
-          bold
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}>
+        <Text bold color={COLORS.textLight}>
           همسالان :
         </Text>
       </View>

@@ -153,22 +153,37 @@ export const setMaritalStatusApi = async function (fullInfo, status) {
   try {
     const loginClient = await getLoginClient();
     const formData = new FormData();
-    formData.append('display_name', 'lll');
+    formData.append('display_name', fullInfo.display_name);
+    formData.append('name', fullInfo.name);
     formData.append('password', fullInfo.password);
     formData.append('repeat_password', fullInfo.password);
-    formData.append('is_married', status);
+    formData.append('status_married', status);
     formData.append('pregnancy_history', '0');
     formData.append(
       'birth_date',
-      moment(fullInfo.birth_date).locale('en').format('jYYYY/jM/jD'),
+      moment(fullInfo.birth_date, 'X').locale('en').format('jYYYY/jMM/jDD'),
     );
     formData.append('gender', 'woman');
     formData.append('is_password_active', Number(fullInfo.is_password_active));
     formData.append('is_finger_active', Number(fullInfo.is_finger_active));
+    console.log('fd ', formData);
     const res = await loginClient.post('complete/profile', formData);
     return res.data;
   } catch (error) {
     // console.log('e ', error.response);
+    throw error;
+  }
+};
+
+export const sendLoveNotifApi = async function (relId) {
+  try {
+    const loginClient = await getLoginClient();
+    const res = await loginClient.get(
+      `heart?gender=woman&relation_id=${relId}`,
+    );
+    return res.status;
+  } catch (error) {
+    // console.log('e ', error.response.status);
     throw error;
   }
 };

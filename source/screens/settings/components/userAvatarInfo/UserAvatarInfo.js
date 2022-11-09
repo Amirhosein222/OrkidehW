@@ -40,7 +40,7 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
               color={COLORS.textDark}
               textAlign="right"
               alignSelf="flex-end">
-              {womanInfo.fullInfo.display_name}
+              {womanInfo.fullInfo.name}
             </Text>
             <Text bold color={COLORS.textLight} alignSelf="flex-end">
               {womanInfo.fullInfo.mobile}

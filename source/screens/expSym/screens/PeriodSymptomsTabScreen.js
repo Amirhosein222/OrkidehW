@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar, ActivityIndicator, FlatList } from 'react-native';
-import * as moment from 'jalali-moment';
+import moment from 'jalali-moment';
 
 import {
   BackgroundView,
@@ -22,7 +22,9 @@ const PeriodSymptomsTabScreen = () => {
   const [mySymptoms, setMySymptoms] = useState([]);
   const [signId, setSignId] = useState(null);
   const [signDate, setSignDate] = useState({
-    jDate: moment.from(new Date(), 'en', 'YYYY/MM/DD').format('jYYYY/jMM/jDD'),
+    jDate: moment(new Date(), 'YYYY/MM/DD')
+      .locale('en')
+      .format('jYYYY/jMM/jDD'),
     dDate: new Date(),
   });
   const [showModal, setShowModal] = useState(false);
@@ -48,7 +50,7 @@ const PeriodSymptomsTabScreen = () => {
     setShowModal(!showModal);
   };
 
-  const openInfoModal = (symp) => {
+  const openInfoModal = symp => {
     selectedSymp.current = symp;
     setShowInfoModal(true);
   };
@@ -66,7 +68,7 @@ const PeriodSymptomsTabScreen = () => {
   const RenderItems = ({ item }) => {
     const alreadySelected =
       (mySymptoms.length &&
-        mySymptoms.filter((symp) => symp.sign_id === item.id).pop()) ||
+        mySymptoms.filter(symp => symp.sign_id === item.id).pop()) ||
       false;
     return (
       <ExpSympCard
@@ -79,6 +81,10 @@ const PeriodSymptomsTabScreen = () => {
   };
 
   useEffect(() => {
+    console.log(
+      'at my exp ',
+      moment(new Date(), 'YYYY/MM/DD').locale('en').format('jYYYY/jMM/jDD'),
+    );
     onGetSymptoms();
   }, []);
 
@@ -138,7 +144,7 @@ const PeriodSymptomsTabScreen = () => {
         /> */}
         <FlatList
           data={symptoms}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           renderItem={RenderItems}
           numColumns={2}
           style={{ marginTop: rh(0) }}

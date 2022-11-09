@@ -18,7 +18,7 @@ const CyclesOption = ({ name = 'default', cycle, icon, onPress, data }) => {
           {numberConverter(data)}
         </Text>
         <Text color={COLORS.textLight} marginRight={rw(4)}>
-          شما {cycle.title} :
+          {cycle.title} شما:
         </Text>
 
         <FontAwesome5

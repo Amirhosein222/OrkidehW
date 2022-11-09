@@ -19,7 +19,6 @@ import {
   getCalendarApi,
   getPregnancyPercentApi,
   storePeriodAutoApi,
-  getRelationsApi,
 } from '../apis';
 import { initPusher } from '../../../libs/helpers';
 import {
@@ -28,16 +27,11 @@ import {
   getPusherUserId,
 } from '../../../libs/apiCalls';
 import { useIsPeriodDay, useApi } from '../../../libs/hooks';
-import {
-  saveWomanRelations,
-  WomanInfoContext,
-  saveActiveRel,
-} from '../../../libs/context/womanInfoContext';
+import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import { getFromAsyncStorage } from '../../../libs/helpers';
 
 import {
   BackgroundView,
-  Text,
   Header,
   Snackbar,
   HDatePicker,
@@ -62,7 +56,7 @@ const HomeScreen = ({ navigation, route }) => {
   const storePDate = useRef(null);
 
   const [adsSettings, setAdsSetting] = useState(
-    settings ? settings.app_text_ads : null,
+    settings ? settings.app_text_need_support : null,
   );
   const [pregnancy, setPregnancy] = useState(null);
   const [periodStart, setPeriodStart] = useState(null);
@@ -72,12 +66,11 @@ const HomeScreen = ({ navigation, route }) => {
 
   const [loginWomanInfo, setLoginWomanInfo] = useApi(() => getWomanInfo());
   const [getCalendar, setGetCalendar] = useApi(() => getCalendarApi());
-  const [getRelations, setGetRelations] = useApi(() => getRelationsApi());
   const [getPregnancy, setGetPregnancy] = useApi(() =>
     getPregnancyPercentApi(
       womanInfo.activeRel
         ? womanInfo.activeRel.relId
-        : getRelations.data && !getRelations.data.data.length
+        : !womanInfo.relations.length
         ? 1
         : '',
     ),
@@ -109,16 +102,11 @@ const HomeScreen = ({ navigation, route }) => {
     setStorePeriodAuto();
   };
 
-  const onGetRelations = async function () {
-    setGetRelations();
-  };
-
   const handlePusherInit = async () => {
     initPusher(pusher.data.pusher_user_id, pusher.data.token);
   };
 
   useEffect(() => {
-    onGetRelations();
     onGetCalendar();
   }, []);
 
@@ -153,7 +141,9 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (setts.data && setts.data.is_successful) {
-      const result = setts.data.data.find(e => e.key === 'app_text_ads');
+      const result = setts.data.data.find(
+        e => e.key === 'app_text_need_support',
+      );
       result && setAdsSetting(result);
       const settingsObj = setts.data.data.reduce(
         (acc, cur) => ({ ...acc, [cur.key]: cur }),
@@ -191,45 +181,8 @@ const HomeScreen = ({ navigation, route }) => {
   }, [getCalendar]);
 
   useEffect(() => {
-    if (getRelations.data && getRelations.data.is_successful) {
-      const lastActiveRel = AsyncStorage.getItem('lastActiveRelId');
-
-      let rels = [];
-      let activeRel = null;
-      if (getRelations.data.data.length === 0) {
-        onGetPregnancyPercent();
-        return;
-      }
-      getRelations.data.data.map(rel => {
-        rels.push({
-          label: rel.man_name ? rel.man_name : 'بدون نام',
-          value: rel.id,
-          is_active: rel.is_active,
-          is_verified: rel.is_verified,
-        });
-        if (rel.is_active === 1 && rel.id === Number(lastActiveRel)) {
-          activeRel = rel;
-        }
-      });
-      if (activeRel) {
-        saveActiveRel({
-          relId: activeRel.id,
-          label: activeRel.man_name,
-          image: activeRel.man_image,
-          mobile: activeRel.man.mobile,
-          birthday: activeRel.man.birth_date,
-        });
-      }
-      AsyncStorage.setItem('rels', JSON.stringify(rels));
-      saveWomanRelations(rels);
-    }
-    getRelations.data &&
-      !getRelations.data.is_successful &&
-      setSnackbar({
-        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
-        visible: true,
-      });
-  }, [getRelations]);
+    womanInfo.getAndHandleRels();
+  }, []);
 
   useEffect(() => {
     if (getPregnancy.data && getPregnancy.data.is_successful) {
@@ -246,21 +199,13 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (storePeriodAuto.data && storePeriodAuto.data.is_successful) {
       AsyncStorage.setItem('periodStart', storePDate.current);
-      if (storePeriodAuto.data.data.status === 'auto_s') {
-        setSnackbar({
-          msg: 'تاریخ شروع دوره پریود شما با موفقیت ثبت شد',
-          visible: true,
-          type: 'success',
-        });
-        setShowCalendarModal(true);
-      } else if (storePeriodAuto.data.data.status === 'auto_e') {
-        setSnackbar({
-          msg: 'تاریخ پایان دوره پریود با موفقیت ثبت شد',
-          visible: true,
-          type: 'success',
-        });
-        setShowCalendarModal(true);
-      }
+      onGetCalendar();
+      setSnackbar({
+        msg: 'تاریخ شروع دوره پریود شما با موفقیت ثبت شد',
+        visible: true,
+        type: 'success',
+      });
+      // setShowCalendarModal(true);
     }
     storePeriodAuto.data &&
       !storePeriodAuto.data.is_successful &&
@@ -287,10 +232,12 @@ const HomeScreen = ({ navigation, route }) => {
         navigation={navigation}
         style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
         setShowLovePopup={setShowLove}
+        setSnackbar={setSnackbar}
+        ads={adsSettings && adsSettings.value}
       />
 
-      <View style={{ alignItems: 'center' }}>
-        <View
+      <View style={{ alignItems: 'center', marginTop: rh(2) }}>
+        {/* <View
           style={{
             paddingHorizontal: rw(6),
           }}>
@@ -299,10 +246,9 @@ const HomeScreen = ({ navigation, route }) => {
             textAlign="right"
             medium
             color={COLORS.textLight}>
-            {/* {adsSettings && adsSettings.value} */}
-            متن تست تبلیغات متن تست تبلیغات
+            {adsSettings && adsSettings.value}
           </Text>
-        </View>
+        </View> */}
         <HDatePicker
           periodStart={periodStart}
           onDateSelected={onStorePeriodAuto}
@@ -322,7 +268,7 @@ const HomeScreen = ({ navigation, route }) => {
         {storePeriodAuto.isFetching ? (
           <ActivityIndicator
             size="large"
-            color={COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             style={{ marginTop: rh(4) }}
           />
         ) : (

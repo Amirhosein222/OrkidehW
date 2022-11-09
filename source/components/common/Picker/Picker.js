@@ -38,7 +38,7 @@ const Picker = ({
       setValue={setValue}
       setItems={setItems}
       listMode={listMode}
-      onChangeValue={(val) => {
+      onChangeValue={val => {
         onItemSelect(val);
       }}
       labelStyle={styles.labelStyle}

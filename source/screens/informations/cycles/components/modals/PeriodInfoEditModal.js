@@ -34,7 +34,7 @@ const PeriodInfoEditModal = ({
     ),
   );
 
-  const handleSelectedValue = (i) => {
+  const handleSelectedValue = i => {
     setSelected(i);
     selectedRef.current =
       cycle.id === 1
@@ -65,61 +65,64 @@ const PeriodInfoEditModal = ({
   }, [editInfo]);
 
   return (
-    <Modal
-      testID={'modal'}
-      isVisible={visible}
-      coverScreen={true}
-      hasBackdrop={true}
-      backdropOpacity={0.5}
-      backdropTransitionOutTiming={1}
-      backdropTransitionInTiming={0}
-      animationOutTiming={0}
-      animationInTiming={0}
-      animationIn="slideInUp"
-      onBackdropPress={editInfo.isFetching ? () => {} : closeModal}
-      style={styles.modal}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <View style={{ marginLeft: 'auto' }} />
-          <Text medium style={{ marginLeft: 'auto', marginRight: rw(5) }}>
-            {cycle.title} خود را وارد کنید
-          </Text>
-          <Pressable
-            onPress={editInfo.isFetching ? () => {} : closeModal}
-            hitSlop={7}
-            style={{ marginLeft: 'auto' }}>
-            <Close style={{ ...ICON_SIZE, marginRight: rw(5) }} />
-          </Pressable>
-        </View>
-        <Picker
-          style={{ width: rw(70), height: 180, marginTop: rh(3) }}
-          lineColor="black"
-          lineGradientColorFrom="#687777"
-          lineGradientColorTo="#687777"
-          selectedValue={selected}
-          selectedIndex={selected}
-          itemStyle={{
-            color: COLORS.textDark,
-            fontSize: 24,
-            fontFamily: 'IRANYekanMobileBold',
-          }}
-          onValueChange={(index) => handleSelectedValue(index)}>
-          {cycle.data.map((value, i) => (
-            <PickerItem label={value} value={i} key={i} />
-          ))}
-        </Picker>
+    console.log('cycle.id ', cycle.id),
+    (
+      <Modal
+        testID={'modal'}
+        isVisible={visible}
+        coverScreen={true}
+        hasBackdrop={true}
+        backdropOpacity={0.5}
+        backdropTransitionOutTiming={1}
+        backdropTransitionInTiming={0}
+        animationOutTiming={0}
+        animationInTiming={0}
+        animationIn="slideInUp"
+        onBackdropPress={editInfo.isFetching ? () => {} : closeModal}
+        style={styles.modal}>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <View style={{ marginLeft: 'auto' }} />
+            <Text medium style={{ marginLeft: 'auto', marginRight: rw(5) }}>
+              {cycle.title} خود را وارد کنید
+            </Text>
+            <Pressable
+              onPress={editInfo.isFetching ? () => {} : closeModal}
+              hitSlop={7}
+              style={{ marginLeft: 'auto' }}>
+              <Close style={{ ...ICON_SIZE, marginRight: rw(5) }} />
+            </Pressable>
+          </View>
+          <Picker
+            style={{ width: rw(70), height: 180, marginTop: rh(3) }}
+            lineColor="black"
+            lineGradientColorFrom="#687777"
+            lineGradientColorTo="#687777"
+            selectedValue={selected}
+            selectedIndex={selected}
+            itemStyle={{
+              color: COLORS.textDark,
+              fontSize: 24,
+              fontFamily: 'IRANYekanMobileBold',
+            }}
+            onValueChange={index => handleSelectedValue(index)}>
+            {cycle.data.map((value, i) => (
+              <PickerItem label={value} value={i} key={i} />
+            ))}
+          </Picker>
 
-        <Button
-          title="تایید اطلاعات"
-          Icon={() => <EnableCheck style={ICON_SIZE} />}
-          color={COLORS.primary}
-          onPress={onSubmit}
-          style={{ marginTop: 'auto', marginBottom: rh(4) }}
-          loading={editInfo.isFetching}
-          disabled={editInfo.isFetching}
-        />
-      </View>
-    </Modal>
+          <Button
+            title="تایید اطلاعات"
+            Icon={() => <EnableCheck style={ICON_SIZE} />}
+            color={COLORS.primary}
+            onPress={onSubmit}
+            style={{ marginTop: 'auto', marginBottom: rh(4) }}
+            loading={editInfo.isFetching}
+            disabled={editInfo.isFetching}
+          />
+        </View>
+      </Modal>
+    )
   );
 };
 

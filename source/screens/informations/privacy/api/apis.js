@@ -6,6 +6,7 @@ export const setPasswordApi = async function (fullInfo, password) {
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('display_name', fullInfo.display_name);
+    formData.append('name', fullInfo.name);
     formData.append('password', password);
     formData.append('repeat_password', password);
     formData.append(

@@ -83,6 +83,7 @@ const ProfileScreen = ({ navigation }) => {
         name: 'profileImg',
       });
     formData.append('display_name', fullInfo.display_name);
+    formData.append('name', fullInfo.name);
     formData.append(
       'birth_date',
       bDay
@@ -131,9 +132,6 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const onOptionPress = option => {
-    if (option === 'نام کاربری') {
-      return;
-    }
     setSelectedOption(option);
     setShowModal(true);
   };
@@ -155,7 +153,7 @@ const ProfileScreen = ({ navigation }) => {
         />
         <ProfileOption
           name="username"
-          title="نام کاربری"
+          title="نام نمایشی"
           data={fullInfo.display_name}
           Icon={() => <NameIcon style={ICON_SIZE} />}
           onPress={onOptionPress}
@@ -163,7 +161,7 @@ const ProfileScreen = ({ navigation }) => {
         <ProfileOption
           name="name"
           title="نام"
-          data={fullInfo.display_name}
+          data={fullInfo.name}
           Icon={() => <NameIcon style={ICON_SIZE} />}
           onPress={onOptionPress}
         />
@@ -177,7 +175,7 @@ const ProfileScreen = ({ navigation }) => {
         <ProfileOption
           name="birthday"
           title="وضعیت تاهل:"
-          data={fullInfo.is_married}
+          data={fullInfo.status_married}
           Icon={() => <DateOfBirth style={ICON_SIZE} />}
           onPress={() => setShowMaritalModal(true)}
         />
@@ -228,6 +226,7 @@ const ProfileScreen = ({ navigation }) => {
           visible={showModal}
           closeModal={() => setShowModal(false)}
           displayName={fullInfo.display_name}
+          oldName={fullInfo.name}
         />
       )}
     </BackgroundView>
