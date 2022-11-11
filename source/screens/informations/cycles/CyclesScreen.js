@@ -1,17 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext, useEffect } from 'react';
-import { ScrollView, View, ActivityIndicator } from 'react-native';
+import { ScrollView, View, ActivityIndicator, Text } from 'react-native';
 
 import { CyclesOption, PeriodInfoEditModal } from './components';
 import {
   ScreenHeader,
-  Divider,
-  Text,
   BackgroundView,
   Snackbar,
+  Divider,
 } from '../../../components/common';
 
-import { bleedingText, ovalText, pmsText, cycles } from './constants';
+import { bleedingText, cycles } from './constants';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../../configs';
 import { numberConverter } from '../../../libs/helpers';
@@ -69,18 +68,31 @@ const CyclesScreen = ({ navigation }) => {
             data={`${periodInfo.cycle_length} روز `}
             onPress={handleEditModalType}
           />
+
           <CyclesOption
             icon="calendar-day"
             cycle={cycles[1]}
             data={`${periodInfo.period_length} روز `}
             onPress={handleEditModalType}
           />
-          <View style={{ width: rw(84), marginTop: rh(2) }}>
-            <Text color={COLORS.textLight} textAlign="right" small>
-              {numberConverter(bleedingText)}
+          <View style={{ width: rw(81), marginTop: rh(2) }}>
+            <Text
+              style={{
+                color: COLORS.textLight,
+                fontSize: 11,
+                fontFamily: 'IRANYekanMobileMedium',
+                // writingDirection: 'rtl',
+                // textAlign: 'justify',
+              }}>
+              {bleedingText}
             </Text>
           </View>
-
+          <Divider
+            color={COLORS.textDark}
+            width="82%"
+            style={{ marginTop: rh(2) }}
+            borderWidth={0.5}
+          />
           {/* <Divider
               color={COLORS.textDark}
               width="82%"

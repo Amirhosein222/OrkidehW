@@ -51,7 +51,7 @@ const CounselorResponseModal = ({ visible, closeModal }) => {
           bold
           large
           marginTop={rh(2)}>
-          پیام شما ثبت شد
+          پیام شما با موفقیت ثبت شد
         </Text>
         <Text
           color={COLORS.textLight}

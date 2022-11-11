@@ -20,7 +20,7 @@ const Header = ({ navigation, style, setShowLovePopup, setSnackbar, ads }) => {
 
   const onSendLove = () => {
     if (!activeRel) {
-      setSnackbar({
+      return setSnackbar({
         msg: 'شما هیچ رابطه فعالی ندارید!',
         visible: true,
       });

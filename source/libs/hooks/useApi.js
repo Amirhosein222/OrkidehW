@@ -19,7 +19,7 @@ export default function useApi(apiFunction) {
     });
 
     apiFunction()
-      .then((res) => {
+      .then(res => {
         setResponse({
           // ...response,
           data: res,
@@ -27,7 +27,7 @@ export default function useApi(apiFunction) {
           isSuccess: true,
         });
       })
-      .catch((err) => {
+      .catch(err => {
         setResponse({
           // ...response,
           isFetching: false,

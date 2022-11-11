@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
 import Orientation from 'react-native-orientation-locker';
+import SplashScreen from 'react-native-splash-screen';
 
 import MainStackNavigator from './routes/MainStackNavigator';
 
@@ -32,6 +33,10 @@ const App = () => {
 
   useEffect(() => {
     handleRenederInitialScreen();
+  }, []);
+
+  useEffect(() => {
+    SplashScreen.hide(); //hides the splash screen on app load.
   }, []);
 
   if (checkingIsLoggedin === true) {

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   Image,
   StyleSheet,
@@ -8,13 +8,10 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 import { Text } from '../../../../components/common';
 import { baseUrl, COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
-import { convertToFullDate, numberConverter } from '../../../../libs/helpers';
 
 import manIcon from '../../../../assets/vectors/profile/man-1.png';
 import Delete from '../../../../assets/icons/btns/delete.svg';
@@ -32,7 +29,9 @@ const RelItem = ({
     <View style={styles.avatarContainer}>
       <View style={{ alignSelf: 'flex-start' }}>
         <View style={styles.editDeleteContainer}>
-          <Pressable onPress={() => handleShowDeleteModal(rel.id)} hitSlop={7}>
+          <Pressable
+            onPress={() => handleShowDeleteModal(rel.value)}
+            hitSlop={7}>
             <Delete style={ICON_SIZE} />
           </Pressable>
           <Pressable
@@ -49,7 +48,7 @@ const RelItem = ({
         {!rel.is_verified && rel.applicant === 'man' && (
           <Pressable
             disabled={isVerifying}
-            onPress={() => handleVerifyRel(rel.verification_code)}
+            onPress={() => handleVerifyRel(rel.verifyCode)}
             style={styles.verifyRel}>
             {isVerifying ? (
               <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
@@ -69,14 +68,14 @@ const RelItem = ({
             color={COLORS.textDark}
             textAlign="right"
             alignSelf="flex-end">
-            {rel.man_name}
+            {rel.label}
           </Text>
           <Text size={12} bold color={COLORS.textLight} alignSelf="flex-end">
-            {numberConverter(convertToFullDate(rel.man.birth_date))}
+            {rel.mobile}
           </Text>
         </View>
 
-        {rel.man_image ? (
+        {rel.image ? (
           <View
             style={{
               ...styles.avatarBorderdContainer,
@@ -84,7 +83,7 @@ const RelItem = ({
               height: 110,
             }}>
             <Image
-              source={{ uri: baseUrl + rel.man_image }}
+              source={{ uri: baseUrl + rel.image }}
               style={{ width: 100, height: 100, borderRadius: 70 }}
               resizeMode="contain"
             />

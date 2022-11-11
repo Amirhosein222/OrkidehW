@@ -83,7 +83,7 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
     if (report.data && report.data.is_successful) {
       closeModal();
       setSnackbar({
-        msg: 'گزارش شما ثبت شد',
+        msg: 'گزارش شما با موفقیت ثبت شد',
         visible: true,
         type: 'success',
       });

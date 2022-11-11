@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ImagePicker from 'react-native-image-crop-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -20,7 +19,6 @@ import SelectPictureModal from '../../../components/informations/SelectPictureMo
 import { Text, Snackbar, InputRow } from '../../../components/common';
 
 import getLoginClient from '../../../libs/api/loginClientApi';
-import { getFromAsyncStorage } from '../../../libs/helpers';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import { COLORS, rw, rh } from '../../../configs';
 

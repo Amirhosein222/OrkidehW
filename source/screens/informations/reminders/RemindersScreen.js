@@ -128,10 +128,10 @@ const RemindersScreen = ({ navigation }) => {
     setOtime(handleReminderDefaultTime(getReminders.data.data, 'ovulation_f'));
     setPmsTime(handleReminderDefaultTime(getReminders.data.data, 'pms_f'));
     setDtime(handleReminderDefaultTime(getReminders.data.data, 'drug'));
-    setPText(handleReminderDefaultTime(getReminders.data.data, 'period_f'));
-    setOText(handleReminderDefaultTime(getReminders.data.data, 'ovulation_f'));
-    setPmsText(handleReminderDefaultTime(getReminders.data.data, 'pms_f'));
-    setDText(handleReminderDefaultTime(getReminders.data.data, 'drug'));
+    setPText(handleReminderDefaultText(getReminders.data.data, 'period_f'));
+    setOText(handleReminderDefaultText(getReminders.data.data, 'ovulation_f'));
+    setPmsText(handleReminderDefaultText(getReminders.data.data, 'pms_f'));
+    setDText(handleReminderDefaultText(getReminders.data.data, 'drug'));
   };
 
   useEffect(() => {
@@ -159,10 +159,10 @@ const RemindersScreen = ({ navigation }) => {
       setSnackbar({
         msg:
           reminder.data.data.send_notif === '1'
-            ? 'یادآور فعال شد'
-            : 'یادآور غیر فعال شد',
+            ? 'یادآور با موفقیت فعال شد'
+            : 'یادآور با موفقیت غیر فعال شد',
         visible: true,
-        type: reminder.data.data.send_notif === '1' ? 'success' : 'error',
+        type: 'success',
       });
     }
     reminder.data &&

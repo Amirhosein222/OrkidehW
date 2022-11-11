@@ -2,7 +2,6 @@
 import React, { useState, useContext } from 'react';
 import { View, StatusBar, StyleSheet, Image } from 'react-native';
 import FormData from 'form-data';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   Text,
@@ -22,13 +21,13 @@ import loginBg from '../../../assets/images/login_bg.png';
 
 import enabledEdit from '../../../assets/icons/btns/enabled-edit.png';
 import disabledEdit from '../../../assets/icons/btns/disabled-edit.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditMobileScreen = ({ navigation, route }) => {
   const params = route.params || {};
   const { settings, saveFullInfo } = useContext(WomanInfoContext);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSendingEdit, setIsSendingEdit] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
   const handleVisible = () => {
@@ -64,6 +63,12 @@ const EditMobileScreen = ({ navigation, route }) => {
       loginClient.post('change/mobile', formData).then(async response => {
         setIsLoading(false);
         if (response.data.is_successful) {
+          console.log('on changing mobile ', response.data);
+          AsyncStorage.setItem('mobile', response.data.data.user.mobile);
+          AsyncStorage.setItem(
+            'userToken',
+            JSON.stringify(response.data.data.token),
+          );
           setSnackbar({
             msg: 'شماره موبایل شما با موفقیت تغییر یافت',
             visible: true,

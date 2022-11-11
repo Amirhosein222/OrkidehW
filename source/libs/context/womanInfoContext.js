@@ -78,6 +78,11 @@ const WomanInfoProvider = function ({ children }) {
         value: rel.id,
         is_active: rel.is_active,
         is_verified: rel.is_verified,
+        image: rel.man_image,
+        mobile: rel.man.mobile,
+        birthday: rel.man.birth_date,
+        applicant: rel.applicant,
+        verifyCode: rel.verification_code,
       });
       if (rel.is_active === 1 && rel.id === Number(lastActiveRel)) {
         activeRell = rel;

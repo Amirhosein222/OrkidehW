@@ -98,78 +98,81 @@ const RelationsScreen = ({ navigation }) => {
   }, [shouldUpdate]);
 
   return (
-    <BackgroundView>
-      <ScreenHeader title="روابط من" />
-      {fetchingRels && (
-        <ActivityIndicator
-          size="small"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-          style={{ marginTop: rh(2), marginBottom: rh(2) }}
-        />
-      )}
-      {relations.length ? (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={relations}
-          keyExtractor={item => item.id.toString()}
-          renderItem={renderRelations}
+    console.log('rels ', relations),
+    (
+      <BackgroundView>
+        <ScreenHeader title="روابط من" />
+        {fetchingRels && (
+          <ActivityIndicator
+            size="small"
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            style={{ marginTop: rh(2), marginBottom: rh(2) }}
+          />
+        )}
+        {relations.length ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={relations}
+            keyExtractor={item => item.value.toString()}
+            renderItem={renderRelations}
+            style={{
+              flexGrow: 0,
+              marginTop: rh(2),
+              marginBottom: rh(2),
+            }}
+          />
+        ) : null}
+        {!fetchingRels && relations[0].id === 0 ? (
+          <Text marginTop={rh(0)} marginBottom={rh(2)}>
+            شما هیچ رابطه ای ثبت نکرده اید
+          </Text>
+        ) : null}
+
+        <Divider
+          color={COLORS.textDark}
+          width={rw(76)}
           style={{
-            flexGrow: 0,
-            marginTop: rh(2),
+            borderBottomWidth: 0.5,
+            marginTop: rh(1),
             marginBottom: rh(2),
           }}
         />
-      ) : null}
-      {!fetchingRels && !relations.length ? (
-        <Text marginTop={rh(2)} marginBottom={rh(2)}>
-          شما هیچ رابطه ای ثبت نکرده اید
-        </Text>
-      ) : null}
 
-      <Divider
-        color={COLORS.textDark}
-        width={rw(76)}
-        style={{
-          borderBottomWidth: 0.5,
-          marginTop: rh(1),
-          marginBottom: rh(2),
-        }}
-      />
-
-      <View style={styles.addRelContainer}>
-        <Pressable
-          onPress={() =>
-            navigation.navigate('AddRel', {
-              handleUpdateRels: () => setShouldUpdate(!shouldUpdate),
-            })
-          }
-          hitSlop={7}>
-          <NextIcon style={{ width: 25, height: 25 }} />
-        </Pressable>
-        <View style={{ flexDirection: 'row' }}>
-          <Text marginRight={rw(2)}>افزودن رابطه جدید</Text>
-          <AddPerson style={{ width: 25, height: 25 }} />
+        <View style={styles.addRelContainer}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate('AddRel', {
+                handleUpdateRels: () => setShouldUpdate(!shouldUpdate),
+              })
+            }
+            hitSlop={7}>
+            <NextIcon style={{ width: 25, height: 25 }} />
+          </Pressable>
+          <View style={{ flexDirection: 'row' }}>
+            <Text marginRight={rw(2)}>افزودن رابطه جدید</Text>
+            <AddPerson style={{ width: 25, height: 25 }} />
+          </View>
         </View>
-      </View>
 
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null}
-      {showDeleteModal.show && (
-        <DeleteModal
-          type="rel"
-          title="پارتنر"
-          visible={showDeleteModal.show}
-          closeModal={() => setShowDeleteModal({ show: false, id: null })}
-          id={showDeleteModal.id}
-          setSnackbar={setSnackbar}
-        />
-      )}
-    </BackgroundView>
+        {snackbar.visible === true ? (
+          <Snackbar
+            message={snackbar.msg}
+            type={snackbar.type}
+            handleVisible={handleVisible}
+          />
+        ) : null}
+        {showDeleteModal.show && (
+          <DeleteModal
+            type="rel"
+            title="پارتنر"
+            visible={showDeleteModal.show}
+            closeModal={() => setShowDeleteModal({ show: false, id: null })}
+            id={showDeleteModal.id}
+            setSnackbar={setSnackbar}
+          />
+        )}
+      </BackgroundView>
+    )
   );
 };
 

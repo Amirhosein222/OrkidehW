@@ -9,7 +9,7 @@ import { numberConverter } from '../../../../../libs/helpers';
 const CyclesOption = ({ name = 'default', cycle, icon, onPress, data }) => {
   return (
     <View style={styles.container}>
-      <Pressable hitslop={7} onPress={() => onPress(cycle)}>
+      <Pressable hitslop={10} onPress={() => onPress(cycle)}>
         <FontAwesome5 name="pen" size={16} color={COLORS.textLight} />
       </Pressable>
 

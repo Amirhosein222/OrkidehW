@@ -20,12 +20,12 @@ const DefaultImages = ({ route, navigation }) => {
     setShowPictureModal,
     atEnterInfo,
     handleDefaultImage,
-  } = route.params;
+  } = route.params || null;
   const { settings } = useContext(WomanInfoContext);
 
   const [selectedImg, setSelectedImg] = useState('');
 
-  const selectImages = (image) => {
+  const selectImages = image => {
     setSelectedImg(image);
   };
 
@@ -36,9 +36,14 @@ const DefaultImages = ({ route, navigation }) => {
       navigation.goBack();
       return 1;
     }
+    setShowPictureModal(true);
     navigation.goBack();
     updateImage(selectedImg);
   };
+
+  useEffect(() => {
+    return () => clearTimeout();
+  });
 
   const RenderImages = ({ item }) => (
     <Pressable

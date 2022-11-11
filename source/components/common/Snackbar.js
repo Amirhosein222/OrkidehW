@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 
 import { Text } from './index';
-import { COLORS, rh, rw } from '../../configs';
+import { COLORS, HEIGHT, rh, rw } from '../../configs';
 
 const Snackbar = ({
   message,
@@ -11,15 +11,17 @@ const Snackbar = ({
   handleVisible,
   delay = 1500,
   style = {},
+  atBottom = false,
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
-      top: 45,
+      top: atBottom ? HEIGHT - rh(40) : 45,
       left: 0,
       right: 0,
+      // zIndex: atBottom ? 1 : null,
     },
   });
 
@@ -42,7 +44,7 @@ const Snackbar = ({
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, atBottom ? { zIndex: 1 } : null]}>
       <Animated.View
         style={{
           justifyContent: 'center',

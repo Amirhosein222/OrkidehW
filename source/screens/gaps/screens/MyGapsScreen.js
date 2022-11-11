@@ -23,7 +23,6 @@ const MyGapsScreen = ({ navigation }) => {
     show: false,
     id: null,
   });
-
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [edit, setEdit] = useState({ isEdit: false, memory: null });
@@ -140,6 +139,7 @@ const MyGapsScreen = ({ navigation }) => {
           message={snackbar.msg}
           type={snackbar.type}
           handleVisible={handleVisible}
+          atBottom={true}
         />
       ) : null}
     </BackgroundView>

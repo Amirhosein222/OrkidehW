@@ -52,7 +52,7 @@ const PasswordModal = ({ visible, closeModal, modalType, handleSnackbar }) => {
       saveFullInfo(submitPassword.data.data);
       AsyncStorage.setItem('isPassActive', 'true');
       handleSnackbar({
-        msg: 'رمز عبور شما ثبت شد',
+        msg: 'رمز عبور شما با موفقیت ثبت شد',
         visible: true,
         type: 'success',
       });

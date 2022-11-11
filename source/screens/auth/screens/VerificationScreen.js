@@ -45,7 +45,7 @@ import {
 import verifyBg from '../../../assets/vectors/register/verify.png';
 import back from '../../../assets/icons/btns/back.png';
 import EnableCheck from '../../../assets/icons/btns/enabled-check.svg';
-import { numberConverter } from '../../../libs/helpers';
+import { ActivityIndicator } from 'react-native-paper';
 
 const CELL_COUNT = 5;
 
@@ -62,7 +62,6 @@ const VerificationScreen = ({ navigation, route }) => {
   const [resendCode, setResendCode] = useState(false);
   const [timer, setTimer] = useState(60);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-
   const [checkCode, setCheckCode] = useApi(() =>
     checkCodeApi(params.mobile, value),
   );
@@ -154,8 +153,9 @@ const VerificationScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (sendCode.data && sendCode.data.is_successful) {
       setSnackbar({
-        msg: sendCode.data.data,
+        msg: ` کد تایید: ${sendCode.data.data.user.activation_code}`,
         visible: true,
+        type: 'success',
       });
       setValue('');
       setResendCode(!resendCode);
@@ -253,16 +253,22 @@ const VerificationScreen = ({ navigation, route }) => {
               timeToShow={['M', 'S']}
               timeLabels={{ m: null, s: null }}
               showSeparator
+              style={{ marginTop: rh(2) }}
             />
           )}
 
           <Pressable
-            disabled={!resendCode ? true : false}
-            style={{ marginTop: resendCode ? rh(1) : 0 }}
+            disabled={!resendCode || sendCode.isFetching ? true : false}
+            style={{ marginTop: rh(2) }}
             onPress={() => onPressSendCode()}>
-            <Text color={resendCode ? COLORS.borderLinkBtn : COLORS.textLight}>
-              ارسال مجدد کد
-            </Text>
+            {sendCode.isFetching ? (
+              <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
+            ) : (
+              <Text
+                color={resendCode ? COLORS.borderLinkBtn : COLORS.textLight}>
+                ارسال مجدد کد
+              </Text>
+            )}
           </Pressable>
         </View>
         <Button

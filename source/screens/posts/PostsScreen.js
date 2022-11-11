@@ -99,7 +99,8 @@ const PostsScreen = ({ navigation, route }) => {
           }}>
           <Text
             color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-            medium
+            size={12}
+            black
             alignSelf="flex-end"
             marginRight="0"
             marginTop="10">
@@ -111,13 +112,21 @@ const PostsScreen = ({ navigation, route }) => {
           </Text> */}
         </View>
 
-        <View style={{ flexDirection: 'row', width: '100%' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            width: '100%',
+            paddingRight: rw(1),
+            paddingBottom: rh(1),
+          }}>
           <Pressable
             onPress={() => navigation.navigate('FullPost', { post: item })}
             style={{ flexDirection: 'row', margin: 5, alignSelf: 'flex-end' }}>
             <Text
               marginRight="5"
               alignSelf="flex-start"
+              bold
               color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
               بیشتر...
             </Text>

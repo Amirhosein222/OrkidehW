@@ -16,7 +16,6 @@ import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 const AllGapsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [showReportModal, setShowReportModal] = useState(false);
-  const [liking, setLiking] = useState();
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [allGaps, setAllGaps] = useApi(() => getAllGapsApi());
   const selectedMemId = useRef(null);
@@ -39,7 +38,6 @@ const AllGapsScreen = ({ navigation }) => {
         myMemory={false}
         handleReportModal={handleReportModal}
         updateGaps={setAllGaps}
-        setLiking={setLiking}
       />
     );
   };
@@ -57,7 +55,7 @@ const AllGapsScreen = ({ navigation }) => {
       });
   }, [allGaps]);
 
-  if (allGaps.isFetching && !liking) {
+  if (allGaps.isFetching) {
     return (
       <BackgroundView>
         <ActivityIndicator
@@ -101,6 +99,7 @@ const AllGapsScreen = ({ navigation }) => {
             message={snackbar.msg}
             type={snackbar.type}
             handleVisible={handleVisible}
+            atBottom={true}
           />
         ) : null}
       </BackgroundView>

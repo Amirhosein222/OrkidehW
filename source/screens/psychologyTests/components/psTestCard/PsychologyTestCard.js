@@ -37,8 +37,11 @@ const PsychologyTestCard = ({
           style={{ width: 100, height: 100 }}
         />
       ) : (
-        <Octicons name="checklist" size={70} color={COLORS.primary} />
-        // <MaterialIcons name="fact-check" size={70} color={COLORS.primary} />
+        <Octicons
+          name="checklist"
+          size={70}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+        />
       )}
 
       <View

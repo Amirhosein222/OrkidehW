@@ -25,15 +25,15 @@ const UpdateRelScreen = ({ navigation, route }) => {
   const isPeriodDay = useIsPeriodDay();
 
   const params = route.params || {};
-  const [partner, setPartner] = useState(params.rel.man_name);
-  const [partnerMobile, setPartnerMobile] = useState(params.rel.man.mobile);
+  const [partner, setPartner] = useState(params.rel.label);
+  const [partnerMobile, setPartnerMobile] = useState(params.rel.mobile);
   const [picture, setPicture] = useState(
-    params.rel.man_image ? baseUrl + params.rel.man_image : '',
+    params.rel.image ? baseUrl + params.rel.image : '',
   );
   const [showPictureModal, setShowPictureModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [update, setUpdate] = useApi(() =>
-    updateRelApi(params.rel.id, partner, partnerMobile, picture),
+    updateRelApi(params.rel.value, partner, partnerMobile, picture),
   );
 
   const onUpdateRel = () => {
@@ -65,7 +65,7 @@ const UpdateRelScreen = ({ navigation, route }) => {
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image.path);
       });
@@ -74,7 +74,7 @@ const UpdateRelScreen = ({ navigation, route }) => {
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image.path);
       });

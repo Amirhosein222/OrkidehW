@@ -121,9 +121,14 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
+        <ScreenHeader
+          title="تست های روانشناسی"
+          disableBack={submitAnswers.isFetching}
+        />
         <ActivityIndicator
           size="large"
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
     );
@@ -147,7 +152,11 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
             style={{ width: 100, height: 100 }}
           />
         ) : (
-          <Octicons name="checklist" size={70} color={COLORS.primary} />
+          <Octicons
+            name="checklist"
+            size={70}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          />
         )}
 
         {details.data && (

@@ -20,7 +20,7 @@ import Gallery from '../../assets/icons/profilePrivacy/gallery.svg';
 import Close from '../../assets/icons/btns/close.svg';
 import Delete from '../../assets/icons/btns/delete.svg';
 
-const SelectPictureModal = (props) => {
+const SelectPictureModal = props => {
   const {
     visible,
     closeModal,
@@ -92,7 +92,7 @@ const SelectPictureModal = (props) => {
           <ActivityIndicator
             size="small"
             color={COLORS.borderLinkBtn}
-            style={{ marginTop: rh(2) }}
+            style={{ marginTop: 'auto', marginBottom: 'auto' }}
           />
         )}
         {showDelete && (

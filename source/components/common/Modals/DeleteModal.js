@@ -13,7 +13,15 @@ import deleteVector from '../../../assets/vectors/register/delete.png';
 import Trash from '../../../assets/icons/btns/delete.svg';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 
-const DeleteModal = ({ id, type, title, visible, closeModal, setSnackbar }) => {
+const DeleteModal = ({
+  id,
+  type,
+  title,
+  visible,
+  closeModal,
+  setSnackbar,
+  updateData,
+}) => {
   const { getAndHandleRels } = useContext(WomanInfoContext);
   const [isDeleting, setIsDeleting] = useState(false);
   const onDeleteRel = async () => {
@@ -51,8 +59,8 @@ const DeleteModal = ({ id, type, title, visible, closeModal, setSnackbar }) => {
         visible: true,
         type: 'success',
       });
+    updateData();
     closeModal();
-    getAndHandleRels();
   };
 
   return (

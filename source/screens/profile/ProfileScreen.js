@@ -1,12 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
-import JDate from 'jalali-date';
 import moment from 'moment-jalaali';
 import ImagePicker from 'react-native-image-crop-picker';
 
 import { ProfileOption, EditInfoModal } from './components';
-import DefaultImages from '../../components/common/defaultImages';
 import { UserAvatarInfo } from '../settings/components';
 import {
   ScreenHeader,
@@ -21,7 +19,6 @@ import SelectMaritalModal from '../../components/informations/SelectMaritalModal
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { baseUrl, COLORS, rh, rw } from '../../configs';
 import getLoginClient from '../../libs/api/loginClientApi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertToFullDate } from '../../libs/helpers';
 
 import NameIcon from '../../assets/icons/profilePrivacy/name.svg';
@@ -31,7 +28,7 @@ import { useIsPeriodDay } from '../../libs/hooks';
 
 const ProfileScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
-  const { saveFullInfo, fullInfo, settings } = useContext(WomanInfoContext);
+  const { saveFullInfo, fullInfo } = useContext(WomanInfoContext);
   const [picture, setPicture] = useState(
     fullInfo.image ? baseUrl + fullInfo.image : '',
   );
@@ -43,12 +40,6 @@ const ProfileScreen = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
-  const formatted = moment(fullInfo.birth_date, 'X')
-    .locale('en')
-    .format('jYYYY/jM/jD');
-  const date = moment(formatted, 'jYYYY/jM/jD');
-  const jdate = new JDate(date.jYear(), date.jMonth() + 1, date.jDate()); // => default to today
-
   const selectPicture = function (camera = false) {
     if (camera) {
       ImagePicker.openCamera({
@@ -57,7 +48,7 @@ const ProfileScreen = ({ navigation }) => {
         cropping: true,
       }).then(image => {
         setPicture(image.path);
-        updatePicture();
+        updatePicture(image.path);
       });
     } else {
       ImagePicker.openPicker({
@@ -125,8 +116,8 @@ const ProfileScreen = ({ navigation }) => {
 
     navigation.navigate('DefaultImages', {
       atEnterInfo: false,
-      updateImage: setPicture,
-      isUpdating: null,
+      updateImage: updatePicture,
+      isUpdating: isUpdating,
       setShowPictureModal,
     });
   };

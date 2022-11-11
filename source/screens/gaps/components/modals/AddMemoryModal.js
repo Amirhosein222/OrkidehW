@@ -71,7 +71,7 @@ const AddMemoryModal = ({
         setIsSending(false);
         if (response.data.is_successful) {
           setSnackbar({
-            msg: 'خاطره شما ثبت شد',
+            msg: 'خاطره شما با موفقیت ثبت شد',
             visible: true,
             type: 'success',
           });

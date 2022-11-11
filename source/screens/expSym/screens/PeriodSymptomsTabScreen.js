@@ -55,10 +55,6 @@ const PeriodSymptomsTabScreen = () => {
     setShowInfoModal(true);
   };
 
-  const onCloseModal = function () {
-    setShowModal(!showModal);
-  };
-
   const onDateSelected = async function (jDate) {
     const dDate = moment.from(jDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
     var dateObj = new Date(dDate + 'T00:00:00');

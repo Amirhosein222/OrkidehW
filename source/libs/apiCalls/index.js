@@ -166,7 +166,6 @@ export const setMaritalStatusApi = async function (fullInfo, status) {
     formData.append('gender', 'woman');
     formData.append('is_password_active', Number(fullInfo.is_password_active));
     formData.append('is_finger_active', Number(fullInfo.is_finger_active));
-    console.log('fd ', formData);
     const res = await loginClient.post('complete/profile', formData);
     return res.data;
   } catch (error) {
