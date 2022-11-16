@@ -57,7 +57,7 @@ const PrivacyScreen = ({ navigation }) => {
         });
         await AsyncStorage.setItem('isFingerActive', 'true');
       })
-      .catch((error) => {
+      .catch(error => {
         FingerprintScanner.release();
         setFingerStat(false);
       });
@@ -68,12 +68,12 @@ const PrivacyScreen = ({ navigation }) => {
       onAttempt: handleAuthenticationAttemptedLegacy,
     })
       .then(() => {
-        console.log('successfully authenticated legacy.');
+        // console.log('successfully authenticated legacy.');
       })
-      .catch((error) => {});
+      .catch(error => {});
   };
 
-  const handleAuthenticationAttemptedLegacy = (error) => {
+  const handleAuthenticationAttemptedLegacy = error => {
     setErrLegacy(error.message);
   };
 
@@ -93,7 +93,7 @@ const PrivacyScreen = ({ navigation }) => {
     return Platform.Version < 23;
   };
 
-  const onClosePassModal = (st) => {
+  const onClosePassModal = st => {
     // on Successful or not pass active....
     setPassStat(st);
     setShowModal(false);
@@ -112,10 +112,10 @@ const PrivacyScreen = ({ navigation }) => {
 
   useEffect(() => {
     FingerprintScanner.isSensorAvailable()
-      .then((bioType) => {
+      .then(bioType => {
         setBiometryType(bioType);
       })
-      .catch((error) =>
+      .catch(error =>
         setSnackbar({
           visible: true,
           msg: 'دستگاه شما از قابلیت اسکن اثر انگشت برخوردار نمی باشد.',

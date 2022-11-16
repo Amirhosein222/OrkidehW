@@ -4,7 +4,6 @@ import moment from 'moment-jalaali';
 export default function convertToFullDate(d) {
   const date = moment(d, 'X').locale('en').format('jYYYY/jM/jD');
   const formatted = moment(date, 'jYYYY/jM/jD');
-  console.log('formatted ', formatted);
 
   const jdate = new JDate(
     formatted.jYear(),

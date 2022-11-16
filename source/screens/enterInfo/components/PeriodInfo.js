@@ -74,7 +74,7 @@ const PeriodInfo = ({
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: 'Welcome', params: { name: displayName } }],
+          routes: [{ name: 'HomeDrawer' }],
         }),
       );
     }
@@ -114,7 +114,7 @@ const PeriodInfo = ({
           selectedValue={lastPeriodDate}
           selectedIndex={lastPeriodDate}
           itemStyle={{ color: COLORS.textDark, fontSize: 26 }}
-          onValueChange={(index) => setLastPeriodDate(index)}>
+          onValueChange={index => setLastPeriodDate(index)}>
           {dates.map((value, i) => (
             <PickerItem label={value} value={i} key={i} />
           ))}
@@ -128,7 +128,7 @@ const PeriodInfo = ({
           selectedValue={periodLength}
           selectedIndex={periodLength}
           itemStyle={{ color: COLORS.textDark, fontSize: 26 }}
-          onValueChange={(index) => setPeriodLength(index)}>
+          onValueChange={index => setPeriodLength(index)}>
           {['3', '4', '5', '6', '7', '8', '9', '10'].map((value, i) => (
             <PickerItem label={value} value={i} key={i} />
           ))}
@@ -142,7 +142,7 @@ const PeriodInfo = ({
           selectedValue={cycleLength}
           selectedIndex={cycleLength}
           itemStyle={{ color: COLORS.textDark, fontSize: 26 }}
-          onValueChange={(index) => setCycleLength(index)}>
+          onValueChange={index => setCycleLength(index)}>
           {dayNumbers.map((value, i) => (
             <PickerItem label={value} value={i} key={i} />
           ))}

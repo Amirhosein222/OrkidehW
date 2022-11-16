@@ -59,7 +59,7 @@ const Bars = ({ data }) => {
             styles.bar,
             styles.points,
             {
-              width: Math.round(data.count) * 20,
+              width: Math.round(data.count) * 6,
               backgroundColor: isPeriodDay
                 ? COLORS.fireEngineRed
                 : COLORS.primary,
@@ -72,7 +72,7 @@ const Bars = ({ data }) => {
             styles.bar,
             styles.assists,
             {
-              width: Math.round(data.othersCount) * 20,
+              width: Math.round(data.othersCount) * 5,
               marginTop: 5,
               backgroundColor: isPeriodDay ? COLORS.lightRed : COLORS.textLight,
             },
@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: rh(0.5),
     marginRight: 5,
-    // marginBottom: 5,
   },
 });
 

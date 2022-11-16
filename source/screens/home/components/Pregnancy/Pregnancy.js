@@ -1,18 +1,26 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet, View, ActivityIndicator, Image } from 'react-native';
+import LottieView from 'lottie-react-native';
 
 import { useIsPeriodDay } from '../../../../libs/hooks';
 
 import { Text } from '../../../../components/common';
-import { numberConverter } from '../../../../libs/helpers';
 import { COLORS, rh, rw } from '../../../../configs';
+import { numberConverter } from '../../../../libs/helpers';
+
+const hobab = '../../../../assets/animations/hobab1.json';
 
 const Pregnancy = ({ pregnancy, isFetching }) => {
   const isPeriodDay = useIsPeriodDay();
 
   return (
     <View style={styles.pregnancyContainer}>
-      <Image
+      {/* <View style={{ width: rw(100), height: rh(20) }}> */}
+
+      {/* </View> */}
+
+      {/* <Image
         source={
           isPeriodDay
             ? require('../../../../assets/images/600.png')
@@ -23,11 +31,12 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
           height: rh(43),
         }}
         resizeMode="contain"
-      />
+      /> */}
       {!isFetching ? (
         <View style={styles.pregnancyPercentText}>
-          <Text size={45} bold color={COLORS.white}>
-            {pregnancy && numberConverter(pregnancy)}
+          <Text size={40} bold color={COLORS.white}>
+            {/* {pregnancy && numberConverter(pregnancy)} */}
+            20%
           </Text>
           <Text size={20} bold color={COLORS.white}>
             احتمال بارداری
@@ -38,6 +47,18 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
           <ActivityIndicator size="large" color="white" />
         </View>
       )}
+      <LottieView
+        source={require(hobab)}
+        autoPlay
+        loop
+        width={650}
+        height={650}
+        style={{
+          top: rh(-7),
+          left: isFetching ? rh(-18) : rh(-15),
+          position: 'absolute',
+        }}
+      />
     </View>
   );
 };
@@ -46,13 +67,15 @@ const styles = StyleSheet.create({
   pregnancyContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: rh(3),
+    marginTop: rh(2),
   },
   pregnancyPercentText: {
-    ...StyleSheet.absoluteFillObject,
+    // ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: rh(5),
+    top: rh(17),
+    height: rh(15),
+    zIndex: 1,
   },
 });
 

@@ -63,7 +63,6 @@ const EditMobileScreen = ({ navigation, route }) => {
       loginClient.post('change/mobile', formData).then(async response => {
         setIsLoading(false);
         if (response.data.is_successful) {
-          console.log('on changing mobile ', response.data);
           AsyncStorage.setItem('mobile', response.data.data.user.mobile);
           AsyncStorage.setItem(
             'userToken',

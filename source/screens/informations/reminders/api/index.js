@@ -1,7 +1,6 @@
 import getLoginClient from '../../../../libs/api/loginClientApi';
 
 export const setReminderApi = async function (reminder) {
-  console.log('reminder ', reminder);
   try {
     const loginClient = await getLoginClient();
     const formData = new FormData();

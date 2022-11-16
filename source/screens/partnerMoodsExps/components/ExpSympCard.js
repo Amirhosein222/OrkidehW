@@ -5,13 +5,15 @@ import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
 import { baseUrl, COLORS } from '../../../configs';
 import { rw, rh } from '../../../configs';
 
-const ExpSympCard = ({ item, onPress }) => {
+const ExpSympCard = ({ item, type, onReadMore }) => {
   return (
     <View style={styles.container}>
       <Image
         source={
-          item.image
-            ? { uri: baseUrl + item.image }
+          type === 'exp' && item.expectation.image
+            ? { uri: baseUrl + item.expectation.image }
+            : type === 'sign' && item.sign.image
+            ? { uri: baseUrl + item.sign.image }
             : require('../../../assets/images/icons8-heart-100.png')
         }
         style={styles.icon}
@@ -19,23 +21,50 @@ const ExpSympCard = ({ item, onPress }) => {
       <View style={styles.titleContainer}>
         <Text
           style={[styles.text, { color: COLORS.textCommentCal, fontSize: 11 }]}>
-          {item.title}
+          {type === 'exp' ? item.expectation.title : item.sign.title}
         </Text>
-        <View style={styles.degreeContainer}>
-          <Text
-            style={[styles.text, { color: COLORS.textLight, fontSize: 10.5 }]}>
-            میزان {item.title} امروز پارتنر شما :{' '}
+        {type === 'sign' ? (
+          <View style={styles.degreeContainer}>
             <Text
               style={[
-                {
-                  color: COLORS.primary,
-                  fontSize: 10.5,
-                },
+                styles.text,
+                { color: COLORS.textLight, fontSize: 10.5 },
               ]}>
-              {item.title}
+              میزان {item.sign.title} امروز پارتنر شما :{' '}
+              <Text
+                style={[
+                  {
+                    color: COLORS.primary,
+                    fontSize: 10.5,
+                  },
+                ]}>
+                {item.mood.title}
+              </Text>
+              <Text
+                style={[
+                  {
+                    color: COLORS.primary,
+                    fontSize: 10.5,
+                  },
+                ]}>
+                {item.title}
+              </Text>
             </Text>
-          </Text>
-        </View>
+          </View>
+        ) : null}
+        {type === 'exp' ? (
+          <Pressable onPress={() => onReadMore(item)} hitSlop={5}>
+            <Text
+              style={{
+                ...styles.text,
+                color: '#B7AFB9',
+                marginTop: rh(0.2),
+                fontSize: 10,
+              }}>
+              بیشتر بخوانید...
+            </Text>
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );

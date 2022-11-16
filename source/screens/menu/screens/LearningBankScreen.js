@@ -31,19 +31,17 @@ const LearningBankScreen = ({ navigation }) => {
   const getCategories = async function () {
     setIsLoading(true);
     const loginClient = await getLoginClient();
-    loginClient
-      .get('index/category?type=post&gender=woman')
-      .then((response) => {
-        setIsLoading(false);
-        if (response.data.is_successful) {
-          setCategories(response.data.data);
-        } else {
-          setSnackbar({
-            msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
-            visible: true,
-          });
-        }
-      });
+    loginClient.get('index/category?type=post&gender=woman').then(response => {
+      setIsLoading(false);
+      if (response.data.is_successful) {
+        setCategories(response.data.data);
+      } else {
+        setSnackbar({
+          msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+          visible: true,
+        });
+      }
+    });
   };
 
   const handleVisible = () => {
@@ -87,6 +85,7 @@ const LearningBankScreen = ({ navigation }) => {
   if (isLoading) {
     return (
       <BackgroundView>
+        <ScreenHeader title="بانک آموزشی" />
         <ActivityIndicator
           size="large"
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
@@ -106,7 +105,7 @@ const LearningBankScreen = ({ navigation }) => {
 
         <FlatList
           data={categories}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           renderItem={RenderCategories}
           style={{ width: '100%', marginTop: 10 }}
         />

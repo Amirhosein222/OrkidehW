@@ -43,7 +43,6 @@ import { COLORS, STATUS_BAR_HEIGHT, rw, rh } from '../../../configs';
 const HomeScreen = ({ navigation, route }) => {
   const params = route.params || {};
   const isPeriodDay = useIsPeriodDay();
-  const womanInfo = useContext(WomanInfoContext);
   const {
     saveFullInfo,
     handleUserPeriodDays,
@@ -51,6 +50,9 @@ const HomeScreen = ({ navigation, route }) => {
     settings,
     saveSettings,
     saveAllSettings,
+    getAndHandleRels,
+    activeRel,
+    relations,
   } = useContext(WomanInfoContext);
 
   const storePDate = useRef(null);
@@ -68,11 +70,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [getCalendar, setGetCalendar] = useApi(() => getCalendarApi());
   const [getPregnancy, setGetPregnancy] = useApi(() =>
     getPregnancyPercentApi(
-      womanInfo.activeRel
-        ? womanInfo.activeRel.relId
-        : !womanInfo.relations.length
-        ? 1
-        : '',
+      activeRel ? activeRel.relId : !relations.length ? 1 : '',
     ),
   );
   const [storePeriodAuto, setStorePeriodAuto] = useApi(() =>
@@ -103,6 +101,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const handlePusherInit = async () => {
+    console.log('pusher.data.pusher_user_id ', pusher.data.pusher_user_id);
     initPusher(pusher.data.pusher_user_id, pusher.data.token);
   };
 
@@ -125,7 +124,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     onGetPregnancyPercent();
-  }, [womanInfo.activeRel]);
+  }, [activeRel]);
 
   useEffect(() => {
     !settings && setSetts();
@@ -181,7 +180,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, [getCalendar]);
 
   useEffect(() => {
-    womanInfo.getAndHandleRels();
+    getAndHandleRels();
   }, []);
 
   useEffect(() => {
@@ -260,10 +259,9 @@ const HomeScreen = ({ navigation, route }) => {
         pregnancy={pregnancy}
         isFetching={getPregnancy.isFetching ? true : false}
       />
-
       <Pressable
         onPress={() => onStorePeriodAuto('today')}
-        style={{ marginTop: rh(2) }}
+        style={{ marginTop: 'auto', marginBottom: rh(4) }}
         disabled={storePeriodAuto.isFetching}>
         {storePeriodAuto.isFetching ? (
           <ActivityIndicator

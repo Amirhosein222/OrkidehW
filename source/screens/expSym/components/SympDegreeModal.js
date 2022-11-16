@@ -108,6 +108,7 @@ const SympDegreeModal = ({
             visible: true,
             type: 'success',
           });
+          closeModal();
         } else {
           setSnackbar({
             msg: response.data.message,

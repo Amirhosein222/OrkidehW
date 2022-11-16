@@ -6,11 +6,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import { Text } from '../../../components/common';
 
-import { useIsPeriodDay } from '../../../libs/hooks';
 import { baseUrl, COLORS, rh, rw } from '../../../configs';
 
 const ExpSympInfoModal = ({ item, visible, closeModal }) => {
-  const isPeriodDay = useIsPeriodDay();
   return (
     <Modal
       isVisible={visible}
@@ -22,7 +20,6 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
       animationIn="zoomIn"
-      // animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
@@ -41,25 +38,30 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
         <View style={styles.imageContainer}>
           <Image
             source={
-              item.image
-                ? { uri: baseUrl + item.image }
+              item.expectation.image
+                ? { uri: baseUrl + item.expectation.image }
                 : require('../../../assets/images/icons8-heart-100.png')
             }
-            style={styles.icon}
+            style={{
+              width: item.expectation.image ? 140 : 100,
+              height: item.expectation.image ? 140 : 100,
+            }}
+            resizeMode="contain"
           />
         </View>
 
-        <ScrollView>
-          <Text color={COLORS.expSympTitle} bold large marginTop={rh(2)}>
-            {item.title}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text color={COLORS.textCommentCal} bold marginTop={rh(2)}>
+            {item.expectation.title}
           </Text>
-          {item.description ? (
+          {item.expectation.description ? (
             <Text
-              color={COLORS.dark}
+              bold
+              color={COLORS.textLight}
               marginTop={rh(2)}
               textAlign="right"
               alignSelf="center">
-              {item.description.replace(/(<([^>]+)>)/gi, '')}
+              {item.expectation.description.replace(/(<([^>]+)>)/gi, '')}
             </Text>
           ) : null}
         </ScrollView>
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   closeIcon: {
-    marginRight: rw(2),
+    marginRight: rw(2.5),
   },
   icon: {
     width: 100,
@@ -98,21 +100,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: 'center',
   },
-  checkBox: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '40%',
-    alignSelf: 'center',
-    margin: 10,
-  },
-  btn: { width: '40%', height: 40, margin: 20, alignSelf: 'center' },
   imageContainer: {
     alignItems: 'center',
     width: rw(71),
     borderRightWidth: 3,
     borderRightColor: COLORS.icon,
-    marginTop: rh(4),
+    marginTop: rh(2),
   },
 });
 

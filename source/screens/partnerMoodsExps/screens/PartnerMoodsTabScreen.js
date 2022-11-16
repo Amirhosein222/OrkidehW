@@ -127,7 +127,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
   };
 
   const RenderItems = ({ item }) => {
-    return <ExpSympCard item={item} />;
+    return <ExpSympCard item={item} type="sign" />;
   };
 
   useEffect(() => {

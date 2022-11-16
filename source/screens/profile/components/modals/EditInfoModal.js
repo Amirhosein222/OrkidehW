@@ -63,7 +63,7 @@ const EditInfoModal = ({
     formData.append('is_password_active', Number(fullInfo.is_password_active));
     formData.append('is_finger_active', Number(fullInfo.is_finger_active));
     formData.append('password', fullInfo.password);
-    formData.append('repeat_password', fullInfo.repeat_password);
+    formData.append('repeat_password', fullInfo.password);
     loginClient
       .post('complete/profile', formData)
       .then(response => {

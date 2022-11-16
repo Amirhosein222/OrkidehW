@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   View,
   StatusBar,
@@ -28,19 +28,19 @@ import {
 } from '../../../components/common';
 
 import { COLORS, rh, rw } from '../../../configs';
-import { useIsPeriodDay } from '../../../libs/hooks';
 
 import deleteIcon from '../../../assets/vectors/register/delete.png';
-import { ExpSympCard } from '../components';
+import { ExpSympCard, ExpSympInfoModal } from '../components';
 
 const PartnerExpsTabScreen = ({ navigation }) => {
-  const isPeriodDay = useIsPeriodDay();
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const [expectations, setExpectation] = useState([]);
   const [resetPicker, setResetPicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showLove, setShowLove] = useState(false);
   const womanInfo = useContext(WomanInfoContext);
+  const selectedExp = useRef(null);
 
   const getSpouseMoodsAndExps = async function (moodDate) {
     setExpectation([]);
@@ -125,8 +125,13 @@ const PartnerExpsTabScreen = ({ navigation }) => {
     setActiveSpouse(spouse);
   };
 
+  const openInfoModal = exp => {
+    selectedExp.current = exp;
+    setShowInfoModal(true);
+  };
+
   const RenderExpectations = ({ item }) => {
-    return <ExpSympCard item={item} />;
+    return <ExpSympCard item={item} type="exp" onReadMore={openInfoModal} />;
   };
 
   useEffect(() => {
@@ -196,6 +201,16 @@ const PartnerExpsTabScreen = ({ navigation }) => {
           <NoRelation navigation={navigation} />
         )}
       </View>
+
+      {selectedExp.current && (
+        <ExpSympInfoModal
+          visible={showInfoModal}
+          closeModal={() => setShowInfoModal(false)}
+          item={selectedExp.current}
+          setSnackbar={setSnackbar}
+          isExp={true}
+        />
+      )}
 
       {snackbar.visible === true ? (
         <Snackbar

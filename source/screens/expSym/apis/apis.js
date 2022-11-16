@@ -38,7 +38,6 @@ export const getMyExpectationsFromSpouseApi = async function (activeRel) {
 };
 
 export const getMySignsApi = async function (moodDate) {
-  console.log('m', moodDate);
   try {
     const loginClient = await getLoginClient();
     const formData = new FormData();

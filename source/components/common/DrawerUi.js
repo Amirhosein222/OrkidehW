@@ -129,9 +129,7 @@ const DrawerUi = ({ navigation }) => {
                   bold
                   color={COLORS.textLight}
                   alignSelf="flex-end">
-                  {numberConverter(
-                    convertToFullDate(womanInfo.fullInfo.birth_date),
-                  )}
+                  {womanInfo.fullInfo.mobile}
                 </Text>
               </View>
               {womanInfo.fullInfo.image ? (
@@ -170,9 +168,7 @@ const DrawerUi = ({ navigation }) => {
                     bold
                     color={COLORS.textLight}
                     alignSelf="flex-end">
-                    {numberConverter(
-                      convertToFullDate(womanInfo.activeRel.birthday),
-                    )}
+                    {womanInfo.activeRel.mobile}
                   </Text>
                 </View>
                 {womanInfo.activeRel.image ? (
@@ -355,12 +351,13 @@ const styles = StyleSheet.create({
   avatarContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: rh(15.5),
+    height: rh(14),
     overflow: 'hidden',
     alignSelf: 'center',
     justifyContent: 'flex-end',
     alignItems: 'center',
     paddingRight: rw(6),
+    // backgroundColor: 'yellow',
   },
   avatarBorderdContainer: {
     backgroundColor: COLORS.inputTabBarBg,

@@ -84,7 +84,6 @@ const RemindersScreen = ({ navigation }) => {
     }
   };
   const handleReminderTime = time => {
-    console.log('s time ', time);
     switch (timeType) {
       case 'period_f':
         setPtime(time);

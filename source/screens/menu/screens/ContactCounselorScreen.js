@@ -89,7 +89,6 @@ const ContactCounselorScreen = ({ navigation }) => {
       formData.append('message', message);
       formData.append('email', email);
       formData.append('gender', 'woman');
-      console.log('call to admin ', formData);
       loginClient.post('call/to/admin', formData).then(response => {
         setEmail('');
         setMessage('');
