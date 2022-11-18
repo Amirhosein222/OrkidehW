@@ -25,6 +25,7 @@ export const getTestDetailsApi = async function (testId) {
 };
 
 export const submitAnswersApi = async function (selectedChoices) {
+  // console.log('sending answers ', selectedChoices);
   try {
     const loginClient = await getLoginClient();
     const res = await loginClient.post('test/answer', selectedChoices);

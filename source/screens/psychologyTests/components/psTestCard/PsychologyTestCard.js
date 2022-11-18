@@ -2,7 +2,6 @@
 import React from 'react';
 import { Pressable, View, StyleSheet, Image } from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { Text } from '../../../../components/common';
 

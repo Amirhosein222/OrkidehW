@@ -63,17 +63,19 @@ const EditMobileScreen = ({ navigation, route }) => {
       loginClient.post('change/mobile', formData).then(async response => {
         setIsLoading(false);
         if (response.data.is_successful) {
-          AsyncStorage.setItem('mobile', response.data.data.user.mobile);
-          AsyncStorage.setItem(
+          setPhoneNumber('');
+          await AsyncStorage.setItem('mobile', response.data.data.user.mobile);
+          await AsyncStorage.setItem(
             'userToken',
             JSON.stringify(response.data.data.token),
           );
-          setSnackbar({
+          saveFullInfo(response.data.data.user);
+          params.setSnackbar({
             msg: 'شماره موبایل شما با موفقیت تغییر یافت',
             visible: true,
             type: 'success',
           });
-          saveFullInfo(response.data.data);
+          navigation.goBack();
         } else {
           setSnackbar({
             msg: response.data.message.hasOwnProperty('mobile')

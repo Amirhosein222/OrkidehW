@@ -75,7 +75,6 @@ const PsychologyTestsScreen = ({ navigation }) => {
       </BackgroundView>
     );
   } else {
-    console.log('tests ', tests);
     return (
       <BackgroundView>
         <StatusBar

@@ -131,7 +131,8 @@ const PrivacyScreen = ({ navigation }) => {
       <ScreenHeader title="حریم خصوصی" />
       <View style={styles.content}>
         <View style={styles.editMobileContainer}>
-          <Pressable onPress={() => navigation.navigate('EditMobile')}>
+          <Pressable
+            onPress={() => navigation.navigate('EditMobile', { setSnackbar })}>
             <Entypo
               name="chevron-thin-left"
               size={20}

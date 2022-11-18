@@ -7,9 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Button, Text } from '../../../../components/common';
 import { rw, rh, COLORS } from '../../../../configs';
 
-const TestResultModal = ({ tid, visible, closeModal }) => {
-  const [rudeness, setRudeness] = useState(false);
-
+const TestResultModal = ({ testInfo, visible, closeModal }) => {
   return (
     <Modal
       testID={'modal'}

@@ -138,8 +138,8 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.image}
           resizeMode="contain"
         />
-        <Text marginTop={rh(1)} color={COLORS.textLight}>
-          نسخه 0.0.2
+        <Text marginBottom={rh(3)} color={COLORS.textLight}>
+          نسخه 0.0.3
         </Text>
       </ScrollView>
       {snackbar.visible === true ? (
@@ -167,16 +167,17 @@ const styles = StyleSheet.create({
     width: rw(100),
   },
   content: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: rw(100),
     marginTop: rh(2),
-    paddingBottom: rh(4),
+    flex: 1,
   },
   image: {
     width: rw(31),
     height: rh(12),
-    marginTop: rh(4),
+    marginTop: 'auto',
+    marginBottom: rh(1),
   },
 });
 

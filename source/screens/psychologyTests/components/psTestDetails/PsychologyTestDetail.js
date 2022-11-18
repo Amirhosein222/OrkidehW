@@ -131,7 +131,7 @@ const PsychologyTestDetail = ({
         style={{ marginTop: rh(2) }}
       />
       <FlatList
-        data={questions}
+        data={testDetails.questions}
         keyExtractor={item => item.id}
         renderItem={RenderQuestions}
         style={{ marginTop: rh(1), width: '100%' }}
@@ -139,93 +139,6 @@ const PsychologyTestDetail = ({
     </View>
   );
 };
-
-const questions = [
-  {
-    created_at: 1661840335,
-    id: 1,
-    options: [
-      {
-        created_at: 1661840408,
-        id: 1,
-        question_id: 1,
-        score: 1,
-        title: 'کمی',
-        updated_at: 1661840408,
-      },
-      {
-        created_at: 1661840419,
-        id: 2,
-        question_id: 1,
-        score: 2,
-        title: 'متوسط',
-        updated_at: 1661840419,
-      },
-      {
-        created_at: 1661840428,
-        id: 3,
-        question_id: 1,
-        score: 3,
-        title: 'زیاد',
-        updated_at: 1661840428,
-      },
-      {
-        created_at: 1661840439,
-        id: 4,
-        question_id: 1,
-        score: 4,
-        title: 'خیلی زیاد',
-        updated_at: 1661840439,
-      },
-    ],
-    question:
-      '1.نتدالزنتیبادنیتبا دمنستیبایبدمنتاردمنتسیا متنابمنت بلیرسیلزدنتساقبل ستنبذ مثنزب',
-    test_id: 1,
-    updated_at: 1661840335,
-  },
-  {
-    created_at: 1661840347,
-    id: 2,
-    options: [
-      {
-        created_at: 1661840452,
-        id: 5,
-        question_id: 2,
-        score: 0,
-        title: 'هرگز',
-        updated_at: 1661840452,
-      },
-      {
-        created_at: 1661840462,
-        id: 6,
-        question_id: 2,
-        score: 1,
-        title: 'به ندرت',
-        updated_at: 1661840462,
-      },
-      {
-        created_at: 1661840472,
-        id: 7,
-        question_id: 2,
-        score: 2,
-        title: 'گاهی',
-        updated_at: 1661840472,
-      },
-      {
-        created_at: 1661840482,
-        id: 8,
-        question_id: 2,
-        score: 3,
-        title: 'اغلب',
-        updated_at: 1661840482,
-      },
-    ],
-    question:
-      '2.ندتاسینبتازثق منتسلایبتسزلایذبدنزتسذیب متاذیبدزتسیذبدزنتسیبا تاذیبنزتاذیبنمت',
-    test_id: 1,
-    updated_at: 1661840347,
-  },
-];
 
 const styles = StyleSheet.create({
   btn: {

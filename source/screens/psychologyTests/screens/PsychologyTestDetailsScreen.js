@@ -53,8 +53,10 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   };
 
   const sendTestAnswers = async function () {
-    console.log('selectedChoices ', selectedChoices);
-    if (selectedChoices.current.option_id.length < 2) {
+    if (
+      selectedChoices.current.option_id.length <
+      details.data.data.questions.length
+    ) {
       setSnackbar({
         msg: 'لطفا به تمام سوالات پاسخ دهید.',
         visible: true,
@@ -90,6 +92,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (submitAnswers.data && submitAnswers.data.is_successful) {
+      console.log('submitAnswers.data success ', submitAnswers.data);
       selectedChoices.current = {
         gender: 'woman',
         test_id: params.testId,
@@ -99,12 +102,14 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     }
 
     if (submitAnswers.data && !submitAnswers.data.is_successful) {
+      console.log('submitAnswers.data fail ', submitAnswers);
+
       selectedChoices.current = {
         gender: 'woman',
         test_id: params.testId,
         option_id: [],
       };
-      params.showAlert(submitAnswers.data.message);
+      params.showAlert(JSON.stringify(submitAnswers.data.message));
       navigation.navigate('PsychologyTests');
     }
   }, [submitAnswers]);
@@ -177,13 +182,20 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
           style={{ marginTop: 'auto', marginBottom: rh(4), width: rw(80) }}
         />
 
-        {showResultModal && (
-          <TestResultModal
-            visible={showResultModal}
-            closeModal={() => setShowResultModal(false)}
-            tid={params.testId}
-          />
-        )}
+        {showResultModal &&
+          submitAnswers.data &&
+          details.data(
+            <TestResultModal
+              visible={showResultModal}
+              closeModal={() => setShowResultModal(false)}
+              testInfo={{
+                id: params.testId,
+                score: submitAnswers.data.data.score,
+                total: submitAnswers.data.data.total,
+                title: details.data.data.title,
+              }}
+            />,
+          )}
         {snackbar.visible === true ? (
           <Snackbar
             message={snackbar.msg}
