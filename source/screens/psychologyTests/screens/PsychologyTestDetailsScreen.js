@@ -15,7 +15,7 @@ import { TestResultModal } from '../components/modals';
 import PsychologyTestDetail from '../components/psTestDetails';
 
 import { getTestDetailsApi, submitAnswersApi } from '../apis';
-import { COLORS, ICON_SIZE, rh, rw } from '../../../configs';
+import { baseUrl, COLORS, ICON_SIZE, rh, rw } from '../../../configs';
 import { useIsPeriodDay, useApi } from '../../../libs/hooks';
 
 import EnabledCheck from '../../../assets/icons/btns/enabled-check.svg';
@@ -73,6 +73,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         testDetails={item}
         handleTestAnswers={handleTestAnswers}
         resetState={resetState}
+        isFocused={isFocused}
       />
     );
   };
@@ -92,7 +93,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (submitAnswers.data && submitAnswers.data.is_successful) {
-      console.log('submitAnswers.data success ', submitAnswers.data);
+      setResetState(true);
       selectedChoices.current = {
         gender: 'woman',
         test_id: params.testId,
@@ -102,21 +103,16 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     }
 
     if (submitAnswers.data && !submitAnswers.data.is_successful) {
-      console.log('submitAnswers.data fail ', submitAnswers);
-
+      setResetState(true);
       selectedChoices.current = {
         gender: 'woman',
         test_id: params.testId,
         option_id: [],
       };
       params.showAlert(JSON.stringify(submitAnswers.data.message));
-      navigation.navigate('PsychologyTests');
+      navigation.goBack();
     }
   }, [submitAnswers]);
-
-  useEffect(() => {
-    setResetState(!resetState);
-  }, [isFocused]);
 
   if (details.isFetching) {
     return (
@@ -138,6 +134,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
       </BackgroundView>
     );
   } else {
+    console.log('details.data.data ', details.data && details.data.data);
     return (
       <BackgroundView>
         <StatusBar
@@ -153,8 +150,9 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
         {params.testImage ? (
           <Image
-            source={{ uri: params.testImage }}
-            style={{ width: 100, height: 100 }}
+            source={{ uri: baseUrl + params.testImage }}
+            style={{ width: 200, height: 200 }}
+            resizeMode="contain"
           />
         ) : (
           <Octicons
@@ -175,27 +173,27 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         <Button
           title="مشاهده نتیجه"
           Icon={() => <EnabledCheck style={ICON_SIZE} />}
-          color={COLORS.primary}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           onPress={() => sendTestAnswers()}
           loading={submitAnswers.isFetching}
           disabled={submitAnswers.isFetching}
           style={{ marginTop: 'auto', marginBottom: rh(4), width: rw(80) }}
         />
 
-        {showResultModal &&
-          submitAnswers.data &&
-          details.data(
-            <TestResultModal
-              visible={showResultModal}
-              closeModal={() => setShowResultModal(false)}
-              testInfo={{
-                id: params.testId,
-                score: submitAnswers.data.data.score,
-                total: submitAnswers.data.data.total,
-                title: details.data.data.title,
-              }}
-            />,
-          )}
+        {showResultModal && submitAnswers.data && details.data ? (
+          <TestResultModal
+            visible={showResultModal}
+            closeModal={() => setShowResultModal(false)}
+            testInfo={{
+              id: params.testId,
+              score: submitAnswers.data.data.score,
+              total: submitAnswers.data.data.total,
+              title: details.data.data.title,
+              des: details.data.data.description,
+              image: details.data.data.image,
+            }}
+          />
+        ) : null}
         {snackbar.visible === true ? (
           <Snackbar
             message={snackbar.msg}

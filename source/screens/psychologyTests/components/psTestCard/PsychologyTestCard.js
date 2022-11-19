@@ -6,7 +6,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Text } from '../../../../components/common';
 
 import { useIsPeriodDay } from '../../../../libs/hooks';
-import { COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
+import { baseUrl, COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
 
 import DisabledBack from '../../../../assets/icons/btns/disabled-back.svg';
 
@@ -32,13 +32,14 @@ const PsychologyTestCard = ({
     <View style={styles.container}>
       {testImage ? (
         <Image
-          source={{ uri: testImage }}
-          style={{ width: 100, height: 100 }}
+          source={{ uri: baseUrl + testImage }}
+          style={{ width: 150, height: 150 }}
+          resizeMode="contain"
         />
       ) : (
         <Octicons
           name="checklist"
-          size={70}
+          size={80}
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
         />
       )}

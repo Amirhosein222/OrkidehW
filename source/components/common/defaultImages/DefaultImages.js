@@ -46,14 +46,21 @@ const DefaultImages = ({ route, navigation }) => {
   });
 
   const RenderImages = ({ item }) => (
-    <Pressable
-      onPress={() => selectImages(item)}
-      style={[
-        styles.imageContainer,
-        selectedImg === item ? styles.imageSelected : {},
-      ]}>
-      <Image source={{ uri: item }} resizeMode="contain" style={styles.image} />
-    </Pressable>
+    console.log('item ', item),
+    (
+      <Pressable
+        onPress={() => selectImages(item)}
+        style={[
+          styles.imageContainer,
+          selectedImg === item ? styles.imageSelected : {},
+        ]}>
+        <Image
+          source={{ uri: item }}
+          resizeMode="contain"
+          style={styles.image}
+        />
+      </Pressable>
+    )
   );
 
   const backAction = () => {
@@ -93,10 +100,11 @@ const DefaultImages = ({ route, navigation }) => {
         </Text>
         {/* TODO: Fill flatlist data with settings['app_image_defaults[]'].value, which is an array */}
         <FlatList
-          data={[
-            settings['app_image_defaults[]'].value,
-            'https://static.cdn.asset.filimo.com/vision-file/25e64741-40f0-4480-a254-8bc3cec80a77-logo.jpg',
-          ]}
+          data={
+            typeof settings['app_image_defaults[]'].value === 'array'
+              ? [...settings['app_image_defaults[]'].value]
+              : [settings['app_image_defaults[]'].value]
+          }
           numColumns={2}
           key={(item, index) => index.toString()}
           renderItem={RenderImages}

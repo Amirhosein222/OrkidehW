@@ -31,6 +31,9 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
 
   const handleCyclesGpDays = (i, cycleId) => {
     let startDay = i;
+    if (!daysGpWithCycles.data) {
+      return startDay;
+    }
     if (i <= daysGpWithCycles.data.data.hasCycle[0].days.length - 1) {
       if (daysGpWithCycles.data.data.hasCycle[0].days[i].cycle_id === cycleId) {
         startDay = startDay + 1;

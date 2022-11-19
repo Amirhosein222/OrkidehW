@@ -100,14 +100,19 @@ const RelationsScreen = ({ navigation }) => {
   return (
     <BackgroundView>
       <ScreenHeader title="روابط من" />
-      {fetchingRels && (
+      {fetchingRels ? (
         <ActivityIndicator
           size="small"
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           style={{ marginTop: rh(2), marginBottom: rh(2) }}
         />
-      )}
-      {relations.length ? (
+      ) : null}
+      {!fetchingRels && relations[0].id === 0 ? (
+        <Text marginTop={rh(2)} marginBottom={rh(1)}>
+          شما هیچ رابطه ای ثبت نکرده اید
+        </Text>
+      ) : null}
+      {!fetchingRels && relations.length > 1 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           data={relations}
@@ -120,18 +125,13 @@ const RelationsScreen = ({ navigation }) => {
           }}
         />
       ) : null}
-      {!fetchingRels && relations[0].id === 0 ? (
-        <Text marginTop={rh(0)} marginBottom={rh(2)}>
-          شما هیچ رابطه ای ثبت نکرده اید
-        </Text>
-      ) : null}
 
       <Divider
         color={COLORS.textDark}
         width={rw(76)}
         style={{
           borderBottomWidth: 0.5,
-          marginTop: rh(1),
+          marginTop: rh(0),
           marginBottom: rh(2),
         }}
       />

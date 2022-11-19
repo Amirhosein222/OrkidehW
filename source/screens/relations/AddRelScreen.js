@@ -78,13 +78,23 @@ const AddRelScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleShowOrSetSnackbar = () => {
+    params.showSnackbar
+      ? params.showSnackbar({
+          msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
+          visible: true,
+          type: 'success',
+        })
+      : setSnackbar({
+          msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
+          visible: true,
+          type: 'success',
+        });
+  };
+
   useEffect(() => {
     if (addRel.data && addRel.data.is_successful) {
-      setSnackbar({
-        msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
-        visible: true,
-        type: 'success',
-      });
+      handleShowOrSetSnackbar();
       setPartner('');
       setPartnerMobile('');
       setPicture('');

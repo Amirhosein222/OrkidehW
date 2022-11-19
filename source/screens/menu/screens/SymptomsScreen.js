@@ -122,7 +122,7 @@ const SymptomsScreen = ({ navigation }) => {
           type: 'success',
         });
       } else {
-        setResetPicker(true);
+        setResetPicker(!resetPicker);
         setSnackbar({
           msg: response.data.message,
           visible: true,
@@ -133,8 +133,10 @@ const SymptomsScreen = ({ navigation }) => {
 
   const onSelectSpouse = spouse => {
     if (spouse === 'newRel') {
+      setResetPicker(!resetPicker);
       return navigation.navigate('AddRel', {
         handleUpdateRels: womanInfo.getAndHandleRels,
+        showSnackbar: setSnackbar,
       });
     }
     setActiveSpouse(spouse);

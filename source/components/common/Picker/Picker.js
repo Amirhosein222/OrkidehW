@@ -13,16 +13,13 @@ const Picker = ({
   listMode = 'FLATLIST',
   reset = false,
   defaultValue = null,
-  isMemory = false,
 }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState(data);
 
   useEffect(() => {
-    if (reset) {
-      isMemory ? setValue(null) : setValue({});
-    }
+    setValue({});
   }, [reset]);
 
   useEffect(() => {

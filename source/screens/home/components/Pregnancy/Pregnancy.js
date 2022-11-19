@@ -20,7 +20,7 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
 
       {/* </View> */}
 
-      {/* <Image
+      <Image
         source={
           isPeriodDay
             ? require('../../../../assets/images/600.png')
@@ -29,14 +29,14 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
         style={{
           width: rw(82),
           height: rh(43),
+          marginTop: rh(5),
         }}
         resizeMode="contain"
-      /> */}
+      />
       {!isFetching ? (
         <View style={styles.pregnancyPercentText}>
           <Text size={40} bold color={COLORS.white}>
-            {/* {pregnancy && numberConverter(pregnancy)} */}
-            20%
+            {pregnancy && numberConverter(pregnancy)}
           </Text>
           <Text size={20} bold color={COLORS.white}>
             احتمال بارداری
@@ -47,7 +47,7 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
           <ActivityIndicator size="large" color="white" />
         </View>
       )}
-      <LottieView
+      {/* <LottieView
         source={require(hobab)}
         autoPlay
         loop
@@ -58,7 +58,7 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
           left: isFetching ? rh(-18) : rh(-15),
           position: 'absolute',
         }}
-      />
+      /> */}
     </View>
   );
 };
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     marginTop: rh(2),
   },
   pregnancyPercentText: {
-    // ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
     top: rh(17),

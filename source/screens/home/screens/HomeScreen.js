@@ -101,7 +101,6 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const handlePusherInit = async () => {
-    console.log('pusher.data.pusher_user_id ', pusher.data.pusher_user_id);
     initPusher(pusher.data.pusher_user_id, pusher.data.token);
   };
 
@@ -127,7 +126,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, [activeRel]);
 
   useEffect(() => {
-    !settings && setSetts();
+    setSetts();
     setLoginWomanInfo();
     setPusher();
   }, []);

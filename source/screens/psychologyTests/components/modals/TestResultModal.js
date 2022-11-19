@@ -1,13 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Pressable, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Octicons from 'react-native-vector-icons/Octicons';
+import Slider from '@react-native-community/slider';
 
-import { Button, Text } from '../../../../components/common';
-import { rw, rh, COLORS } from '../../../../configs';
+import { Text } from '../../../../components/common';
+import { rw, rh, COLORS, baseUrl } from '../../../../configs';
+import { useIsPeriodDay } from '../../../../libs/hooks';
 
 const TestResultModal = ({ testInfo, visible, closeModal }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   return (
     <Modal
       testID={'modal'}
@@ -38,29 +43,59 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
           </Pressable>
         </View>
 
-        <Image
-          source={require('../../../../assets/images/icons8-heart-100.png')}
-          style={styles.image}
-        />
+        {testInfo.image ? (
+          <Image
+            source={{ uri: baseUrl + testInfo.image }}
+            style={{ width: 200, height: 200 }}
+            resizeMode="contain"
+          />
+        ) : (
+          <Octicons
+            name="checklist"
+            size={70}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          />
+        )}
 
         <View style={{ paddingHorizontal: rw(2) }}>
-          <Text medium color={COLORS.textDark} marginTop={rh(2)}>
-            تست پذیرش اجتماعی
+          <Text size={12} color={COLORS.textDark} marginTop={rh(2)}>
+            {testInfo.title}
           </Text>
         </View>
 
-        <Text color={COLORS.textLight} marginBottom={rh(2)} marginTop={rh(1)}>
-          توضیحات تست پذیرش اجتماعی
-        </Text>
+        <View style={{ width: rw(70), marginVertical: rh(1) }}>
+          <Text size={11} color={COLORS.textLight} textAlign="right">
+            {testInfo.des.replace(/(<([^>]+)>)/gi, '')}
+          </Text>
+        </View>
 
         <View style={styles.scoreContainer}>
-          <Text color={COLORS.primary}>80</Text>
+          <Text color={COLORS.primary}>{testInfo.score} </Text>
           <Text color={COLORS.textLight} marginRight={rw(2)}>
-            /100
+            / {testInfo.total}
           </Text>
           <Text medium color={COLORS.textDark}>
             امتیاز شما در این تست :
           </Text>
+        </View>
+        <View
+          style={{
+            width: testInfo.total * 2,
+            height: 10,
+            backgroundColor: COLORS.inputTabBarBg,
+            borderRadius: 20,
+            marginBottom: 5,
+          }}>
+          <View
+            style={{
+              position: 'absolute',
+              width: testInfo.score * 2,
+              height: 8,
+              backgroundColor: COLORS.primary,
+              borderRadius: 20,
+              marginBottom: 5,
+            }}
+          />
         </View>
       </View>
     </Modal>
@@ -106,7 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 'auto',
-    marginBottom: rh(4),
+    marginBottom: rh(2),
   },
 });
 
