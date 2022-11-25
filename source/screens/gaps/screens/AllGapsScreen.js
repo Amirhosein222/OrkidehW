@@ -38,6 +38,7 @@ const AllGapsScreen = ({ navigation }) => {
         myMemory={false}
         handleReportModal={handleReportModal}
         updateGaps={setAllGaps}
+        setSnackbar={setSnackbar}
       />
     );
   };

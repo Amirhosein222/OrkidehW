@@ -59,7 +59,7 @@ const ExpSympCard = ({
               <Text
                 style={[
                   {
-                    color: COLORS.primary,
+                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>

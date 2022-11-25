@@ -70,7 +70,9 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
         </View>
 
         <View style={styles.scoreContainer}>
-          <Text color={COLORS.primary}>{testInfo.score} </Text>
+          <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+            {testInfo.score}{' '}
+          </Text>
           <Text color={COLORS.textLight} marginRight={rw(2)}>
             / {testInfo.total}
           </Text>
@@ -84,14 +86,16 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
             height: 10,
             backgroundColor: COLORS.inputTabBarBg,
             borderRadius: 20,
-            marginBottom: 5,
+            marginBottom: rh(1),
           }}>
           <View
             style={{
               position: 'absolute',
               width: testInfo.score * 2,
               height: 8,
-              backgroundColor: COLORS.primary,
+              backgroundColor: isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
               borderRadius: 20,
               marginBottom: 5,
             }}
@@ -141,7 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 'auto',
-    marginBottom: rh(2),
+    marginBottom: rh(1),
   },
 });
 

@@ -45,20 +45,22 @@ const RelItem = ({
             <EnabledEdit style={ICON_SIZE} />
           </Pressable>
         </View>
-        {!rel.is_verified && rel.applicant === 'man' && (
-          <Pressable
-            disabled={isVerifying}
-            onPress={() => handleVerifyRel(rel.verifyCode)}
-            style={styles.verifyRel}>
-            {isVerifying ? (
-              <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
-            ) : (
-              <Text size={10} color={COLORS.borderLinkBtn} textAlign="right">
-                تایید رابطه
-              </Text>
-            )}
-          </Pressable>
-        )}
+        <Pressable
+          disabled={rel.applicant === 'woman' || isVerifying || rel.is_verified}
+          onPress={() => handleVerifyRel(rel.verifyCode)}
+          style={styles.verifyRel}>
+          {isVerifying ? (
+            <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
+          ) : (
+            <Text size={9} color={COLORS.borderLinkBtn} textAlign="right">
+              {!rel.is_verified && rel.applicant === 'man'
+                ? 'تایید رابطه'
+                : !rel.is_verified && rel.applicant === 'woman'
+                ? 'در انتظار تایید'
+                : 'تایید شده'}
+            </Text>
+          )}
+        </Pressable>
       </View>
       <View style={styles.avatarNameContainer}>
         <View style={styles.nameContainer}>

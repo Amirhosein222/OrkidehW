@@ -9,10 +9,6 @@ export const handleInfoLevelsImage = (registerStage, settings) => {
         ? { uri: settings.app_image_field_username.value }
         : pinfoBg;
     case 1:
-      console.log(
-        'settings?.app_image_last_period_date ',
-        settings?.app_image_last_period_date,
-      );
       return settings?.app_image_last_period_date
         ? { uri: settings.app_image_last_period_date.value }
         : pdates_bg;

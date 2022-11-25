@@ -20,7 +20,6 @@ import {
   SCROLL_VIEW_CONTAINER,
   STATUS_BAR_HEIGHT,
 } from '../../configs';
-import { convertToFullDate, numberConverter } from '../../libs/helpers';
 
 import { CalendarModal } from '../../screens/calendar/components';
 
@@ -32,6 +31,7 @@ import PsycheTestMenu from '../../assets/icons/drawerSettings/psychologicalTest-
 import ChartMenu from '../../assets/icons/drawerSettings/chart-menu.svg';
 import ContactAnExpertMenu from '../../assets/icons/drawerSettings/contactAnExpert-menu.svg';
 import SettingMenu from '../../assets/icons/drawerSettings/setting-menu.svg';
+import Instruction from '../../assets/icons/drawerSettings/instruction.svg';
 
 const DrawerUi = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
@@ -46,7 +46,6 @@ const DrawerUi = ({ navigation }) => {
     if (typeof value === 'object') {
       return true;
     }
-    resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('relation_id', value);
@@ -273,7 +272,7 @@ const DrawerUi = ({ navigation }) => {
           <Text size={11} bold marginRight="15">
             مجله
           </Text>
-          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
+          <Instruction style={{ width: 25, height: 25 }} />
         </Pressable>
         <Divider
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}

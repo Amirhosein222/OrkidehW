@@ -11,7 +11,7 @@ export const setPasswordApi = async function (fullInfo, password) {
     formData.append('repeat_password', password);
     formData.append(
       'birth_date',
-      moment(fullInfo.birth_date).locale('en').format('jYYYY/jM/jD'),
+      moment(fullInfo.birth_date, 'X').locale('en').format('jYYYY/jMM/jDD'),
     );
     formData.append('gender', 'woman');
     formData.append('is_password_active', 1);

@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     width: '100%',
-    height: rh(8),
+    height: rh(10),
     backgroundColor: 'transparent',
   },
   leftSide: {

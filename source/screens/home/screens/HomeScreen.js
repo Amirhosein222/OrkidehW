@@ -123,7 +123,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     onGetPregnancyPercent();
-  }, [activeRel]);
+  }, []);
 
   useEffect(() => {
     setSetts();
@@ -203,7 +203,6 @@ const HomeScreen = ({ navigation, route }) => {
         visible: true,
         type: 'success',
       });
-      // setShowCalendarModal(true);
     }
     storePeriodAuto.data &&
       !storePeriodAuto.data.is_successful &&
@@ -266,7 +265,7 @@ const HomeScreen = ({ navigation, route }) => {
           <ActivityIndicator
             size="large"
             color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-            style={{ marginTop: rh(4) }}
+            style={{ marginBottom: rh(2) }}
           />
         ) : (
           <Image

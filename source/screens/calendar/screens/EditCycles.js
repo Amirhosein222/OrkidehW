@@ -1,11 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, Alert, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { CalendarList } from 'react-native-calendars-persian';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import moment from 'moment-jalaali';
 import RadioGroup from 'react-native-radio-buttons-group';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   BackgroundView,
@@ -25,13 +26,12 @@ import { CALENDAR_THEME } from '../theme';
 
 import EnabledCheck from '../../../assets/icons/btns/enabled-check.svg';
 
-const EditCyclesScreen = ({ visible, closeModal }) => {
+const EditCyclesScreen = () => {
   const { fullInfo } = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
   const navigation = useNavigation();
-  const { userCalendar, handleUserCalendar, handleUserPeriodDays } = useContext(
-    WomanInfoContext,
-  );
+  const { userCalendar, handleUserCalendar, handleUserPeriodDays } =
+    useContext(WomanInfoContext);
   const [currentMarkedDates, setCurrentMarkedDates] = useState([]);
   const currentMarkedDatesRef = useRef([]);
   const [newMarkedDates, setNewMarkedDates] = useState([]);
@@ -110,7 +110,8 @@ const EditCyclesScreen = ({ visible, closeModal }) => {
     const womanClient = await getWomanClient();
     womanClient
       .post('update/calendar', sortedDates)
-      .then(response => {
+      .then(async response => {
+        setSelectedOption(null);
         setIsUpdating(false);
         setCurrentMarkedDates([]);
         setNewMarkedDates([]);
@@ -135,6 +136,7 @@ const EditCyclesScreen = ({ visible, closeModal }) => {
         ]);
         if (response.data.is_successful) {
           if (response.data.data[1].getPeriodInfo === true) {
+            await AsyncStorage.removeItem('periodStart');
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
@@ -168,7 +170,6 @@ const EditCyclesScreen = ({ visible, closeModal }) => {
                 ? response.data.message[0].cycle_message
                 : 'خطا در ویرایش دوره!',
             ),
-
             visible: true,
             delay: 5000,
           });
@@ -291,7 +292,7 @@ const EditCyclesScreen = ({ visible, closeModal }) => {
     const selectedDate = date.dateString;
     if (moment(selectedDate).isBefore(today) === false) {
       setSnackbar({
-        msg: 'شما میتوانید تاریخ را فقط تا امروز را انتخاب کنید.',
+        msg: 'شما می توانید تاریخ را فقط تا امروز را انتخاب کنید.',
         visible: true,
       });
       return;

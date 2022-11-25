@@ -199,13 +199,7 @@ const AddMemoryModal = ({
               ? () => <EnabledEdit style={ICON_SIZE} />
               : () => <EnabledSend style={ICON_SIZE} />
           }
-          color={
-            isPeriodDay
-              ? COLORS.fireEngineRed
-              : edit.isEdit
-              ? COLORS.borderLinkBtn
-              : COLORS.primary
-          }
+          color={edit.isEdit ? COLORS.borderLinkBtn : COLORS.primary}
           style={styles.btn}
           loading={isSending ? true : false}
           disabled={isSending ? true : false}

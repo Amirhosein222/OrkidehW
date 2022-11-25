@@ -111,39 +111,36 @@ const PsychologyTestDetail = ({
   }, [resetState]);
 
   return (
-    console.log('resetState ', resetState),
-    (
-      <View style={{ width: '100%', alignItems: 'center' }}>
-        <Text color={COLORS.textCommentCal} marginTop={rh(4)} siz2={11} bold>
-          {testDetails.title}
+    <View style={{ width: '100%', alignItems: 'center' }}>
+      <Text color={COLORS.textCommentCal} marginTop={rh(4)} siz2={11} bold>
+        {testDetails.title}
+      </Text>
+      <View style={{ width: rw(85) }}>
+        <Text
+          size={10}
+          color={COLORS.textLight}
+          marginRight="10"
+          // alignSelf="flex-end"
+          marginTop="5"
+          textAlign="right">
+          {testDetails.description
+            ? testDetails.description.replace(/(<([^>]+)>)/gi, '')
+            : ''}
         </Text>
-        <View style={{ width: rw(85) }}>
-          <Text
-            size={10}
-            color={COLORS.textLight}
-            marginRight="10"
-            // alignSelf="flex-end"
-            marginTop="5"
-            textAlign="right">
-            {testDetails.description
-              ? testDetails.description.replace(/(<([^>]+)>)/gi, '')
-              : ''}
-          </Text>
-        </View>
-
-        <Divider
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
-          width="80%"
-          style={{ marginTop: rh(2) }}
-        />
-        <FlatList
-          data={testDetails.questions}
-          keyExtractor={item => item.id}
-          renderItem={RenderQuestions}
-          style={{ marginTop: rh(1), width: '100%' }}
-        />
       </View>
-    )
+
+      <Divider
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
+        width="80%"
+        style={{ marginTop: rh(2) }}
+      />
+      <FlatList
+        data={testDetails.questions}
+        keyExtractor={item => item.id}
+        renderItem={RenderQuestions}
+        style={{ marginTop: rh(1), width: '100%' }}
+      />
+    </View>
   );
 };
 

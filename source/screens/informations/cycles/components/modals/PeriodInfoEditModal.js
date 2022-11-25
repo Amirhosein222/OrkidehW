@@ -53,6 +53,11 @@ const PeriodInfoEditModal = ({
   useEffect(() => {
     if (editInfo.data && editInfo.data.is_successful) {
       updateCycles();
+      setSnackbar({
+        msg: 'اطلاعات شما با موفقیت بروزرسانی شد',
+        visible: true,
+        type: 'success',
+      });
       closeModal();
     }
     if (editInfo.data && !editInfo.data.is_successful) {

@@ -16,6 +16,7 @@ export const initPusher = async (userId, token, clear = false) => {
 
   // Setup notification listeners
   RNPusherPushNotifications.on('notification', handleNotification);
+
   !clear && setUser(userId, token, onPusherInitError, onPusherInitSuccess);
 
   // This code is not running
@@ -47,7 +48,7 @@ async function setUser(userId, token, onError, onSuccess) {
 
 // Handle notifications received
 const handleNotification = notification => {
-  console.log(notification);
+  // console.log(notification);
 };
 
 // Subscribe to an interest

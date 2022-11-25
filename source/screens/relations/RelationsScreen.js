@@ -53,7 +53,11 @@ const RelationsScreen = ({ navigation }) => {
         handleShowDeleteModal={handleDeleteRel}
         handleVerifyRel={handleVerifyRel}
         updateRels={() => setShouldUpdate(!shouldUpdate)}
-        isVerifying={verifyCode.isFetching}
+        isVerifying={
+          item.verifyCode === verificationCode.current
+            ? verifyCode.isFetching
+            : false
+        }
       />
     );
   };
@@ -97,22 +101,26 @@ const RelationsScreen = ({ navigation }) => {
     getAndHandleRels();
   }, [shouldUpdate]);
 
+  if (fetchingRels) {
+    return (
+      <BackgroundView>
+        <ScreenHeader title="روابط من" />
+        <ActivityIndicator
+          size="large"
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
+        />
+      </BackgroundView>
+    );
+  }
   return (
     <BackgroundView>
       <ScreenHeader title="روابط من" />
-      {fetchingRels ? (
-        <ActivityIndicator
-          size="small"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-          style={{ marginTop: rh(2), marginBottom: rh(2) }}
-        />
-      ) : null}
-      {!fetchingRels && relations[0].id === 0 ? (
+      {relations[0].id === 0 ? (
         <Text marginTop={rh(2)} marginBottom={rh(1)}>
           شما هیچ رابطه ای ثبت نکرده اید
         </Text>
-      ) : null}
-      {!fetchingRels && relations.length > 1 ? (
+      ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
           data={relations}
@@ -124,7 +132,7 @@ const RelationsScreen = ({ navigation }) => {
             marginBottom: rh(2),
           }}
         />
-      ) : null}
+      )}
 
       <Divider
         color={COLORS.textDark}

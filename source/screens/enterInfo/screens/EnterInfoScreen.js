@@ -11,9 +11,8 @@ import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import { rh, STATUS_BAR_HEIGHT } from '../../../configs';
 
 const EnterInfoScreen = ({ navigation, route }) => {
-  const { registerStage, handleRegisterStage, settings } = useContext(
-    WomanInfoContext,
-  );
+  const { registerStage, handleRegisterStage, settings } =
+    useContext(WomanInfoContext);
   const params = route.params;
   const [informations, setInformations] = useState({});
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
@@ -31,10 +30,11 @@ const EnterInfoScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (params.reEnter === true) {
       setSnackbar({
-        msg:
-          'شما تمام اطلاعات مربوط به پریود خود را حذف کردید، لطفا مجدد اطلاعات پریود خود را وارد کنید',
+        msg: 'شما تمام اطلاعات مربوط به پریود خود را حذف کردید، لطفا مجدد اطلاعات پریود خود را وارد کنید',
         visible: true,
+        delay: 3000,
       });
+      handleRegisterStage(1);
     }
   }, []);
 
@@ -83,6 +83,7 @@ const EnterInfoScreen = ({ navigation, route }) => {
               message={snackbar.msg}
               type={snackbar.type}
               handleVisible={handleVisible}
+              delay={snackbar.delay}
             />
           ) : null}
         </View>

@@ -31,8 +31,10 @@ import { COLORS, rh, rw } from '../../../configs';
 
 import deleteIcon from '../../../assets/vectors/register/delete.png';
 import { ExpSympCard, ExpSympInfoModal } from '../components';
+import { useIsPeriodDay } from '../../../libs/hooks';
 
 const PartnerExpsTabScreen = ({ navigation }) => {
+  const isPeriodDay = useIsPeriodDay();
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [expectations, setExpectation] = useState([]);
   const [resetPicker, setResetPicker] = useState(false);
@@ -83,7 +85,6 @@ const PartnerExpsTabScreen = ({ navigation }) => {
     if (typeof value === 'object') {
       return true;
     }
-    resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('relation_id', value);
@@ -161,18 +162,15 @@ const PartnerExpsTabScreen = ({ navigation }) => {
               <FlatList
                 data={expectations}
                 keyExtractor={item => String(item.id)}
-                style={{ flexGrow: 1 }}
-                contentContainerStyle={{
-                  justifyContent: 'flex-start',
-                  alignSelf: 'center',
-                  width: '100%',
-                  height: rh(40),
-                }}
+                numColumns={2}
                 renderItem={RenderExpectations}
               />
             ) : isLoading ? (
               <View>
-                <ActivityIndicator size="large" color={COLORS.primary} />
+                <ActivityIndicator
+                  size="large"
+                  color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                />
               </View>
             ) : (
               <View style={styles.noMood}>

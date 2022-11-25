@@ -32,6 +32,7 @@ const GapCard = ({
   handleDelete,
   handleReportModal,
   updateGaps,
+  setSnackbar,
 }) => {
   const { fullInfo } = useContext(WomanInfoContext);
   const [liked, setLiked] = useState();
@@ -188,11 +189,17 @@ const GapCard = ({
     if (sendCM.data && sendCM.data.is_successful) {
       setComment('');
       updateGaps();
+      setSnackbar({
+        msg: 'نظر شما با موفقیت ارسال شد',
+        visible: true,
+        type: 'success',
+      });
     }
   }, [sendCM]);
 
   useEffect(() => {
     if (comments.data && comments.data.is_successful) {
+      // console.log('comments ', comments.data);
     }
   }, [comments]);
 
@@ -370,7 +377,9 @@ const GapCard = ({
             size={8}
             style={{ marginLeft: 10 }}
             color={COLORS.textLight}>
-            {calcDiffDays(memory.created_at)} روز
+            {calcDiffDays(memory.created_at) === 0
+              ? 'امروز'
+              : `${calcDiffDays(memory.created_at)} روز`}
           </Text>
         </View>
       </View>

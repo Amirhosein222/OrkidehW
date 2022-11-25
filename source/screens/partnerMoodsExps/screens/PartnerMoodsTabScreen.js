@@ -60,7 +60,6 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
       .post('show/spouse/moods/and/expectation', formData)
       .then(response => {
         setIsLoading(false);
-        console.log('partner moods ', response.data);
         if (response.data.is_successful) {
           setSpouseMoods(response.data.data.signs);
         } else {
@@ -84,7 +83,6 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
     if (typeof value === 'object') {
       return true;
     }
-    resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('relation_id', value);
@@ -109,7 +107,6 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
         });
       } else {
         setResetPicker(!resetPicker);
-
         setSnackbar({
           msg: response.data.message,
           visible: true,
@@ -173,7 +170,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
             ) : isLoading ? (
               <ActivityIndicator
                 size="large"
-                color={COLORS.primary}
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
                 style={{
                   marginTop: 'auto',
                   marginBottom: 'auto',

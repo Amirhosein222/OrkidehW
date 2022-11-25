@@ -165,7 +165,7 @@ const ProfileScreen = ({ navigation }) => {
         />
         <ProfileOption
           name="birthday"
-          title="وضعیت تاهل:"
+          title="وضعیت تاهل"
           data={fullInfo.status_married}
           Icon={() => <DateOfBirth style={ICON_SIZE} />}
           onPress={() => setShowMaritalModal(true)}
@@ -194,7 +194,7 @@ const ProfileScreen = ({ navigation }) => {
       )}
       {showMaritalModal && (
         <SelectMaritalModal
-          defaultValue={fullInfo.is_married}
+          defaultValue={fullInfo.status_married}
           visible={showMaritalModal}
           closeModal={() => setShowMaritalModal(false)}
           setSnackbar={setSnackbar}

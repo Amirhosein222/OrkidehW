@@ -1,12 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useContext, useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  Image,
-  Pressable,
-  Linking,
-} from 'react-native';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, ScrollView, Image, Pressable } from 'react-native';
 
 import { SettingOption, UserAvatarInfo } from './components';
 import {
@@ -18,14 +12,11 @@ import {
   BackgroundView,
 } from '../../components/common';
 import { baseUrl, COLORS, rh, rw } from '../../configs';
-import { useApi } from '../../libs/hooks';
-import { buyGoldenAccount } from '../../libs/apiCalls';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 import Reminder from '../../assets/icons/drawerSettings/reminder.svg';
 import Relationships from '../../assets/icons/drawerSettings/relationships.svg';
 import Privacy from '../../assets/icons/drawerSettings/privacy.svg';
-// import PremiumvVersion from '../../assets/icons/drawerSettings/premium-version.svg';
 import Guide from '../../assets/icons/drawerSettings/guide.svg';
 import AboutUs from '../../assets/icons/drawerSettings/aboutUs.svg';
 import InviteFriends from '../../assets/icons/drawerSettings/inviteFriends.svg';
@@ -36,7 +27,6 @@ const SettingsScreen = ({ navigation }) => {
   const { fullInfo } = useContext(WomanInfoContext);
   const [showModal, setShowModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-  const [buyAccount, setBuyAccount] = useApi(() => buyGoldenAccount());
 
   const handleExitModal = function () {
     setShowModal(!showModal);
@@ -171,12 +161,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: rw(100),
     marginTop: rh(2),
-    flex: 1,
   },
   image: {
     width: rw(31),
     height: rh(12),
-    marginTop: 'auto',
+    marginTop: rh(2),
     marginBottom: rh(1),
   },
 });

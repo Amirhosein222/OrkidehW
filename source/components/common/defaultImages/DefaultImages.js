@@ -46,21 +46,14 @@ const DefaultImages = ({ route, navigation }) => {
   });
 
   const RenderImages = ({ item }) => (
-    console.log('item ', item),
-    (
-      <Pressable
-        onPress={() => selectImages(item)}
-        style={[
-          styles.imageContainer,
-          selectedImg === item ? styles.imageSelected : {},
-        ]}>
-        <Image
-          source={{ uri: item }}
-          resizeMode="contain"
-          style={styles.image}
-        />
-      </Pressable>
-    )
+    <Pressable
+      onPress={() => selectImages(item)}
+      style={[
+        styles.imageContainer,
+        selectedImg === item ? styles.imageSelected : {},
+      ]}>
+      <Image source={{ uri: item }} resizeMode="contain" style={styles.image} />
+    </Pressable>
   );
 
   const backAction = () => {

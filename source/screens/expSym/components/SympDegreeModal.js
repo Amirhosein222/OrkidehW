@@ -253,8 +253,9 @@ const SympDegreeModal = ({
                 <View
                   style={{
                     flexDirection: 'row',
-                    width: rw(87),
-                    justifyContent: 'space-evenly',
+                    width: allMoods.length === 2 ? rw(68) : rw(87),
+                    justifyContent:
+                      allMoods.length === 2 ? 'space-between' : 'space-evenly',
                     paddingHorizontal: rw(2),
                   }}>
                   {!sign.is_multiple && allMoods.length

@@ -4,8 +4,11 @@ import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
 
 import { baseUrl, COLORS } from '../../../configs';
 import { rw, rh } from '../../../configs';
+import { useIsPeriodDay } from '../../../libs/hooks';
 
 const ExpSympCard = ({ item, type, onReadMore }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   return (
     <View style={styles.container}>
       <Image
@@ -34,7 +37,7 @@ const ExpSympCard = ({ item, type, onReadMore }) => {
               <Text
                 style={[
                   {
-                    color: COLORS.primary,
+                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>
@@ -43,7 +46,7 @@ const ExpSympCard = ({ item, type, onReadMore }) => {
               <Text
                 style={[
                   {
-                    color: COLORS.primary,
+                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>

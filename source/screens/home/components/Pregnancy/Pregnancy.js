@@ -6,10 +6,10 @@ import LottieView from 'lottie-react-native';
 import { useIsPeriodDay } from '../../../../libs/hooks';
 
 import { Text } from '../../../../components/common';
-import { COLORS, rh, rw } from '../../../../configs';
+import { COLORS, HEIGHT, rh, rw, WIDTH } from '../../../../configs';
 import { numberConverter } from '../../../../libs/helpers';
 
-const hobab = '../../../../assets/animations/hobab1.json';
+const hobab = '../../../../assets/animations/hobab_khanom.json';
 
 const Pregnancy = ({ pregnancy, isFetching }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -20,7 +20,7 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
 
       {/* </View> */}
 
-      <Image
+      {/* <Image
         source={
           isPeriodDay
             ? require('../../../../assets/images/600.png')
@@ -29,13 +29,24 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
         style={{
           width: rw(82),
           height: rh(43),
-          marginTop: rh(5),
+          marginTop: rh(4),
         }}
         resizeMode="contain"
+      /> */}
+
+      <LottieView
+        source={require(hobab)}
+        autoPlay
+        loop
+        style={{
+          width: 360,
+          height: 360,
+          marginTop: rh(2),
+        }}
       />
       {!isFetching ? (
         <View style={styles.pregnancyPercentText}>
-          <Text size={40} bold color={COLORS.white}>
+          <Text size={38} bold color={COLORS.white}>
             {pregnancy && numberConverter(pregnancy)}
           </Text>
           <Text size={20} bold color={COLORS.white}>
@@ -47,18 +58,6 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
           <ActivityIndicator size="large" color="white" />
         </View>
       )}
-      {/* <LottieView
-        source={require(hobab)}
-        autoPlay
-        loop
-        width={650}
-        height={650}
-        style={{
-          top: rh(-7),
-          left: isFetching ? rh(-18) : rh(-15),
-          position: 'absolute',
-        }}
-      /> */}
     </View>
   );
 };
@@ -73,9 +72,9 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    top: rh(17),
-    height: rh(15),
-    zIndex: 1,
+    marginTop: rh(6),
+    marginRight: rw(2),
+    // top: rh(19),
   },
 });
 

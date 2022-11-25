@@ -116,6 +116,8 @@ const VerificationScreen = ({ navigation, route }) => {
       );
       const periodStart = AsyncStorage.getItem('periodStart');
       periodStart && AsyncStorage.removeItem('periodStart');
+      AsyncStorage.removeItem('isPassActive');
+      AsyncStorage.removeItem('isFingerActive');
       params.isNew
         ? navigation.dispatch(
             CommonActions.reset({

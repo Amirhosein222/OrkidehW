@@ -49,7 +49,6 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
       animationIn="zoomIn"
-      // animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{

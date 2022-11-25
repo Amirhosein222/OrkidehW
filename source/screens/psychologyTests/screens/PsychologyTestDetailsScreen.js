@@ -134,7 +134,6 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
       </BackgroundView>
     );
   } else {
-    console.log('details.data.data ', details.data && details.data.data);
     return (
       <BackgroundView>
         <StatusBar

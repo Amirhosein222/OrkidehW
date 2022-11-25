@@ -48,7 +48,11 @@ const SelectPictureModal = props => {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={{ marginLeft: 'auto' }} />
-          <Text medium style={{ marginLeft: 'auto', marginRight: rw(5) }}>
+          <Text
+            size={12}
+            color={COLORS.textCommentCal}
+            bold
+            style={{ marginLeft: 'auto', marginRight: rw(5) }}>
             انتخاب عکس
           </Text>
           <Pressable

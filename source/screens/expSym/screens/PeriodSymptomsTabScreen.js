@@ -77,10 +77,6 @@ const PeriodSymptomsTabScreen = () => {
   };
 
   useEffect(() => {
-    console.log(
-      'at my exp ',
-      moment(new Date(), 'YYYY/MM/DD').locale('en').format('jYYYY/jMM/jDD'),
-    );
     onGetSymptoms();
   }, []);
 

@@ -118,11 +118,19 @@ const ExpSympInfoModal = ({
         {isExp && (
           <Pressable
             onPress={() => onStoreExpectation()}
-            style={styles.submitBtn}>
+            style={{
+              ...styles.submitBtn,
+              borderColor: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+            }}>
             {isSending ? (
-              <ActivityIndicator color={COLORS.primary} size="small" />
+              <ActivityIndicator
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                size="small"
+              />
             ) : (
-              <Text bold color={COLORS.primary}>
+              <Text
+                bold
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
                 ثبت
               </Text>
             )}

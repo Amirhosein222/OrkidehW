@@ -12,9 +12,13 @@ import EnableCheck from '../../assets/icons/btns/enabled-check.svg';
 import Close from '../../assets/icons/btns/close.svg';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
-const SelectMaritalModal = ({ visible, closeModal, setSnackbar }) => {
+const SelectMaritalModal = ({
+  defaultValue,
+  visible,
+  closeModal,
+  setSnackbar,
+}) => {
   const { saveFullInfo, fullInfo, allSettings } = useContext(WomanInfoContext);
-
   const [resetPicker, setResetPicker] = useState(false);
   const selectedOption = useRef(null);
   const [maritalStatOptions, setMaritalStatOptions] = useState([]);
