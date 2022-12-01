@@ -15,7 +15,7 @@ export const setReminderApi = async function (reminder) {
 
     return res.data;
   } catch (error) {
-    console.log('e ', error.response);
+    // console.log('e ', error.response);
     throw error;
   }
 };
@@ -26,7 +26,7 @@ export const getRemindersApi = async function (reminder) {
     const res = await loginClient.get('alarm/setting/show?gender=woman');
     return res.data;
   } catch (error) {
-    console.log('e ', error.response);
+    // console.log('e ', error.response);
     throw error;
   }
 };

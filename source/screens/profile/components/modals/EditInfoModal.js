@@ -137,7 +137,7 @@ const EditInfoModal = ({
         <Button
           title="تایید اطلاعات"
           Icon={() => <EnableCheck style={ICON_SIZE} />}
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           disabled={isUpdating}
           loading={isUpdating}
           onPress={updateName}

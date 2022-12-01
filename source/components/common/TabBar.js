@@ -12,7 +12,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
   const { routes, index } = state;
   const handlePeriodTabStyles = () => {
     return isPeriodDay
-      ? { ...styles.plusIconContainer, backgroundColor: COLORS.fireEngineRed }
+      ? { ...styles.plusIconContainer, backgroundColor: COLORS.periodDay }
       : styles.plusIconContainer;
   };
 

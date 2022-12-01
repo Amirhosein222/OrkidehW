@@ -41,7 +41,7 @@ const SelectPicture = ({ picture, setShowPictureModal, isUpdate = false }) => {
       <Pressable
         style={{
           ...styles.plusIconContainer,
-          backgroundColor: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+          backgroundColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
         }}
         hitSlop={7}
         onPress={() => setShowPictureModal(true)}>

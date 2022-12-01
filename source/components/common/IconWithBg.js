@@ -36,7 +36,7 @@ const IconWithBg = ({
     border-color: ${borderColor ? borderColor : 'white'};
     border-width: ${borderWidth ? borderWidth : '0'};
     align-items: center;
-    margin: ${(props) => (props.margin ? props.margin : '0px')};
+    margin: ${props => (props.margin ? props.margin : '0px')};
     margin-top: ${marginTop ? marginTop : '0px'};
     margin-bottom: ${marginBottom ? marginBottom : '0px'};
     margin-right: ${marginRight ? marginRight : '0px'};
@@ -50,7 +50,7 @@ const IconWithBg = ({
       {loading ? (
         <ActivityIndicator
           size="large"
-          color={useIsPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={useIsPeriodDay ? COLORS.periodDay : COLORS.primary}
         />
       ) : icon === 'user-alt' ? (
         <View>

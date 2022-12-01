@@ -60,9 +60,7 @@ const Bars = ({ data }) => {
             styles.points,
             {
               width: Math.round(data.count) * 6,
-              backgroundColor: isPeriodDay
-                ? COLORS.fireEngineRed
-                : COLORS.primary,
+              backgroundColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
             },
           ]}
         />

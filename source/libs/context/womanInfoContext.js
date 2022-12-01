@@ -79,7 +79,7 @@ const WomanInfoProvider = function ({ children }) {
         is_active: rel.is_active,
         is_verified: rel.is_verified,
         image: rel.man_image,
-        mobile: rel.man.mobile,
+        mobile: rel.man_mobile,
         birthday: rel.man.birth_date,
         applicant: rel.applicant,
         verifyCode: rel.verification_code,
@@ -93,7 +93,7 @@ const WomanInfoProvider = function ({ children }) {
         relId: activeRell.id,
         label: activeRell.man_name,
         image: activeRell.man_image,
-        mobile: activeRell.man.mobile,
+        mobile: activeRell.man_mobile,
         birthday: activeRell.man.birth_date,
       });
     }

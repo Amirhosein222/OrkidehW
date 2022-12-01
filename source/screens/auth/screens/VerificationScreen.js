@@ -114,8 +114,6 @@ const VerificationScreen = ({ navigation, route }) => {
         'userToken',
         JSON.stringify(checkCode.data.data.token),
       );
-      const periodStart = AsyncStorage.getItem('periodStart');
-      periodStart && AsyncStorage.removeItem('periodStart');
       AsyncStorage.removeItem('isPassActive');
       AsyncStorage.removeItem('isFingerActive');
       params.isNew

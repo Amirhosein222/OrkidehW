@@ -48,9 +48,7 @@ const ExpectationCard = ({ exp, onRight = false }) => {
       <TouchableOpacity style={styles.container}>
         {/* <View style={styles.overlay} /> */}
         <View style={styles.titleContainer}>
-          <Text
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-            medium>
+          <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary} medium>
             {exp.expectation.title}
           </Text>
           <Text small>{exp.expectation.title}</Text>
@@ -84,7 +82,7 @@ const ExpectationCard = ({ exp, onRight = false }) => {
 
         <View style={styles.titleContainer}>
           <Text
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             medium
             textAlign="right"
             alignSelf="flex-end">

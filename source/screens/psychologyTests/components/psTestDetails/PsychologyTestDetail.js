@@ -65,7 +65,7 @@ const PsychologyTestDetail = ({
               </Text>
               <Checkbox
                 uncheckedColor={COLORS.textLight}
-                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
                 // disabled={isLoading ? true : false}
                 status={
                   selectedOption.has(op.question_id) &&
@@ -83,7 +83,7 @@ const PsychologyTestDetail = ({
             //       ? 'contained'
             //       : 'outlined'
             //   }
-            //   color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            //   color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             //   style={styles.btn}
             //   onPress={() => handleSelectedChoices(op)}>
             //   <Text
@@ -130,7 +130,7 @@ const PsychologyTestDetail = ({
       </View>
 
       <Divider
-        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
+        color={isPeriodDay ? COLORS.periodDay : COLORS.textLight}
         width="80%"
         style={{ marginTop: rh(2) }}
       />

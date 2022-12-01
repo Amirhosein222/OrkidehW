@@ -25,7 +25,7 @@ const ExpSympCard = ({
       {alreadySelected && (
         <AntDesign
           name="checkcircle"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           size={32}
           style={styles.selectedBadge}
         />
@@ -59,7 +59,7 @@ const ExpSympCard = ({
               <Text
                 style={[
                   {
-                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+                    color: isPeriodDay ? COLORS.periodDay : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>

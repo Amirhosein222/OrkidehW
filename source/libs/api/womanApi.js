@@ -40,7 +40,7 @@ const getWomanClient = async () => {
 
 // Intercept all responses
 womanApi.interceptors.response.use(
-  async (response) => {
+  async response => {
     if (response.status === 401) {
       try {
         const value = await AsyncStorage.getItem('userToken');
@@ -50,12 +50,12 @@ womanApi.interceptors.response.use(
         }
       } catch (error) {
         // Error retrieving data
-        console.log(error, 'logged in client error');
+        // console.log(error, 'logged in client error');
       }
     }
     return response;
   },
-  (error) => {
+  error => {
     console.error(error);
     return Promise.reject(error);
   },

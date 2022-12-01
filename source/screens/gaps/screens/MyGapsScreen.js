@@ -107,7 +107,7 @@ const MyGapsScreen = ({ navigation }) => {
         onPress={onAdd}
         style={{
           ...styles.plusIconContainer,
-          backgroundColor: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+          backgroundColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
         }}>
         <FontAwesome5 name="plus" size={30} color={COLORS.white} />
       </Pressable>

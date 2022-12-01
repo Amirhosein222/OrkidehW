@@ -153,7 +153,7 @@ const SymptomsScreen = ({ navigation }) => {
           alignItems: 'center',
         }}>
         <View style={{ marginBottom: 'auto' }}>
-          <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+          <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
             {item.sign.title} {item.mood.title}
           </Text>
         </View>

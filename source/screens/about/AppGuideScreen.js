@@ -30,17 +30,17 @@ const AppGuideScreen = ({ navigation }) => {
         <View style={styles.container}>
           <FontAwesome5
             name="map-signs"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.icon}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.icon}
             size={90}
           />
           <Text
             medium
             bold
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}>
+            color={isPeriodDay ? COLORS.periodDay : COLORS.textLight}>
             راهنما
           </Text>
           <Divider
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.textDark}
             width="85%"
             style={{ marginTop: 20 }}
           />

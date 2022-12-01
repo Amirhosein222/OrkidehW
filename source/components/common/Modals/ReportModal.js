@@ -51,7 +51,7 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
           size={10.5}
           color={
             item === reportOption && isPeriodDay
-              ? COLORS.fireEngineRed
+              ? COLORS.periodDay
               : item === reportOption && !isPeriodDay
               ? COLORS.primary
               : COLORS.textLight
@@ -60,7 +60,7 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
         </Text>
         <Checkbox
           uncheckedColor={COLORS.textLight}
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           status={item === reportOption ? 'checked' : 'unchecked'}
           onPress={() => {
             setReportOption(item);
@@ -184,7 +184,7 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
             () => <DsSend style={ICON_SIZE} />,
             () => <EnSend style={ICON_SIZE} />,
           ]}
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={onReport}
           style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(68) }}
         />

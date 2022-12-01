@@ -34,7 +34,10 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
     if (!daysGpWithCycles.data) {
       return startDay;
     }
-    if (i <= daysGpWithCycles.data.data.hasCycle[0].days.length - 1) {
+    if (
+      daysGpWithCycles.data.data.hasCycle.length &&
+      i <= daysGpWithCycles.data.data.hasCycle[0].days.length - 1
+    ) {
       if (daysGpWithCycles.data.data.hasCycle[0].days[i].cycle_id === cycleId) {
         startDay = startDay + 1;
       }
@@ -70,7 +73,7 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
           item.type === 'sex' || item.type === 'period_f' ? '#B7AFB9' : 'white',
         borderColor:
           item.type === 'sex'
-            ? COLORS.fireEngineRed
+            ? COLORS.periodDay
             : item.type === 'period_f'
             ? COLORS.primary
             : null,
@@ -141,7 +144,7 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
         ) : (
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             style={{ flex: 1 }}
           />
         )}
@@ -188,7 +191,6 @@ const styles = StyleSheet.create({
 
   calendar: {
     width: '100%',
-    marginTop: rh(2),
   },
   btn: {
     width: '80%',

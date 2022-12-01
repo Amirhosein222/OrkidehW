@@ -40,14 +40,14 @@ const PsychologyTestCard = ({
         <Octicons
           name="checklist"
           size={80}
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
         />
       )}
 
       <View
         style={{
           ...styles.badge,
-          backgroundColor: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+          backgroundColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
         }}>
         <Text color={COLORS.white}>جدید</Text>
       </View>
@@ -72,7 +72,7 @@ const PsychologyTestCard = ({
             marginLeft="10"
             alignSelf="flex-end"
             bold
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
             0
           </Text>
           <Text small alignSelf="flex-end" bold color={COLORS.textLight}>

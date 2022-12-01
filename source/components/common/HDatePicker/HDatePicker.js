@@ -3,48 +3,33 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import HorizontalDatePicker from '@logisticinfotech/react-native-horizontal-date-picker';
+import { useNavigation } from '@react-navigation/native';
 
 import { useIsPeriodDay } from '../../../libs/hooks';
 import { COLORS, rw } from '../../../configs';
 
-const HDatePicker = ({
-  defaultSelected,
-  style,
-  periodStart,
-  onDateSelected,
-  isFetching,
-}) => {
+const HDatePicker = ({ onDateSelect, isFetching }) => {
   const isPeriodDay = useIsPeriodDay();
 
   return (
-    <View
-      style={{
-        ...styles.pickerHeartContainer,
-        ...style,
-      }}>
-      <HorizontalDatePicker
-        pickerType={'date'}
-        onDateSelected={isFetching ? () => {} : (date) => onDateSelected(date)}
-        minDate={new Date(Date.now() - 12096e5)}
-        maxDate={new Date()}
-        dayFormat="jDD"
-        monthFormat="jMMMM"
-        isShowYear={false}
-        returnDateFormat={'jYYYY/jMM/jDD'}
-        datePickerContainerStyle={{
-          backgroundColor: 'transparent',
-          width: rw(100),
-        }}
-        selectedTextStyle={styles.selectedDate}
-        unSelectedTextStyle={styles.unselectedDate}
-        isPeriodDay={isPeriodDay}
-        defaultSelected={
-          periodStart && periodStart !== 'notSelected'
-            ? periodStart
-            : defaultSelected
-        }
-      />
-    </View>
+    <HorizontalDatePicker
+      pickerType={'date'}
+      onDateSelected={onDateSelect}
+      minDate={new Date(Date.now() - 12096e5)}
+      maxDate={new Date()}
+      dayFormat="jDD"
+      monthFormat="jMMMM"
+      isShowYear={false}
+      returnDateFormat={'jYYYY/jMM/jDD'}
+      datePickerContainerStyle={{
+        backgroundColor: 'transparent',
+        width: rw(100),
+      }}
+      selectedTextStyle={styles.selectedDate}
+      unSelectedTextStyle={styles.unselectedDate}
+      isPeriodDay={isPeriodDay}
+      defaultSelected={new Date()}
+    />
   );
 };
 

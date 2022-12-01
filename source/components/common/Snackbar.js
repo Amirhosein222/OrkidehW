@@ -14,11 +14,10 @@ const Snackbar = ({
   atBottom = false,
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
-
   const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
-      top: atBottom ? HEIGHT - rh(40) : 45,
+      top: atBottom ? HEIGHT - rh(42) : 45,
       left: 0,
       right: 0,
       // zIndex: atBottom ? 1 : null,
@@ -49,7 +48,7 @@ const Snackbar = ({
         style={{
           justifyContent: 'center',
           opacity: opacity,
-          paddingVertical: rh(2.5),
+          // paddingVertical: rh(2.5),
           transform: [
             {
               translateY: opacity.interpolate({
@@ -59,7 +58,7 @@ const Snackbar = ({
             },
           ],
           width: rw(80),
-          // height: rh(8),
+          height: rh(8),
           alignSelf: 'center',
           margin: 10,
           marginBottom: 5,

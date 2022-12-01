@@ -106,7 +106,7 @@ const DeleteModal = ({
           loading={isDeleting}
           disabled={isDeleting}
           onPress={type === 'rel' ? onDeleteRel : onDeleteMem}
-          style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(62) }}
+          style={{ marginTop: 'auto', marginBottom: rh(2), width: rw(62) }}
         />
       </View>
     </Modal>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: rw(80),
-    height: rh(45),
+    height: rh(47),
     elevation: 5,
     borderRadius: 25,
     backgroundColor: COLORS.mainBg,

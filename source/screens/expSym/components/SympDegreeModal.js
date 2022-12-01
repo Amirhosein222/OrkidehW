@@ -196,7 +196,7 @@ const SympDegreeModal = ({
         {fetchingAllMoods || fetchingMyMood ? (
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           />
         ) : (
           <View
@@ -246,7 +246,9 @@ const SympDegreeModal = ({
                   maximumValue={allMoods.length - 1}
                   step={1}
                   onValueChange={sliderValueHandler}
-                  minimumTrackTintColor={COLORS.primary}
+                  minimumTrackTintColor={
+                    isPeriodDay ? COLORS.periodDay : COLORS.primary
+                  }
                   maximumTrackTintColor="#000000"
                   thumbTintColor="#E6E6E6"
                 />
@@ -271,11 +273,21 @@ const SympDegreeModal = ({
                 </Text>
                 <Pressable
                   onPress={handleSelectedMood}
-                  style={styles.submitBtn}>
+                  style={{
+                    ...styles.submitBtn,
+                    borderColor: isPeriodDay
+                      ? COLORS.periodDay
+                      : COLORS.primary,
+                  }}>
                   {isSending ? (
-                    <ActivityIndicator color={COLORS.primary} size="small" />
+                    <ActivityIndicator
+                      color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+                      size="small"
+                    />
                   ) : (
-                    <Text bold color={COLORS.primary}>
+                    <Text
+                      bold
+                      color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
                       ثبت
                     </Text>
                   )}

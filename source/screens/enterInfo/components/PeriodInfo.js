@@ -25,7 +25,7 @@ const PeriodInfo = ({
   navigation,
   registerStage,
   goToNextStage,
-  displayName,
+  reEnter,
   firstDay,
 }) => {
   const dates = getDates(firstDay);
@@ -71,6 +71,7 @@ const PeriodInfo = ({
 
   useEffect(() => {
     if (sendInfo.data && sendInfo.data.is_successful) {
+      goToNextStage(0);
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -149,30 +150,38 @@ const PeriodInfo = ({
         </Picker>
       ) : null}
       <View style={styles.stepperContainer}>
-        <Pressable
-          hitSlop={7}
-          disabled={disableBtn ? true : false}
-          onPress={backAction}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 'auto',
-            marginLeft: rw(6),
-          }}>
-          <Image
-            source={require('../../../assets/icons/btns/disabled-back.png')}
-            style={{ width: 25, height: 25, marginTop: rh(0.5) }}
-          />
-          <Text color={COLORS.textLight}>قبلی</Text>
-        </Pressable>
+        {(reEnter && registerStage === 0) ||
+        (reEnter && registerStage === 1) ? (
+          <View style={{ width: rw(20) }} />
+        ) : (
+          <Pressable
+            hitSlop={7}
+            disabled={disableBtn ? true : false}
+            onPress={backAction}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 'auto',
+              marginLeft: rw(6),
+            }}>
+            <Image
+              source={require('../../../assets/icons/btns/disabled-back.png')}
+              style={{ width: 25, height: 25, marginTop: rh(0.5) }}
+            />
+            <Text color={COLORS.textLight}>قبلی</Text>
+          </Pressable>
+        )}
 
         <View style={{ flexDirection: 'row', marginRight: rw(1) }}>
-          <MaterialIcons
-            name="circle"
-            color={registerStage === 0 ? COLORS.primary : COLORS.icon}
-            size={14}
-            style={{ marginRight: rw(1.5) }}
-          />
+          {reEnter ? null : (
+            <MaterialIcons
+              name="circle"
+              color={registerStage === 0 ? COLORS.primary : COLORS.icon}
+              size={14}
+              style={{ marginRight: rw(1.5) }}
+            />
+          )}
+
           <MaterialIcons
             name="circle"
             color={registerStage === 1 ? COLORS.primary : COLORS.icon}

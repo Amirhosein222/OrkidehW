@@ -16,6 +16,7 @@ import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 const AllGapsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [showReportModal, setShowReportModal] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [allGaps, setAllGaps] = useApi(() => getAllGapsApi());
   const selectedMemId = useRef(null);
@@ -29,6 +30,13 @@ const AllGapsScreen = ({ navigation }) => {
   const handleReportModal = mId => {
     selectedMemId.current = mId;
     setShowReportModal(true);
+  };
+
+  const onRefresh = () => {
+    //set isRefreshing to true
+    setIsRefreshing(true);
+    setAllGaps();
+    // and set isRefreshing to false at the end of your callApiMethod()
   };
 
   const RenderMemory = function ({ item }) {
@@ -48,6 +56,10 @@ const AllGapsScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    if (allGaps.data && allGaps.data.is_successful && isRefreshing) {
+      setIsRefreshing(false);
+    }
+
     allGaps.data &&
       !allGaps.data.is_successful &&
       setSnackbar({
@@ -61,7 +73,7 @@ const AllGapsScreen = ({ navigation }) => {
       <BackgroundView>
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
@@ -77,6 +89,8 @@ const AllGapsScreen = ({ navigation }) => {
         {allGaps.data && allGaps.data.data.length ? (
           <FlatList
             data={allGaps.data.data}
+            onRefresh={onRefresh}
+            refreshing={isRefreshing}
             keyExtractor={item => String(item.id)}
             renderItem={RenderMemory}
             contentContainerStyle={{

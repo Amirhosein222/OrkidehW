@@ -61,14 +61,14 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
 
         <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Button
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => closeModal()}>
             <Text color="white">نه</Text>
           </Button>
           <Button
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => onLogOut()}>

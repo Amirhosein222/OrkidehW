@@ -17,7 +17,7 @@ export const addRelApi = async function (mobile, pic, name) {
   try {
     const loginClient = await getLoginClient();
     const formData = new FormData();
-    formData.append('mobile', mobile);
+    formData.append('man_mobile', mobile);
     pic &&
       formData.append('man_image', {
         uri: pic,
@@ -41,7 +41,7 @@ export const updateRelApi = async function (id, name, mobile, pic) {
     formData.append('relation_id', id);
     formData.append('gender', 'woman');
     formData.append('man_name', name);
-    formData.append('mobile', mobile);
+    formData.append('man_mobile', mobile);
     pic &&
       formData.append('man_image', {
         uri: pic,

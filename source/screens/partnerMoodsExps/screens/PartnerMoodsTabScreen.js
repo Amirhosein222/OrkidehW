@@ -7,8 +7,10 @@ import {
   View,
   StyleSheet,
   Image,
+  Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'jalali-moment';
 
 import {
@@ -29,11 +31,12 @@ import {
   saveActiveRel,
 } from '../../../libs/context/womanInfoContext';
 
-import deleteIcon from '../../../assets/vectors/register/delete.png';
+import nothingIcon from '../../../assets/icons/others/nothing.png';
 
 const PartnerMoodsTabScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [spouseMoods, setSpouseMoods] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [resetPicker, setResetPicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
@@ -59,6 +62,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
     loginClient
       .post('show/spouse/moods/and/expectation', formData)
       .then(response => {
+        setIsRefreshing(false);
         setIsLoading(false);
         if (response.data.is_successful) {
           setSpouseMoods(response.data.data.signs);
@@ -77,6 +81,13 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
     setSnackbar({
       visible: !snackbar.visible,
     });
+  };
+
+  const onRefresh = () => {
+    //set isRefreshing to true
+    setIsRefreshing(true);
+    getSpouseMoodsAndExps();
+    // and set isRefreshing to false at the end of your callApiMethod()
   };
 
   const setActiveSpouse = async function (value) {
@@ -161,6 +172,8 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
             {spouseMoods.length ? (
               <FlatList
                 data={spouseMoods}
+                onRefresh={onRefresh}
+                refreshing={isRefreshing}
                 keyExtractor={item => item.id}
                 renderItem={RenderItems}
                 numColumns={2}
@@ -170,7 +183,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
             ) : isLoading ? (
               <ActivityIndicator
                 size="large"
-                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
                 style={{
                   marginTop: 'auto',
                   marginBottom: 'auto',
@@ -180,15 +193,22 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
             ) : (
               <View style={styles.noMood}>
                 <Image
-                  source={deleteIcon}
+                  source={nothingIcon}
                   style={{
                     width: rw(52),
                   }}
                   resizeMode="contain"
                 />
-                <Text medium bold color={COLORS.textLight}>
+                <Text bold size={13} color={COLORS.textLight}>
                   پارتنر شما امروز چیزی رو ثبت نکرده!
                 </Text>
+                <Pressable onPress={getSpouseMoodsAndExps}>
+                  <Ionicons
+                    name="md-refresh"
+                    size={26}
+                    style={{ marginTop: rh(2) }}
+                  />
+                </Pressable>
               </View>
             )}
           </View>

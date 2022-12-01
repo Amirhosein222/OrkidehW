@@ -43,7 +43,7 @@ const CalendarInfo = ({}) => {
             <View
               style={{
                 borderWidth: 3,
-                borderColor: COLORS.fireEngineRed,
+                borderColor: COLORS.periodDay,
                 borderRadius: 30,
               }}>
               <MaterialCommunityIcons
@@ -102,8 +102,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: rh(2),
-    // backgroundColor: 'purple',
   },
   tipContainer: {
     flexDirection: 'row',
@@ -112,7 +110,6 @@ const styles = StyleSheet.create({
     width: rw(40),
     marginHorizontal: rw(1),
     alignSelf: 'center',
-    // height: rh(1),
   },
   allTipsContainer: {
     flexDirection: 'row',

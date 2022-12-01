@@ -178,7 +178,7 @@ const FullPostScreen = ({ navigation, route }) => {
         <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           />
         </View>
       </BackgroundView>
@@ -196,46 +196,39 @@ const FullPostScreen = ({ navigation, route }) => {
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={[SCROLL_VIEW_CONTAINER]}>
-          {
-            medias.length ? (
-              <View style={styles.mediaContainer}>
-                <Swiper width={WIDTH} height={rh(40)} showsButtons={true}>
-                  {medias.map(item => {
-                    return item.hasOwnProperty('image') ? (
-                      <Image
-                        source={{ uri: baseUrl + item.image }}
-                        style={{ width: rw(100), height: '100%' }}
+          {medias.length ? (
+            <View style={styles.mediaContainer}>
+              <Swiper width={WIDTH} height={rh(40)} showsButtons={true}>
+                {medias.map(item => {
+                  return item.hasOwnProperty('image') ? (
+                    <Image
+                      source={{ uri: baseUrl + item.image }}
+                      style={{ width: rw(100), height: '100%' }}
+                    />
+                  ) : (
+                    <Pressable
+                      style={styles.playVideo}
+                      onPress={() => onPlayVideo(item.video)}>
+                      <FontAwesome5
+                        name="play-circle"
+                        size={80}
+                        color="white"
+                        style={{ marginTop: rh(1) }}
                       />
-                    ) : (
-                      <Pressable
-                        style={styles.playVideo}
-                        onPress={() => onPlayVideo(item.video)}>
-                        <FontAwesome5
-                          name="play-circle"
-                          size={80}
-                          color="white"
-                          style={{ marginTop: rh(1) }}
-                        />
-                        <Text color="white" large>
-                          مشاهده ویدیو
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
-                </Swiper>
-              </View>
-            ) : null
-            // <Image
-            //   source={require('../../assets/images/01.png')}
-            //   style={{ width: 100, height: 180 }}
-            // />
-          }
-
+                      <Text color="white" large>
+                        مشاهده ویدیو
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </Swiper>
+            </View>
+          ) : null}
           {post ? (
             <>
               <View style={styles.textContainer}>
                 <Text
-                  color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                  color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
                   medium
                   alignSelf="flex-end"
                   marginTop="20">
@@ -246,14 +239,6 @@ const FullPostScreen = ({ navigation, route }) => {
                   source={{ html: post[0].text }}
                   tagsStyles={tagsStyles}
                 />
-
-                {/* <Text
-                  color={COLORS.dark}
-                  medium
-                  textAlign="right"
-                  alignSelf="center">
-                  {numberConverter(post[0].text.replace(/(<([^>]+)>)/gi, ''))}
-                </Text> */}
               </View>
 
               <View style={styles.commentSection}>
@@ -342,7 +327,7 @@ const FullPostScreen = ({ navigation, route }) => {
                 marginRight="5"
                 alignSelf="flex-start"
                 medium
-                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
                 ثبت
               </Text>
             </Pressable>

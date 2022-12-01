@@ -128,7 +128,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
@@ -157,7 +157,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
           <Octicons
             name="checklist"
             size={70}
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           />
         )}
 
@@ -172,7 +172,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         <Button
           title="مشاهده نتیجه"
           Icon={() => <EnabledCheck style={ICON_SIZE} />}
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={() => sendTestAnswers()}
           loading={submitAnswers.isFetching}
           disabled={submitAnswers.isFetching}

@@ -12,44 +12,23 @@ import { numberConverter } from '../../../../libs/helpers';
 const hobab = '../../../../assets/animations/hobab_khanom.json';
 
 const Pregnancy = ({ pregnancy, isFetching }) => {
-  const isPeriodDay = useIsPeriodDay();
-
   return (
     <View style={styles.pregnancyContainer}>
-      {/* <View style={{ width: rw(100), height: rh(20) }}> */}
-
-      {/* </View> */}
-
-      {/* <Image
-        source={
-          isPeriodDay
-            ? require('../../../../assets/images/600.png')
-            : require('../../../../assets/images/500.png')
-        }
-        style={{
-          width: rw(82),
-          height: rh(43),
-          marginTop: rh(4),
-        }}
-        resizeMode="contain"
-      /> */}
-
       <LottieView
         source={require(hobab)}
         autoPlay
         loop
         style={{
-          width: 360,
-          height: 360,
-          marginTop: rh(2),
+          width: 300,
+          height: 300,
         }}
       />
       {!isFetching ? (
         <View style={styles.pregnancyPercentText}>
-          <Text size={38} bold color={COLORS.white}>
+          <Text size={32} bold color={COLORS.white}>
             {pregnancy && numberConverter(pregnancy)}
           </Text>
-          <Text size={20} bold color={COLORS.white}>
+          <Text size={16} bold color={COLORS.white}>
             احتمال بارداری
           </Text>
         </View>
@@ -64,17 +43,16 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
 
 const styles = StyleSheet.create({
   pregnancyContainer: {
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor: 'yellow',
     marginTop: rh(2),
   },
   pregnancyPercentText: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: rh(6),
     marginRight: rw(2),
-    // top: rh(19),
   },
 });
 

@@ -9,10 +9,10 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment-jalaali';
 
 import { Pregnancy } from '../components';
+import Slider from '../components/slider';
 import CalendarModal from '../../calendar/components/calendarModal';
 
 import {
@@ -28,7 +28,6 @@ import {
 } from '../../../libs/apiCalls';
 import { useIsPeriodDay, useApi } from '../../../libs/hooks';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
-import { getFromAsyncStorage } from '../../../libs/helpers';
 
 import {
   BackgroundView,
@@ -39,6 +38,7 @@ import {
 } from '../../../components/common';
 
 import { COLORS, STATUS_BAR_HEIGHT, rw, rh } from '../../../configs';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const HomeScreen = ({ navigation, route }) => {
   const params = route.params || {};
@@ -56,12 +56,7 @@ const HomeScreen = ({ navigation, route }) => {
   } = useContext(WomanInfoContext);
 
   const storePDate = useRef(null);
-
-  const [adsSettings, setAdsSetting] = useState(
-    settings ? settings.app_text_need_support : null,
-  );
   const [pregnancy, setPregnancy] = useState(null);
-  const [periodStart, setPeriodStart] = useState(null);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [showLove, setShowLove] = useState(false);
@@ -109,19 +104,6 @@ const HomeScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    getFromAsyncStorage('periodStart').then(res => {
-      if (res) {
-        const convertedDate = moment(res, 'jYYYY/jM/jD')
-          .locale('en')
-          .format('YYYY-MM-DD');
-        setPeriodStart(new Date(convertedDate));
-      } else {
-        setPeriodStart('notSelected');
-      }
-    });
-  }, []);
-
-  useEffect(() => {
     onGetPregnancyPercent();
   }, []);
 
@@ -139,14 +121,11 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (setts.data && setts.data.is_successful) {
-      const result = setts.data.data.find(
-        e => e.key === 'app_text_need_support',
-      );
-      result && setAdsSetting(result);
       const settingsObj = setts.data.data.reduce(
         (acc, cur) => ({ ...acc, [cur.key]: cur }),
         {},
       );
+      console.log('settingsObj ', settingsObj);
       saveSettings(settingsObj);
       saveAllSettings(setts.data.data);
     }
@@ -196,7 +175,6 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (storePeriodAuto.data && storePeriodAuto.data.is_successful) {
-      AsyncStorage.setItem('periodStart', storePDate.current);
       onGetCalendar();
       setSnackbar({
         msg: 'تاریخ شروع دوره پریود شما با موفقیت ثبت شد',
@@ -227,61 +205,65 @@ const HomeScreen = ({ navigation, route }) => {
       />
       <Header
         navigation={navigation}
-        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+        style={{ marginTop: STATUS_BAR_HEIGHT }}
         setShowLovePopup={setShowLove}
         setSnackbar={setSnackbar}
-        ads={adsSettings && adsSettings.value}
       />
 
-      <View style={{ alignItems: 'center', marginTop: rh(2) }}>
-        {/* <View
+      <ScrollView
+        style={{ alignSelf: 'center' }}
+        contentContainerStyle={{
+          width: rw(100),
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          paddingBottom: rh(1),
+        }}>
+        <View
           style={{
-            paddingHorizontal: rw(6),
+            height: rh(28),
+            alignItems: 'center',
+            paddingTop: 5,
           }}>
-          <Text
-            marginBottom={rh(1.5)}
-            textAlign="right"
-            medium
-            color={COLORS.textLight}>
-            {adsSettings && adsSettings.value}
-          </Text>
-        </View> */}
-        <HDatePicker
-          periodStart={periodStart}
-          onDateSelected={onStorePeriodAuto}
-          isFetching={storePeriodAuto.isFetching}
-        />
-      </View>
+          <HDatePicker onDateSelect={() => setShowCalendarModal(true)} />
+          <Slider />
+        </View>
 
-      <Pregnancy
-        pregnancy={pregnancy}
-        isFetching={getPregnancy.isFetching ? true : false}
-      />
-      <Pressable
-        onPress={() => onStorePeriodAuto('today')}
-        style={{ marginTop: 'auto', marginBottom: rh(4) }}
-        disabled={storePeriodAuto.isFetching}>
-        {storePeriodAuto.isFetching ? (
-          <ActivityIndicator
-            size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-            style={{ marginBottom: rh(2) }}
+        <View
+          style={{
+            alignItems: 'center',
+            marginTop: rh(2),
+          }}>
+          <Pregnancy
+            pregnancy={pregnancy}
+            isFetching={getPregnancy.isFetching ? true : false}
           />
-        ) : (
-          <Image
-            source={
-              isPeriodDay
-                ? require('../../../assets/icons/home/period.png')
-                : require('../../../assets/icons/home/not-period.png')
-            }
-            style={{
-              width: rw(28),
-              height: rh(14),
-            }}
-            resizeMode="contain"
-          />
-        )}
-      </Pressable>
+          <Pressable
+            onPress={() => onStorePeriodAuto('today')}
+            style={{ marginTop: rh(2) }}
+            disabled={storePeriodAuto.isFetching}>
+            {storePeriodAuto.isFetching ? (
+              <ActivityIndicator
+                size="large"
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+                style={{ marginTop: rh(2) }}
+              />
+            ) : (
+              <Image
+                source={
+                  isPeriodDay
+                    ? require('../../../assets/icons/home/period.png')
+                    : require('../../../assets/icons/home/not-period.png')
+                }
+                style={{
+                  width: rw(28),
+                  height: rh(11),
+                }}
+                resizeMode="contain"
+              />
+            )}
+          </Pressable>
+        </View>
+      </ScrollView>
 
       {showCalendarModal && (
         <CalendarModal

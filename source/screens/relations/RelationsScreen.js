@@ -107,7 +107,7 @@ const RelationsScreen = ({ navigation }) => {
         <ScreenHeader title="روابط من" />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
@@ -136,7 +136,7 @@ const RelationsScreen = ({ navigation }) => {
 
       <Divider
         color={COLORS.textDark}
-        width={rw(76)}
+        width={rw(81)}
         style={{
           borderBottomWidth: 0.5,
           marginTop: rh(0),
@@ -204,7 +204,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: rw(1),
     width: rw(82),
     marginTop: rh(1),
     marginBottom: rh(4),

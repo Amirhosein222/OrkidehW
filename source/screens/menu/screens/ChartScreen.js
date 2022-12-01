@@ -76,7 +76,7 @@ const ChartScreen = ({ navigation }) => {
         <ScreenHeader title="نمودار وضعیت من" />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
@@ -103,7 +103,7 @@ const ChartScreen = ({ navigation }) => {
                 </ChartCard>
 
                 <Divider
-                  color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textDark}
+                  color={isPeriodDay ? COLORS.periodDay : COLORS.textDark}
                   width={rw(82)}
                   style={{
                     marginTop: 5,

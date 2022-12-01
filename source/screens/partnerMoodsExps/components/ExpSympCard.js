@@ -37,7 +37,7 @@ const ExpSympCard = ({ item, type, onReadMore }) => {
               <Text
                 style={[
                   {
-                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+                    color: isPeriodDay ? COLORS.periodDay : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>
@@ -46,7 +46,7 @@ const ExpSympCard = ({ item, type, onReadMore }) => {
               <Text
                 style={[
                   {
-                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+                    color: isPeriodDay ? COLORS.periodDay : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>

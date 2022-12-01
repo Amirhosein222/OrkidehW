@@ -12,12 +12,12 @@ const Switch = ({ active, changeStatus }) => {
 
   return (
     <View style={styles.switchContainer}>
-      <Text small color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+      <Text small color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
         فعال
       </Text>
       <Toggle
         value={active}
-        onPress={(newState) => changeStatus(newState)}
+        onPress={newState => changeStatus(newState)}
         containerStyle={{ alignSelf: 'center' }}
         trackBarStyle={{
           borderColor: 'green',
@@ -33,7 +33,7 @@ const Switch = ({ active, changeStatus }) => {
         thumbButton={{
           activeBackgroundColor: COLORS.grey,
           inActiveBackgroundColor: isPeriodDay
-            ? COLORS.fireEngineRed
+            ? COLORS.periodDay
             : COLORS.primary,
           width: 35,
           height: 35,

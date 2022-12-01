@@ -55,7 +55,7 @@ const EnterInfoScreen = ({ navigation, route }) => {
           <Image
             source={handleInfoLevelsImage(registerStage, settings)}
             style={styles.image}
-            resizeMode="stretch"
+            resizeMode="cover"
           />
 
           {registerStage === 0 && (
@@ -75,6 +75,7 @@ const EnterInfoScreen = ({ navigation, route }) => {
               navigation={navigation}
               displayName={params.reEnter ? params.name : informations.name}
               firstDay={params.firstDay}
+              reEnter={params.reEnter}
             />
           ) : null}
 
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginTop: rh(6),
-    borderRadius: 5,
+    borderRadius: 8,
   },
   content: {
     flex: 1,

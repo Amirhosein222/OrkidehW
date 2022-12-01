@@ -24,13 +24,13 @@ const VerticalBar = ({
           ,
           {
             height: Number(data) * 2,
-            backgroundColor: isPeriodDay ? COLORS.fireEngineRed : color,
+            backgroundColor: isPeriodDay ? COLORS.periodDay : color,
             margin: text === false ? 0 : 10,
           },
         ]}
       />
       {text ? (
-        <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary} small>
+        <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary} small>
           {label}
         </Text>
       ) : null}

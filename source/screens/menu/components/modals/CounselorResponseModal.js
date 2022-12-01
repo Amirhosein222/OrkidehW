@@ -7,7 +7,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { Button, Text } from '../../../../components/common';
 
 import { useIsPeriodDay } from '../../../../libs/hooks';
-import { baseUrl, COLORS, rh, rw } from '../../../../configs';
+import { COLORS, rh, rw } from '../../../../configs';
+
+import DoneImage from '../../../../assets/icons/others/done.png';
 
 const CounselorResponseModal = ({ visible, closeModal }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -38,15 +40,15 @@ const CounselorResponseModal = ({ visible, closeModal }) => {
           />
         </View>
         <View style={styles.imageContainer}>
-          <AntDesign
-            name="checkcircle"
-            size={70}
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          <Image
+            source={DoneImage}
+            style={{ width: 180, height: 180 }}
+            resizeMode="contain"
           />
         </View>
 
         <Text
-          size={16}
+          size={14}
           color={COLORS.expSympTitle}
           bold
           large
@@ -56,7 +58,8 @@ const CounselorResponseModal = ({ visible, closeModal }) => {
         <Text
           color={COLORS.textLight}
           bold
-          marginTop={rh(2)}
+          marginTop={rh(1)}
+          marginBottom={rh(1)}
           textAlign="right"
           alignSelf="center">
           پیام شما با موفقیت برای ما ارسال شد پس از بازبینی توسط کارشناسان ما،
@@ -64,7 +67,7 @@ const CounselorResponseModal = ({ visible, closeModal }) => {
         </Text>
         <Button
           title="بستن"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={() => closeModal()}
           style={{
             width: rw(60),
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
     paddingVertical: rh(2),
     elevation: 5,
     alignItems: 'center',
-    height: rh(45),
+    // height: rh(45),
   },
   checkBox: {
     flexDirection: 'row',

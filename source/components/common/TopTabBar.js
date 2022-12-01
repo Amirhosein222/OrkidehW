@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, StatusBar } from 'react-native';
 
 import {
@@ -12,21 +12,16 @@ import {
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
-import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const TopTabBar = ({ state, descriptors, navigation }) => {
-  const { settings } = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
-  const { routes, index } = state;
+  const { routes } = state;
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [showLove, setShowLove] = useState(false);
-  const [adsSettings, setAdsSetting] = useState(
-    settings ? settings.app_text_need_support : null,
-  );
 
   const handleTabColors = focused => {
     if (isPeriodDay) {
-      return focused ? COLORS.fireEngineRed : COLORS.textLight;
+      return focused ? COLORS.periodDay : COLORS.textLight;
     } else {
       return focused ? COLORS.primary : COLORS.textLight;
     }
@@ -49,10 +44,9 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
       />
       <Header
         navigation={navigation}
-        style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+        style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT }}
         setShowLovePopup={setShowLove}
         setSnackbar={setSnackbar}
-        ads={adsSettings && adsSettings.value}
       />
       <View style={styles.container}>
         {routes.map((route, index) => {

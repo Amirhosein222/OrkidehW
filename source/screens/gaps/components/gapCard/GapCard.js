@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Pressable, TextInput, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  TextInput,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Comment from '../comment';
@@ -12,7 +19,6 @@ import { useApi } from '../../../../libs/hooks';
 
 import calcDiffDays from '../../helpers/calcDiffDays';
 import { ICON_SIZE } from '../../../../configs/styles';
-import { ActivityIndicator } from 'react-native-paper';
 import { likeGapApi, getCommentsApi } from '../../apis';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
 

@@ -35,7 +35,7 @@ const Button = ({
         ...style,
       }}>
       {loading ? (
-        <ActivityIndicator size="large" color={COLORS.textLight} />
+        <ActivityIndicator size="small" color={COLORS.textLight} />
       ) : (
         <View style={styles.content}>
           <Text size={10.5} bold color={disabled ? COLORS.textLight : color}>

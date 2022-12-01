@@ -99,7 +99,7 @@ const SelectBirthDayModal = ({
             alignItems: 'center',
             backgroundColor:
               atProfile.profile && atProfile.isPeriodDay
-                ? COLORS.fireEngineRed
+                ? COLORS.periodDay
                 : COLORS.primary,
             marginTop: '1.5%',
             marginBottom: 5,
@@ -119,7 +119,7 @@ const SelectBirthDayModal = ({
             alignItems: 'center',
             backgroundColor:
               atProfile.profile && atProfile.isPeriodDay
-                ? COLORS.fireEngineRed
+                ? COLORS.periodDay
                 : COLORS.primary,
             marginBottom: '3%',
             borderRadius: 10,
@@ -158,7 +158,7 @@ const SelectBirthDayModal = ({
           }}
           selectedDayColor={
             atProfile.profile && atProfile.isPeriodDay
-              ? COLORS.fireEngineRed
+              ? COLORS.periodDay
               : COLORS.primary
           }
           dayTextStyle={{
@@ -169,7 +169,7 @@ const SelectBirthDayModal = ({
           selectedDayTextColor="white"
           dayTextColor={COLORS.textLight}
           disabledTextColor="#4bcffa66"
-          onDateChange={(date) => {
+          onDateChange={date => {
             birthday.current = date;
           }}
         />
@@ -182,7 +182,7 @@ const SelectBirthDayModal = ({
           ]}
           color={
             atProfile.profile && atProfile.isPeriodDay
-              ? COLORS.fireEngineRed
+              ? COLORS.periodDay
               : COLORS.primary
           }
           onPress={onSelectDate}

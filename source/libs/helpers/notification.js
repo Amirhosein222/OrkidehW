@@ -29,10 +29,11 @@ function onPusherInitError(statusCode, response) {
 }
 
 function onPusherInitSuccess(response) {
-  // console.log('PUSHER SUCCESS: ', response);
+  console.log('PUSHER SUCCESS: ', response);
 }
 
 async function setUser(userId, token, onError, onSuccess) {
+  console.log('user id ', userId);
   // Note that only Android devices will respond to success/error callbacks
   RNPusherPushNotifications.setUserId(
     userId.toString(),

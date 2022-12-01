@@ -53,7 +53,7 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
           <Octicons
             name="checklist"
             size={70}
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           />
         )}
 
@@ -70,7 +70,7 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
         </View>
 
         <View style={styles.scoreContainer}>
-          <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+          <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
             {testInfo.score}{' '}
           </Text>
           <Text color={COLORS.textLight} marginRight={rw(2)}>
@@ -93,9 +93,7 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
               position: 'absolute',
               width: testInfo.score * 2,
               height: 8,
-              backgroundColor: isPeriodDay
-                ? COLORS.fireEngineRed
-                : COLORS.primary,
+              backgroundColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
               borderRadius: 20,
               marginBottom: 5,
             }}

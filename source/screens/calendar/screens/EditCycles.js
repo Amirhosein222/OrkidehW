@@ -32,7 +32,6 @@ const EditCyclesScreen = () => {
   const navigation = useNavigation();
   const { userCalendar, handleUserCalendar, handleUserPeriodDays } =
     useContext(WomanInfoContext);
-  const [currentMarkedDates, setCurrentMarkedDates] = useState([]);
   const currentMarkedDatesRef = useRef([]);
   const [newMarkedDates, setNewMarkedDates] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -63,7 +62,7 @@ const EditCyclesScreen = () => {
     radioButtonsArray.map(radio => {
       if (radio.selected) {
         handleSelectedOption(radio.value);
-        radio.color = isPeriodDay ? COLORS.fireEngineRed : COLORS.primary;
+        radio.color = isPeriodDay ? COLORS.periodDay : COLORS.primary;
       } else {
         radio.color = COLORS.textLight;
       }
@@ -78,8 +77,8 @@ const EditCyclesScreen = () => {
         const periodDays = response.data.data.filter(d => d.type === 'period');
         handleUserPeriodDays(periodDays);
         handleUserCalendar(response.data.data);
-        currentMarkedDatesRef.current = [...response.data.data];
         handleCurrentMarkedDates([...response.data.data]);
+        handleSelectedOption(selectedOption);
       } else {
         setSnackbar({
           msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
@@ -111,32 +110,11 @@ const EditCyclesScreen = () => {
     womanClient
       .post('update/calendar', sortedDates)
       .then(async response => {
-        setSelectedOption(null);
         setIsUpdating(false);
-        setCurrentMarkedDates([]);
         setNewMarkedDates([]);
         setNewDatesForApi([]);
-        setRadioButtons([
-          {
-            id: '1', // acts as primary key, should be unique and non-empty string
-            label: 'علامت زدن به عنوان روز دوره پریود',
-            value: 'period',
-            selected: false,
-            color: COLORS.textLight,
-            size: 16,
-          },
-          {
-            id: '2',
-            label: 'علامت زدن به عنوان رابطه زناشویی  ',
-            value: 'sex',
-            selected: false,
-            color: COLORS.textLight,
-            size: 16,
-          },
-        ]);
         if (response.data.is_successful) {
           if (response.data.data[1].getPeriodInfo === true) {
-            await AsyncStorage.removeItem('periodStart');
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
@@ -215,7 +193,7 @@ const EditCyclesScreen = () => {
       .format('YYYY-MM-DD');
 
     //get last date from user calendar
-    const currentDates = Object.entries(currentMarkedDates);
+    const currentDates = Object.entries(currentMarkedDatesRef.current);
     const periodDates = [];
     currentDates.map(date => {
       if (date[1].type === 'period') {
@@ -285,7 +263,8 @@ const EditCyclesScreen = () => {
         type: item.type,
       };
     });
-    setCurrentMarkedDates(currentDates);
+    currentMarkedDatesRef.current = currentDates;
+    // setCurrentMarkedDates(currentDates);
   };
 
   const handleNewMarkedDates = async function (date) {
@@ -338,7 +317,7 @@ const EditCyclesScreen = () => {
 
   const handleSelectedOption = function (selectedOpt) {
     setSelectedOption(selectedOpt);
-    const currentDateskeys = Object.entries(currentMarkedDates);
+    const currentDateskeys = Object.entries(currentMarkedDatesRef.current);
     if (selectedOpt === 'period') {
       let markedDates = currentDateskeys;
       currentDateskeys.map(date => {
@@ -509,8 +488,14 @@ const EditCyclesScreen = () => {
   useEffect(() => {
     if (userCalendar) {
       handleCurrentMarkedDates([...userCalendar]);
-      currentMarkedDatesRef.current = [...userCalendar];
     }
+
+    return () => {
+      setSelectedOption();
+      setIsUpdating();
+      setNewMarkedDates();
+      setNewDatesForApi();
+    };
   }, []);
 
   return (
@@ -521,7 +506,7 @@ const EditCyclesScreen = () => {
         style={{
           marginTop: rh(8),
           width: '100%',
-          height: rh(60),
+          height: rh(62),
         }}>
         <CalendarList
           jalali
@@ -553,7 +538,7 @@ const EditCyclesScreen = () => {
       </View>
 
       <Button
-        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+        color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
         title="ذخیره"
         mode="contained"
         style={{

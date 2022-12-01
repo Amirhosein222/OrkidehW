@@ -48,7 +48,7 @@ const RelItem = ({
         <Pressable
           disabled={rel.applicant === 'woman' || isVerifying || rel.is_verified}
           onPress={() => handleVerifyRel(rel.verifyCode)}
-          style={styles.verifyRel}>
+          style={{ ...styles.verifyRel, width: isVerifying ? rw(18) : null }}>
           {isVerifying ? (
             <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
           ) : (
@@ -142,16 +142,14 @@ const styles = StyleSheet.create({
   },
   editDeleteContainer: {
     flexDirection: 'row',
-    marginLeft: rw(0.5),
     marginTop: rh(4),
   },
   verifyRel: {
     alignSelf: 'flex-end',
-    width: rw(18),
     borderColor: COLORS.borderLinkBtn,
     borderWidth: 1,
     borderRadius: 4,
-    height: rh(3),
+    padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: rh(1.5),

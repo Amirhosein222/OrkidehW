@@ -10,9 +10,8 @@ import { COLORS, rh, rw } from '../../configs';
 import MenuIcon from '../../assets/icons/home/menu.svg';
 import { useApi } from '../../libs/hooks';
 import { sendLoveNotifApi } from '../../libs/apiCalls';
-import Text from './Text';
 
-const Header = ({ navigation, style, setShowLovePopup, setSnackbar, ads }) => {
+const Header = ({ navigation, style, setShowLovePopup, setSnackbar }) => {
   const { activeRel, isPeriodDay } = useContext(WomanInfoContext);
   const [sendLove, setSendLove] = useApi(() =>
     sendLoveNotifApi(activeRel.relId),
@@ -49,7 +48,7 @@ const Header = ({ navigation, style, setShowLovePopup, setSnackbar, ads }) => {
           alignItems: 'center',
           alignSelf: 'center',
           width: rw(100),
-          paddingHorizontal: rw(4),
+          paddingHorizontal: rw(3),
         }}>
         <View style={{ flexDirection: 'row', marginLeft: rw(4) }}>
           <Pressable
@@ -58,7 +57,7 @@ const Header = ({ navigation, style, setShowLovePopup, setSnackbar, ads }) => {
               ...styles.sendLoveContainer,
               backgroundColor:
                 activeRel && isPeriodDay
-                  ? COLORS.fireEngineRed
+                  ? COLORS.periodDay
                   : activeRel && !isPeriodDay
                   ? COLORS.primary
                   : '',
@@ -68,7 +67,7 @@ const Header = ({ navigation, style, setShowLovePopup, setSnackbar, ads }) => {
             ) : (
               <MaterialCommunityIcons
                 name="heart-outline"
-                size={27}
+                size={25}
                 color={activeRel ? COLORS.white : COLORS.icon}
               />
             )}
@@ -79,9 +78,6 @@ const Header = ({ navigation, style, setShowLovePopup, setSnackbar, ads }) => {
           <MenuIcon style={{ width: 25, height: 25, marginRight: rw(4) }} />
         </Pressable>
       </View>
-      <Text size={12} bold color="rgba(190,160,190, 0.6)">
-        {ads}
-      </Text>
     </View>
   );
 };
@@ -90,8 +86,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     width: '100%',
-    height: rh(10),
-    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    height: rh(8),
+    // backgroundColor: 'purple',
   },
   leftSide: {
     flexDirection: 'row',
@@ -106,9 +103,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 45,
-    height: 45,
-    borderRadius: 45 / 2,
+    width: 40,
+    height: 40,
+    borderRadius: 40 / 2,
   },
 });
 

@@ -50,7 +50,7 @@ loginClient.interceptors.response.use(
         }
       } catch (error) {
         // Error retrieving data
-        console.log(error, 'logged in client error');
+        // console.log(error, 'logged in client error');
       }
     }
     return response;

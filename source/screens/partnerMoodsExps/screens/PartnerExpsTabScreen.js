@@ -8,9 +8,11 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
+  Pressable,
 } from 'react-native';
 import moment from 'jalali-moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import getLoginClient from '../../../libs/api/loginClientApi';
 import {
@@ -29,13 +31,15 @@ import {
 
 import { COLORS, rh, rw } from '../../../configs';
 
-import deleteIcon from '../../../assets/vectors/register/delete.png';
+import nothingIcon from '../../../assets/icons/others/nothing.png';
+
 import { ExpSympCard, ExpSympInfoModal } from '../components';
 import { useIsPeriodDay } from '../../../libs/hooks';
 
 const PartnerExpsTabScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [expectations, setExpectation] = useState([]);
   const [resetPicker, setResetPicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +65,7 @@ const PartnerExpsTabScreen = ({ navigation }) => {
     loginClient
       .post('show/spouse/moods/and/expectation', formData)
       .then(response => {
+        setIsRefreshing(false);
         setIsLoading(false);
         if (response.data.is_successful) {
           setExpectation(response.data.data.expects);
@@ -73,6 +78,13 @@ const PartnerExpsTabScreen = ({ navigation }) => {
           });
         }
       });
+  };
+
+  const onRefresh = () => {
+    //set isRefreshing to true
+    setIsRefreshing(true);
+    getSpouseMoodsAndExps();
+    // and set isRefreshing to false at the end of your callApiMethod()
   };
 
   const handleVisible = () => {
@@ -161,6 +173,8 @@ const PartnerExpsTabScreen = ({ navigation }) => {
             {expectations.length ? (
               <FlatList
                 data={expectations}
+                onRefresh={onRefresh}
+                refreshing={isRefreshing}
                 keyExtractor={item => String(item.id)}
                 numColumns={2}
                 renderItem={RenderExpectations}
@@ -169,21 +183,28 @@ const PartnerExpsTabScreen = ({ navigation }) => {
               <View>
                 <ActivityIndicator
                   size="large"
-                  color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                  color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
                 />
               </View>
             ) : (
               <View style={styles.noMood}>
                 <Image
-                  source={deleteIcon}
+                  source={nothingIcon}
                   style={{
                     width: rw(52),
                   }}
                   resizeMode="contain"
                 />
-                <Text medium bold color={COLORS.textLight}>
+                <Text bold size={13} color={COLORS.textLight}>
                   پارتنر شما امروز چیزی رو ثبت نکرده!
                 </Text>
+                <Pressable onPress={getSpouseMoodsAndExps}>
+                  <Ionicons
+                    name="md-refresh"
+                    size={26}
+                    style={{ marginTop: rh(2) }}
+                  />
+                </Pressable>
               </View>
             )}
           </View>

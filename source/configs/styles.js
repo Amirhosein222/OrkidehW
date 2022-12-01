@@ -1,5 +1,4 @@
 import Snackbar from 'react-native-snackbar';
-import { rh, rw } from './dimensions';
 
 export const PALETTE = {
   white: '#FDFCFC',
@@ -14,7 +13,7 @@ export const PALETTE = {
   darkPurple: '#331B2D',
   nickle: '#687777',
   roseRed: '#C03762',
-  fireEngineRed: '#D22328',
+  indianRed: '#E15155',
   greenPantone: '#4AB755',
   vividSkyBlue: '#48c7ef',
 };
@@ -36,7 +35,7 @@ const COLORS = {
   darkYellow: '#FFCC00',
   red: '#FE024E',
   red1: '#FFC2D4',
-  fireEngineRed: PALETTE.fireEngineRed,
+  periodDay: PALETTE.indianRed,
   lightRed: '#fca09f',
   darkRed: '#D40707',
   orange: '#F9741B',

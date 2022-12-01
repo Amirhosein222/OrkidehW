@@ -50,7 +50,7 @@ const CommentModal = ({
       formData.append('parent_id', parent_id);
       formData.append('gender', 'woman');
       const loginClient = await getLoginClient();
-      loginClient.post('comment/store', formData).then((response) => {
+      loginClient.post('comment/store', formData).then(response => {
         setBtnPressed(false);
         if (response.data.is_successful) {
           showSnackbar('نظر شما با موفقیت ثبت شد.', 'success');
@@ -109,7 +109,7 @@ const CommentModal = ({
           style={styles.btn}
           loading={btnPressed ? true : false}
           onPress={() => sendComment()}>
-          <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+          <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
             ارسال نظر
           </Text>
         </Button>

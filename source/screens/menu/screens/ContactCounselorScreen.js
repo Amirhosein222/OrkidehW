@@ -178,7 +178,7 @@ const ContactCounselorScreen = ({ navigation }) => {
                 }}
               />
             )}
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             loading={isSending ? true : false}
             disabled={isSending ? true : false}
             onPress={() => sendMessageToCounselor()}

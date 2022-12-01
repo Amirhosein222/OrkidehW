@@ -275,7 +275,7 @@ const DrawerUi = ({ navigation }) => {
           <Instruction style={{ width: 25, height: 25 }} />
         </Pressable>
         <Divider
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.textLight}
           width="100%"
           style={{ marginVertical: rh(1.5) }}
           borderWidth={1.5}
