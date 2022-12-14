@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { Text } from '../../../../components/common';
 import { COLORS, rh, rw } from '../../../../configs';
 
@@ -8,10 +9,10 @@ import { ICON_SIZE } from '../../../../configs/styles';
 
 const ProfileOption = ({ name = 'default', title, Icon, onPress, data }) => {
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => onPress(title)} hitslop={7}>
+    <Pressable onPress={() => onPress(title)} style={styles.container}>
+      <View hitslop={7}>
         <GoToEditPage style={ICON_SIZE} />
-      </Pressable>
+      </View>
 
       <View style={{ flexDirection: 'row' }}>
         <Text color={COLORS.textDark} marginRight={rw(1)}>
@@ -23,7 +24,7 @@ const ProfileOption = ({ name = 'default', title, Icon, onPress, data }) => {
 
         {Icon()}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

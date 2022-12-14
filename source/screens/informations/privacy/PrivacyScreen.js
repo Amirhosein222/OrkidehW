@@ -156,7 +156,7 @@ const PrivacyScreen = ({ navigation }) => {
           borderWidth={0.6}
         />
         <PrivacyOption
-          title="فعال سازی رمز عبور برای ورود به ارکیده"
+          title="فعال سازی رمز عبور برای ورود به کلوچه"
           handleModal={() => setShowModal(true)}
           type="password"
           modalType={setModalType}
@@ -177,7 +177,7 @@ const PrivacyScreen = ({ navigation }) => {
           borderWidth={0.6}
         />
         <PrivacyOption
-          title="فعال سازی  اثر انگشت برای ورود به ارکیده"
+          title="فعال سازی  اثر انگشت برای ورود به کلوچه"
           handleModal={showAuthenticationDialog}
           type="finger"
           modalType={setModalType}

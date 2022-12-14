@@ -3,12 +3,11 @@ import React, { useRef, useEffect } from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-import { Text } from '../../../components/common';
-import { COLORS, rh, rw } from '../../../configs';
+import { rh, rw } from '../../../configs';
 
-const heart = '../../../assets/animations/362-like.json';
+const love = '../../../assets/animations/100025-email-send-love-letter.json';
 
-const ShowLovePopup = ({ handleVisible, delay = 3000 }) => {
+const ShowLovePopup = ({ handleVisible, delay = 1000 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   const styles = StyleSheet.create({
@@ -54,28 +53,24 @@ const ShowLovePopup = ({ handleVisible, delay = 3000 }) => {
             },
           ],
           borderRadius: 12,
-          elevation: 3,
+          // elevation: 3,
           width: rw(50),
           height: rh(21),
           alignItems: 'center',
-          backgroundColor: COLORS.inputTabBarBg,
+          backgroundColor: 'transparent',
           padding: rw(2),
           alignSelf: 'center',
         }}>
         <LottieView
-          source={require(heart)}
+          source={require(love)}
           autoPlay
-          loop
-          width={rw(20)}
-          height={rh(16)}
           style={{
+            width: 400,
+            height: 400,
             alignSelf: 'center',
             position: 'relative',
           }}
         />
-        <Text size={10.5} bold color={COLORS.textLight}>
-          علاقه مندی به پارتنر ارسال شد
-        </Text>
       </Animated.View>
     </View>
   );

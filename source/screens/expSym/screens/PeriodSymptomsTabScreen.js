@@ -55,12 +55,6 @@ const PeriodSymptomsTabScreen = () => {
     setShowInfoModal(true);
   };
 
-  const onDateSelected = async function (jDate) {
-    const dDate = moment.from(jDate, 'fa', 'YYYY/MM/DD').format('YYYY-MM-DD');
-    var dateObj = new Date(dDate + 'T00:00:00');
-    setSignDate({ jDate: jDate, dDate: dateObj });
-  };
-
   const RenderItems = ({ item }) => {
     const alreadySelected =
       (mySymptoms.length &&
@@ -72,6 +66,8 @@ const PeriodSymptomsTabScreen = () => {
         onPress={onSymptomSelect}
         onReadMore={openInfoModal}
         alreadySelected={alreadySelected}
+        setSnackbar={setSnackbar}
+        updateData={setMySigns}
       />
     );
   };
@@ -126,14 +122,7 @@ const PeriodSymptomsTabScreen = () => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        {/* <HDatePicker
-          style={{ marginTop: rh(2) }}
-          periodStart={null}
-          onDateSelected={onDateSelected}
-          isFetching={null}
-          isPeriodDay={isPeriodDay}
-          defaultSelected={signDate.dDate}
-        /> */}
+
         <FlatList
           data={symptoms}
           keyExtractor={item => item.id}

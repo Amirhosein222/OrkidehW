@@ -9,7 +9,6 @@ import HomeScreen from './home';
 import {
   ChartScreen,
   ContactCounselorScreen,
-  LearningBankScreen,
   SymptomsScreen,
   LoveNotificationScreen,
 } from './menu';
@@ -30,9 +29,6 @@ import {
 import { EnterInfoScreen } from './enterInfo';
 import PMSInfoScreen from './informations/PMSInfoScreen';
 
-import PostsScreen from './posts/PostsScreen';
-import FullPostScreen from './posts/FullPostScreen';
-
 import { WelcomeScreen, AboutUsScreen, AppGuideScreen } from './about';
 
 import SettingsScreen from './settings';
@@ -45,6 +41,8 @@ import EditMobileScreen from './informations/editMobile';
 
 import { EditCyclesScreen } from './calendar';
 
+import { MagazineScreen, FullPostScreen, PostsScreen } from './magazine';
+
 export {
   LoginScreen,
   VerificationScreen,
@@ -52,7 +50,7 @@ export {
   HomeScreen,
   SymptomsScreen,
   ChartScreen,
-  LearningBankScreen,
+  MagazineScreen,
   PostsScreen,
   FullPostScreen,
   PeriodSymptomsTabScreen,

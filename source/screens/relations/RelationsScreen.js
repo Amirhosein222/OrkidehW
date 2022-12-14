@@ -155,7 +155,7 @@ const RelationsScreen = ({ navigation }) => {
           <NextIcon style={{ width: 25, height: 25 }} />
         </Pressable>
         <View style={{ flexDirection: 'row' }}>
-          <Text marginRight={rw(2)}>افزودن رابطه جدید</Text>
+          <Text marginRight={rw(2)}>افزودن دلبر</Text>
           <AddPerson style={{ width: 25, height: 25 }} />
         </View>
       </View>
@@ -170,7 +170,7 @@ const RelationsScreen = ({ navigation }) => {
       {showDeleteModal.show && (
         <DeleteModal
           type="rel"
-          title="پارتنر"
+          title="دلبر"
           visible={showDeleteModal.show}
           closeModal={() => setShowDeleteModal({ show: false, id: null })}
           id={showDeleteModal.id}

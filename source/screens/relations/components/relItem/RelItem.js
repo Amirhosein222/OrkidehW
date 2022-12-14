@@ -48,7 +48,7 @@ const RelItem = ({
         <Pressable
           disabled={rel.applicant === 'woman' || isVerifying || rel.is_verified}
           onPress={() => handleVerifyRel(rel.verifyCode)}
-          style={{ ...styles.verifyRel, width: isVerifying ? rw(18) : null }}>
+          style={{ ...styles.verifyRel, width: isVerifying ? rw(16) : null }}>
           {isVerifying ? (
             <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
           ) : (

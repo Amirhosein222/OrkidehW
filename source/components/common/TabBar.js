@@ -64,7 +64,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
                 tintColor,
                 focused,
               })}
-              {route.name !== 'LearningBank' && (
+              {route.name !== 'Magazine' && (
                 <Text
                   bold
                   color={COLORS.textLight}

@@ -149,6 +149,7 @@ const PeriodInfo = ({
           ))}
         </Picker>
       ) : null}
+
       <View style={styles.stepperContainer}>
         {(reEnter && registerStage === 0) ||
         (reEnter && registerStage === 1) ? (
@@ -226,7 +227,9 @@ const PeriodInfo = ({
               marginTop: 'auto',
               marginRight: rw(6),
             }}>
-            <Text color={COLORS.borderLinkBtn}>بعدی</Text>
+            <Text color={COLORS.borderLinkBtn}>
+              {registerStage === 3 ? 'ثبت' : 'بعدی'}
+            </Text>
             <Image
               source={require('../../../assets/icons/btns/enabled-next.png')}
               style={{ width: 25, height: 25, marginTop: rh(0.5) }}

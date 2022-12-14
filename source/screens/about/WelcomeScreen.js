@@ -56,7 +56,7 @@ const WelcomeScreen = ({ navigation, route }) => {
           //   textAlign="right"
           marginRight={rw(0)}
           marginTop={rh(0)}>
-          قول میدم که ارکیده تورو شگفت زده میکنه
+          قول میدم که کلوچه تورو شگفت زده میکنه
         </Text>
 
         <Text

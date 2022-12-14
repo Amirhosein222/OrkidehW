@@ -21,9 +21,14 @@ const InputRow = ({
   textStyle = {},
   textSmall = false,
   editedText = null,
+  editable = true,
 }) => {
   return (
-    <View style={{ ...styles.container, ...containerStyle }}>
+    <View
+      style={{
+        ...styles.container,
+        ...containerStyle,
+      }}>
       <View>
         <TextInput
           placeholder={placeholder}
@@ -32,6 +37,9 @@ const InputRow = ({
           style={{
             ...styles.input,
             ...inputStyle,
+            backgroundColor: !editable
+              ? 'rgba(200,200,200, 0.4)'
+              : COLORS.inputTabBarBg,
             borderBottomWidth: isValid === false || required ? 2 : 0,
             borderBottomColor: isValid === false || (required && COLORS.error),
           }}
@@ -40,6 +48,7 @@ const InputRow = ({
           onChangeText={handleTextInput}
           inputName={name}
           value={editedText}
+          editable={editable}
         />
         {isValid === false || required ? (
           <Text size={8} color={COLORS.error} bold alignSelf="flex-end">

@@ -234,20 +234,28 @@ const DrawerUi = ({ navigation }) => {
           <SympMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
-          onPress={() => navigate('MemoriesTab')}
+          onPress={() => navigate('Relations')}
           style={{ ...styles.itemContainer, marginLeft: rw(2) }}>
           <Text size={11} bold marginRight="15">
-            خاطرات من
+            روابط من
           </Text>
           <MemMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
-          onPress={() => navigate('PeriodTabs')}
-          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+          onPress={() => navigate('Magazine')}
+          style={styles.itemContainer}>
           <Text size={11} bold marginRight="15">
-            دلبر
+            مجله
           </Text>
-          <SweetHeartMenu style={{ width: 25, height: 25 }} />
+          <Instruction style={{ width: 25, height: 25 }} />
+        </Pressable>
+        <Pressable
+          onPress={() => navigate('Charts')}
+          style={styles.itemContainer}>
+          <Text size={11} bold marginRight="15">
+            نمودار وضعیت من
+          </Text>
+          <ChartMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
           onPress={() => navigate('PsychologyTests')}
@@ -258,21 +266,13 @@ const DrawerUi = ({ navigation }) => {
           <PsycheTestMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
-          onPress={() => navigate('Charts')}
+          onPress={() => navigate('ContactCounselor')}
           style={styles.itemContainer}>
           <Text size={11} bold marginRight="15">
-            نمودار وضعیت من
+            {' '}
+            ارتباط با کارشناس
           </Text>
-          <ChartMenu style={{ width: 25, height: 25 }} />
-        </Pressable>
-
-        <Pressable
-          onPress={() => navigate('LearningBank')}
-          style={styles.itemContainer}>
-          <Text size={11} bold marginRight="15">
-            مجله
-          </Text>
-          <Instruction style={{ width: 25, height: 25 }} />
+          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Divider
           color={isPeriodDay ? COLORS.periodDay : COLORS.textLight}
@@ -288,15 +288,7 @@ const DrawerUi = ({ navigation }) => {
           </Text>
           <SettingMenu style={{ width: 25, height: 25 }} />
         </Pressable>
-        <Pressable
-          onPress={() => navigate('ContactCounselor')}
-          style={styles.itemContainer}>
-          <Text size={11} bold marginRight="15">
-            {' '}
-            ارتباط با کارشناس
-          </Text>
-          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
-        </Pressable>
+
         <ExitModal
           visible={showModal}
           navigation={navigation}

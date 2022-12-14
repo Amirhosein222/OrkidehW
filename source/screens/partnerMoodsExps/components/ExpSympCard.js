@@ -33,7 +33,7 @@ const ExpSympCard = ({ item, type, onReadMore }) => {
                 styles.text,
                 { color: COLORS.textLight, fontSize: 10.5 },
               ]}>
-              میزان {item.sign.title} امروز پارتنر شما :{' '}
+              میزان {item.sign.title} امروز دلبر شما :{' '}
               <Text
                 style={[
                   {
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     paddingBottom: rh(2),
   },
   icon: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     marginTop: rh(1),
   },
   text: {

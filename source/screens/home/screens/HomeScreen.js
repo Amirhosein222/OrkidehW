@@ -39,6 +39,7 @@ import {
 
 import { COLORS, STATUS_BAR_HEIGHT, rw, rh } from '../../../configs';
 import { ScrollView } from 'react-native-gesture-handler';
+import { CommonActions } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation, route }) => {
   const params = route.params || {};
@@ -47,7 +48,7 @@ const HomeScreen = ({ navigation, route }) => {
     saveFullInfo,
     handleUserPeriodDays,
     handleUserCalendar,
-    settings,
+    allSettings,
     saveSettings,
     saveAllSettings,
     getAndHandleRels,
@@ -125,7 +126,6 @@ const HomeScreen = ({ navigation, route }) => {
         (acc, cur) => ({ ...acc, [cur.key]: cur }),
         {},
       );
-      console.log('settingsObj ', settingsObj);
       saveSettings(settingsObj);
       saveAllSettings(setts.data.data);
     }
@@ -139,9 +139,27 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (loginWomanInfo.data && loginWomanInfo.data.is_successful) {
+      if (
+        !loginWomanInfo.data.data[0].name &&
+        allSettings &&
+        !getCalendar.isFetching &&
+        !getPregnancy.isFetching
+      ) {
+        return navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'EnterInfo',
+                params: { unCompleteRegister: true },
+              },
+            ],
+          }),
+        );
+      }
       saveFullInfo(loginWomanInfo.data.data[0]);
     }
-  }, [loginWomanInfo]);
+  }, [loginWomanInfo, allSettings, getCalendar, getPregnancy]);
 
   useEffect(() => {
     if (getCalendar.data && getCalendar.data.is_successful) {
@@ -225,13 +243,25 @@ const HomeScreen = ({ navigation, route }) => {
             paddingTop: 5,
           }}>
           <HDatePicker onDateSelect={() => setShowCalendarModal(true)} />
-          <Slider />
+          {allSettings ? (
+            <Slider />
+          ) : (
+            <View
+              style={{
+                width: rw(82.5),
+                height: rh(16.2),
+                backgroundColor: 'rgba(100,100,100, 0.2)',
+                borderRadius: 18,
+                marginTop: rh(2),
+              }}
+            />
+          )}
         </View>
 
         <View
           style={{
             alignItems: 'center',
-            marginTop: rh(2),
+            marginTop: rh(1),
           }}>
           <Pregnancy
             pregnancy={pregnancy}
@@ -239,7 +269,7 @@ const HomeScreen = ({ navigation, route }) => {
           />
           <Pressable
             onPress={() => onStorePeriodAuto('today')}
-            style={{ marginTop: rh(2) }}
+            style={{ marginTop: rh(0) }}
             disabled={storePeriodAuto.isFetching}>
             {storePeriodAuto.isFetching ? (
               <ActivityIndicator

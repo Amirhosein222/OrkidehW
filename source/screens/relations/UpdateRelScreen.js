@@ -37,7 +37,7 @@ const UpdateRelScreen = ({ navigation, route }) => {
   );
 
   const onUpdateRel = () => {
-    if (verifyInfo(partner, partnerMobile, setSnackbar)) {
+    if (verifyInfo(partner, params.rel.mobile, setSnackbar)) {
       setUpdate();
     }
   };
@@ -89,7 +89,6 @@ const UpdateRelScreen = ({ navigation, route }) => {
         type: 'success',
       });
       setPartner('');
-      setPartnerMobile('');
       setPicture('');
       params.handleUpdateRels();
       navigation.goBack();
@@ -106,27 +105,13 @@ const UpdateRelScreen = ({ navigation, route }) => {
     <BackgroundView>
       <View style={styles.content}>
         <ScreenHeader
-          title="ویرایش اطلاعات پارتنر"
+          title="ویرایش اطلاعات دلبر"
           disableBack={update.isFetching}
         />
-        <SelectPicture
-          picture={picture}
-          setShowPictureModal={setShowPictureModal}
-          isUpdate={true}
-        />
-
-        <Divider
-          color={COLORS.textDark}
-          width={rw(76)}
-          style={{
-            borderBottomWidth: 0.5,
-            marginTop: rh(2),
-          }}
-        />
-        <View style={{ marginTop: rh(2) }}>
+        <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <InputRow
             title="نام :"
-            placeholder="نام پارتنر را اینجا وارد کنید"
+            placeholder="نام دلبر را اینجا وارد کنید"
             handleTextInput={setPartner}
             name="pName"
             editedText={partner}
@@ -134,12 +119,11 @@ const UpdateRelScreen = ({ navigation, route }) => {
           />
           <InputRow
             title="شماره موبایل :"
-            placeholder="شماره موبایل پارتنر را اینجا وارد کنید"
-            handleTextInput={setPartnerMobile}
             name="pMobile"
             kType="numeric"
             editedText={partnerMobile}
             containerStyle={styles.input}
+            editable={false}
           />
         </View>
 
@@ -147,10 +131,10 @@ const UpdateRelScreen = ({ navigation, route }) => {
           disabled={update.isFetching}
           loading={update.isFetching}
           title="ویرایش اطلاعات"
-          Icon={() => <EnabledEdit style={ICON_SIZE} />}
-          color={COLORS.borderLinkBtn}
+          Icon={isPeriodDay ? null : () => <EnabledEdit style={ICON_SIZE} />}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.borderLinkBtn}
           onPress={() => onUpdateRel()}
-          style={{ marginTop: 'auto', marginBottom: rh(4) }}
+          style={{ marginBottom: rh(4) }}
         />
       </View>
       {showPictureModal && (

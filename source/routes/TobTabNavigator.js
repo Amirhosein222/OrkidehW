@@ -36,7 +36,7 @@ export function MemoryTabs() {
       }}>
       <Tab.Screen
         options={{
-          tabBarLabel: 'گپ',
+          tabBarLabel: 'همه ی گپ ها',
         }}
         name="AllGaps"
         component={AllGapsScreen}

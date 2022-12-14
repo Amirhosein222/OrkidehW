@@ -14,7 +14,6 @@ const EnterInfoScreen = ({ navigation, route }) => {
   const { registerStage, handleRegisterStage, settings } =
     useContext(WomanInfoContext);
   const params = route.params;
-  const [informations, setInformations] = useState({});
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
   const goToNextStage = function (nextStage) {
@@ -22,9 +21,6 @@ const EnterInfoScreen = ({ navigation, route }) => {
       return;
     }
     handleRegisterStage(nextStage);
-  };
-  const handleInformations = function (info) {
-    setInformations({ ...info });
   };
 
   useEffect(() => {
@@ -35,6 +31,14 @@ const EnterInfoScreen = ({ navigation, route }) => {
         delay: 3000,
       });
       handleRegisterStage(1);
+    }
+    if (params.unCompleteRegister === true) {
+      handleRegisterStage(0);
+      setSnackbar({
+        msg: 'جهت استفاده از اپلیکیشن، لطفا ابتدا اطلاعات ثبت نام خود را کامل کنید',
+        visible: true,
+        delay: 3000,
+      });
     }
   }, []);
 
@@ -61,7 +65,6 @@ const EnterInfoScreen = ({ navigation, route }) => {
           {registerStage === 0 && (
             <PersonalInfo
               goToNextStage={goToNextStage}
-              setNameAndPicAndBirth={handleInformations}
               editProfile={params.editProfile}
               editName={params.name}
               editPass={params.pass}
@@ -73,7 +76,6 @@ const EnterInfoScreen = ({ navigation, route }) => {
               goToNextStage={goToNextStage}
               registerStage={registerStage}
               navigation={navigation}
-              displayName={params.reEnter ? params.name : informations.name}
               firstDay={params.firstDay}
               reEnter={params.reEnter}
             />

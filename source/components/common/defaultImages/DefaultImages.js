@@ -21,8 +21,8 @@ const DefaultImages = ({ route, navigation }) => {
     atEnterInfo,
     handleDefaultImage,
   } = route.params || null;
-  const { settings } = useContext(WomanInfoContext);
-
+  const { allSettings } = useContext(WomanInfoContext);
+  const [images, setImages] = useState();
   const [selectedImg, setSelectedImg] = useState('');
 
   const selectImages = image => {
@@ -80,6 +80,16 @@ const DefaultImages = ({ route, navigation }) => {
     }
   }, [isUpdating]);
 
+  useEffect(() => {
+    const result = [];
+    allSettings.forEach((s, index) => {
+      if (s.key === 'app_image_defaults[]') {
+        result.push(s.value);
+      }
+    });
+    setImages(result);
+  }, []);
+
   return (
     <BackgroundView>
       <ScreenHeader
@@ -92,19 +102,17 @@ const DefaultImages = ({ route, navigation }) => {
           لطفا تصویر مورد نظر خود را انتخاب کنید
         </Text>
         {/* TODO: Fill flatlist data with settings['app_image_defaults[]'].value, which is an array */}
-        <FlatList
-          data={
-            typeof settings['app_image_defaults[]'].value === 'array'
-              ? [...settings['app_image_defaults[]'].value]
-              : [settings['app_image_defaults[]'].value]
-          }
-          numColumns={2}
-          key={(item, index) => index.toString()}
-          renderItem={RenderImages}
-          style={styles.flatList}
-          contentContainerStyle={styles.flContainer}
-          showsVerticalScrollIndicator={false}
-        />
+        {images ? (
+          <FlatList
+            data={images}
+            numColumns={2}
+            key={(item, index) => index.toString()}
+            renderItem={RenderImages}
+            style={styles.flatList}
+            contentContainerStyle={styles.flContainer}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : null}
       </View>
       <Button
         title="ثبت"

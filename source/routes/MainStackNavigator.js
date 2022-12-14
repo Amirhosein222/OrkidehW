@@ -80,7 +80,11 @@ export default function MainStackNavigator({ isLoggedin, showAuth }) {
         <Stack.Screen
           name="EnterInfo"
           component={EnterInfoScreen}
-          initialParams={{ editProfile: false, reEnter: false }}
+          initialParams={{
+            editProfile: false,
+            reEnter: false,
+            unCompleteRegister: false,
+          }}
         />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="PMSInfo" component={PMSInfoScreen} />

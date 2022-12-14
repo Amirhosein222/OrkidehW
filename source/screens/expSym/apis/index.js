@@ -4,6 +4,8 @@ import {
   getMyExpectationsFromSpouseApi,
   getMySignsApi,
   storeExpectationApi,
+  deleteSignApi,
+  deleteExpApi,
 } from './apis';
 
 export {
@@ -12,4 +14,6 @@ export {
   storeExpectationApi,
   getMyExpectationsFromSpouseApi,
   getMySignsApi,
+  deleteSignApi,
+  deleteExpApi,
 };

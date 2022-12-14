@@ -1,18 +1,21 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image, Pressable } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 import { Text } from './index';
 
+import deleteIcon from '../../assets/vectors/register/delete.png';
+
 import { initPusher } from '../../libs/helpers';
 import { useIsPeriodDay } from '../../libs/hooks';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 
 const ExitModal = ({ visible, closeModal, navigation }) => {
   const { savePeriodInfo } = useContext(WomanInfoContext);
@@ -40,39 +43,76 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
 
   return (
     <Modal
+      testID={'modal'}
       isVisible={visible}
       coverScreen={true}
       hasBackdrop={true}
-      backdropOpacity={0.2}
+      backdropOpacity={0.5}
       backdropTransitionOutTiming={1}
+      backdropTransitionInTiming={0}
       animationOutTiming={0}
       animationInTiming={0}
-      onBackdropPress={() => closeModal()}
-      animationIn="zoomIn"
-      style={styles.view}>
-      <View
-        style={{
-          ...styles.modalContent,
-          backgroundColor: 'white',
-        }}>
-        <Text color={COLORS.dark} marginRight="10">
-          آیا میخواهید از حساب کاربری خود خارج شوید؟
-        </Text>
+      animationIn="slideInUp"
+      onBackdropPress={closeModal}
+      style={styles.modal}>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Pressable
+            onPress={closeModal}
+            hitSlop={7}
+            style={{ marginLeft: 'auto' }}>
+            <Ionicons
+              name="close"
+              size={32}
+              color={COLORS.icon}
+              style={styles.closeIcon}
+            />
+          </Pressable>
+        </View>
 
-        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+        <View
+          style={{
+            alignItems: 'center',
+            marginTop: 'auto',
+          }}>
+          <Image source={deleteIcon} style={{ width: 180, height: 180 }} />
+          <Text bold medium color={COLORS.textCommentCal}>
+            خروج از حساب کاربری
+          </Text>
+          <Text color={COLORS.textLight} marginRight="10">
+            آیا می خواهید از حساب کاربری خود خارج شوید؟
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 'auto',
+            marginBottom: rh(2),
+          }}>
           <Button
             color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
-            mode="contained"
-            style={styles.btn}
+            mode="outlined"
+            style={{
+              ...styles.btn,
+              borderColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
+            }}
             onPress={() => closeModal()}>
-            <Text color="white">نه</Text>
+            <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
+              نه
+            </Text>
           </Button>
           <Button
             color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
-            mode="contained"
-            style={styles.btn}
+            mode="outlined"
+            style={{
+              ...styles.btn,
+              borderColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
+            }}
             onPress={() => onLogOut()}>
-            <Text color="white">اره</Text>
+            <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
+              اره
+            </Text>
           </Button>
         </View>
       </View>
@@ -81,15 +121,6 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  view: {
-    justifyContent: 'center',
-  },
-  header: {
-    marginTop: 20,
-    alignItems: 'center',
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
   modalContent: {
     width: '100%',
     backgroundColor: COLORS.primary,
@@ -99,7 +130,36 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: 'center',
   },
-  btn: { width: '40%', height: 40, margin: 10, alignSelf: 'center' },
+  modal: {
+    alignItems: 'center',
+  },
+  content: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: rw(80),
+    height: rh(47),
+    elevation: 5,
+    borderRadius: 25,
+    backgroundColor: COLORS.mainBg,
+  },
+  header: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: rh(1),
+  },
+  closeIcon: {
+    alignSelf: 'flex-end',
+    marginRight: rw(5),
+  },
+  btn: {
+    width: '40%',
+    margin: 10,
+    alignSelf: 'center',
+    borderRadius: 20,
+    borderWidth: 1,
+  },
 });
 
 export default ExitModal;

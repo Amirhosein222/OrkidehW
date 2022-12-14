@@ -18,6 +18,7 @@ const CommentModal = ({
   postId,
   parent_id,
   updateComments,
+  showPopup,
 }) => {
   const isPeriodDay = useIsPeriodDay();
   const [comment, setComment] = useState('');
@@ -53,11 +54,21 @@ const CommentModal = ({
       loginClient.post('comment/store', formData).then(response => {
         setBtnPressed(false);
         if (response.data.is_successful) {
-          showSnackbar('نظر شما با موفقیت ثبت شد.', 'success');
-          updateComments();
+          showPopup({
+            msg: 'نظر شما با موفقیت ثبت شد',
+            visible: true,
+            type: 'success',
+          });
+          setTimeout(() => {
+            updateComments();
+          }, 2000);
+          // updateComments();
           closeModal();
         } else {
-          showSnackbar('مشکلی در ثبت نظر پیش آمده است');
+          showPopup({
+            msg: 'خطا در ثبت نظر',
+            visible: true,
+          });
           closeModal();
         }
       });
@@ -85,14 +96,16 @@ const CommentModal = ({
       style={styles.view}>
       <View style={styles.modalContent}>
         <View style={styles.header}>
-          <Text color="white" marginRight="10">
+          <Text
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+            marginRight="10">
             نظر خود را بنویسید.
           </Text>
           <AntDesign
             onPress={() => closeModal()}
             name="closecircle"
             size={26}
-            color="white"
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             style={styles.closeIcon}
           />
         </View>
@@ -102,6 +115,8 @@ const CommentModal = ({
           style={styles.textArea}
           onChangeText={handleTextInput}
           textColor="black"
+          phColor={COLORS.textLight}
+          placeholder="نظر شما"
         />
         <Button
           color={COLORS.white}
@@ -137,23 +152,23 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.cardBg,
     borderRadius: 20,
     height: '40%',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     elevation: 5,
     alignItems: 'center',
   },
   textArea: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputTabBarBg,
     borderWidth: 1,
     borderColor: COLORS.grey,
-    borderRadius: 20,
-    width: '90%',
+    borderRadius: 35,
+    width: '82%',
     marginTop: 20,
     fontSize: 12,
   },
-  btn: { width: '40%', height: 40, margin: 20, alignSelf: 'center' },
+  btn: { width: '80%', height: 40, margin: 20, alignSelf: 'center' },
 });
 
 export default CommentModal;

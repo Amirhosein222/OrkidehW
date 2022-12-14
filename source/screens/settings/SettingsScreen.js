@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext, useState } from 'react';
-import { StyleSheet, ScrollView, Image, Pressable } from 'react-native';
+import { StyleSheet, ScrollView, Image, Pressable, View } from 'react-native';
 
 import { SettingOption, UserAvatarInfo } from './components';
 import {
@@ -69,12 +69,6 @@ const SettingsScreen = ({ navigation }) => {
           name="default"
           navigateTo="Privacy"
         />
-        <SettingOption
-          title="روابط من"
-          Icon={() => <Relationships style={{ width: 25, height: 25 }} />}
-          name="default"
-          navigateTo="Relations"
-        />
         <Divider
           color={COLORS.textDark}
           width={rw(77)}
@@ -88,7 +82,7 @@ const SettingsScreen = ({ navigation }) => {
           navigateTo="AppGuide"
         />
         <SettingOption
-          title="درباره ارکیده"
+          title="درباره کلوچه"
           Icon={() => <AboutUs style={{ width: 25, height: 25 }} />}
           name="about"
           navigateTo="AboutUs"
@@ -100,7 +94,7 @@ const SettingsScreen = ({ navigation }) => {
           style={{ marginVertical: rh(1.5) }}
         />
         <SettingOption
-          title="امتیاز به ارکیده"
+          title="امتیاز به کلوچه"
           Icon={() => <Point style={{ width: 25, height: 25 }} />}
         />
         <SettingOption
@@ -109,28 +103,31 @@ const SettingsScreen = ({ navigation }) => {
           name="invite"
           handleVisible={setSnackbar}
         />
+
         <Divider
           color={COLORS.textDark}
           width={rw(77)}
           borderWidth={0.5}
           style={{ marginTop: rh(2) }}
         />
-        <Pressable onPress={handleExitModal}>
-          <SettingOption
-            title="خروج از حساب کاربری"
-            Icon={() => <Exit style={{ width: 25, height: 25 }} />}
-            name="exit"
-          />
-        </Pressable>
 
-        <Image
-          source={require('../../assets/images/orkideh-logo.png')}
-          style={styles.image}
-          resizeMode="contain"
+        <SettingOption
+          title="خروج از حساب کاربری"
+          Icon={() => <Exit style={{ width: 25, height: 25 }} />}
+          name="exit"
+          openExitModal={handleExitModal}
         />
-        <Text marginBottom={rh(3)} color={COLORS.textLight}>
-          نسخه 0.0.3
-        </Text>
+
+        <View style={{ marginTop: rh(4) }}>
+          <Image
+            source={require('../../assets/images/orkideh-logo.png')}
+            style={styles.image}
+            resizeMode="contain"
+          />
+          <Text marginBottom={rh(3)} color={COLORS.textLight}>
+            نسخه 0.0.3
+          </Text>
+        </View>
       </ScrollView>
       {snackbar.visible === true ? (
         <Snackbar

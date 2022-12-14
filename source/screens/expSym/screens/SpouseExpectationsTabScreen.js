@@ -22,6 +22,7 @@ import {
 import {
   getExpectationsFromSpouseApi,
   getMyExpectationsFromSpouseApi,
+  storeExpectationApi,
 } from '../apis';
 import { COLORS, rh } from '../../../configs';
 import { useApi } from '../../../libs/hooks';
@@ -35,12 +36,14 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [resetPicker, setResetPicker] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-
   const [getExpectationsFromSpouse, setGetExpectationsFromSpouse] = useApi(() =>
     getExpectationsFromSpouseApi(womanInfo.activeRel.relId),
   );
   const [myExpsFromSpouce, setMyExpsFromSpouse] = useApi(() =>
     getMyExpectationsFromSpouseApi(womanInfo.activeRel.relId),
+  );
+  const [storeExpectation, setStoreExpectation] = useApi(() =>
+    storeExpectationApi(selectedExp.current.id, womanInfo.activeRel.relId),
   );
 
   const onGetExpectationsFromSpouse = async function () {
@@ -92,10 +95,27 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
     });
   };
 
-  const openInfoModal = exp => {
+  const onStoreExpectation = async function (exp) {
     selectedExp.current = exp;
-    setShowInfoModal(true);
+    setStoreExpectation();
   };
+
+  useEffect(() => {
+    if (storeExpectation.data && storeExpectation.data.is_successful) {
+      setSnackbar({
+        msg: 'با موفقیت ثبت شد.',
+        visible: true,
+        type: 'success',
+      });
+      setMyExpsFromSpouse();
+    }
+    if (storeExpectation.data && !storeExpectation.data.is_successful) {
+      setSnackbar({
+        msg: storeExpectation.data.message,
+        visible: true,
+      });
+    }
+  }, [storeExpectation]);
 
   const onSelectSpouse = spouse => {
     if (spouse === 'newRel') {
@@ -111,15 +131,24 @@ const SpouseExpectationsTabScreen = ({ navigation }) => {
   const RenderExpectations = ({ item }) => {
     const alreadySelected =
       (myExps.length &&
-        myExps.some(exp => exp.expectation_id === item.id && true)) ||
+        myExps.filter(exp => exp.expectation_id === item.id).pop()) ||
       false;
     return (
       <ExpSympCard
         item={item}
-        onReadMore={openInfoModal}
-        onPress={openInfoModal}
+        onPress={onStoreExpectation}
         isExp={true}
+        selectedExp={
+          selectedExp.current
+            ? {
+                id: selectedExp.current.id,
+                isStoring: storeExpectation.isFetching,
+              }
+            : {}
+        }
         alreadySelected={alreadySelected}
+        setSnackbar={setSnackbar}
+        updateData={setMyExpsFromSpouse}
       />
     );
   };

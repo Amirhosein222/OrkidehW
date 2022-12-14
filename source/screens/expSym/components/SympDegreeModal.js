@@ -35,6 +35,7 @@ const SympDegreeModal = ({
   const [fetchingMyMood, setFetchingMyMood] = useState(true);
   const [checkbox, setCheckbox] = useState(new Map([]));
   const moodsRef = useRef([]);
+  const moodsObj = useRef([]);
   const [selectedMood, setSelectedMood] = useState(null);
   const [allMoods, setAllMoods] = useState([]);
   const [alreadySelectedMood, setAlreadySelectedMood] = useState(0);
@@ -48,6 +49,8 @@ const SympDegreeModal = ({
     formData.append('sign_id', sign.id);
     formData.append('gender', 'woman');
     loginClient.post('moods_of_sign', formData).then(response => {
+      console.log('all moods', response.data);
+
       if (response.data.is_successful) {
         moodsRef.current = response.data.data.moods;
         setAllMoods(response.data.data.moods);
@@ -61,63 +64,30 @@ const SympDegreeModal = ({
     setAlreadySelectedMood(moodIndex);
   };
 
-  const handleSelectedMood = async function (mood) {
-    if (sign.is_multiple === 0) {
-      setIsSending(true);
-      const moodObj = {
-        gender: 'woman',
-        sign_id: selectedMood.sign_id,
-        date: signDate,
-        mood_id: [selectedMood.id],
-      };
-      const loginClient = await getLoginClient();
-      loginClient.post('store/sign', moodObj).then(response => {
-        setIsSending(false);
-        if (response.data.is_successful) {
-          updateMySigns();
-          setSnackbar({
-            msg: 'با موفقیت ثبت شد',
-            visible: true,
-            type: 'success',
-          });
-          closeModal();
-        } else {
-          setSnackbar({
-            msg: response.data.message,
-            visible: true,
-          });
-          closeModal();
-        }
-      });
+  const handleSingleMood = () => {
+    moodsObj.current = {
+      gender: 'woman',
+      sign_id: selectedMood.sign_id,
+      date: signDate,
+      mood_id: [selectedMood.id],
+    };
+  };
+
+  const handleSelectedMultipleMoods = async function (mood) {
+    const items = new Map([...checkbox]);
+    if (items.has(mood.id)) {
+      items.delete(mood.id);
     } else {
-      const items = new Map([...checkbox]);
       items.set(mood.id);
-      setCheckbox(items);
-      const moodObj = {
-        gender: 'woman',
-        sign_id: mood.sign_id,
-        date: signDate,
-        mood_id: [mood.id],
-      };
-      const loginClient = await getLoginClient();
-      loginClient.post('store/sign', moodObj).then(response => {
-        if (response.data.is_successful) {
-          updateMySigns();
-          setSnackbar({
-            msg: 'با موفقیت ثبت شد',
-            visible: true,
-            type: 'success',
-          });
-          closeModal();
-        } else {
-          setSnackbar({
-            msg: response.data.message,
-            visible: true,
-          });
-          closeModal();
-        }
-      });
     }
+    setCheckbox(items);
+    const keys = [...items.keys()];
+    moodsObj.current = {
+      gender: 'woman',
+      sign_id: mood.sign_id,
+      date: signDate,
+      mood_id: keys,
+    };
   };
 
   const getMyMoods = async function () {
@@ -129,13 +99,19 @@ const SympDegreeModal = ({
     formData.append('include_mood', 1);
 
     loginClient.post('show/my/moods', formData).then(response => {
-      setFetchingMyMood(false);
+      console.log('my moods', response.data);
       if (response.data.is_successful) {
         const items = new Map([...checkbox]);
+        setFetchingMyMood(false);
+
         if (response.data.data.length) {
           response.data.data.map(item => {
-            items.set(item.mood.id);
-            setCheckbox(items);
+            allMoods.map(am => {
+              if (item.mood.id === am.id) {
+                items.set(item.mood.id);
+                setCheckbox(items);
+              }
+            });
             if (item.sign_id === sign.id && sign.is_multiple === 0) {
               handleAlreadySelectedMood(item.mood.id);
             }
@@ -150,14 +126,40 @@ const SympDegreeModal = ({
     });
   };
 
+  const submit = async () => {
+    if (sign.is_multiple === 0) {
+      handleSingleMood();
+    }
+    setIsSending(true);
+    const loginClient = await getLoginClient();
+    loginClient.post('store/sign', moodsObj.current).then(response => {
+      setIsSending(false);
+      if (response.data.is_successful) {
+        updateMySigns();
+        setSnackbar({
+          msg: 'با موفقیت ثبت شد',
+          visible: true,
+          type: 'success',
+        });
+        closeModal();
+      } else {
+        setSnackbar({
+          msg: JSON.stringify(response.data.message),
+          visible: true,
+        });
+        closeModal();
+      }
+    });
+  };
+
   const RenderMoods = ({ item }) => {
     return (
       <View style={styles.checkBox}>
         <Text color={COLORS.dark}>{item.title}</Text>
         <Checkbox
           status={checkbox.has(item.id) ? 'checked' : 'unchecked'}
-          color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
-          onPress={() => handleSelectedMood(item)}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+          onPress={() => handleSelectedMultipleMoods(item)}
         />
       </View>
     );
@@ -225,7 +227,7 @@ const SympDegreeModal = ({
               />
             </View>
             <Text color={COLORS.textCommentCal} medium bold>
-              میزان {sign.title} شما در این دوره
+              {sign.title} امروزت چطوره؟
             </Text>
             {!sign.is_multiple ? (
               <View
@@ -271,27 +273,6 @@ const SympDegreeModal = ({
                 <Text color={COLORS.dark} medium bold marginTop={rh(2)}>
                   {sign.title}
                 </Text>
-                <Pressable
-                  onPress={handleSelectedMood}
-                  style={{
-                    ...styles.submitBtn,
-                    borderColor: isPeriodDay
-                      ? COLORS.periodDay
-                      : COLORS.primary,
-                  }}>
-                  {isSending ? (
-                    <ActivityIndicator
-                      color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
-                      size="small"
-                    />
-                  ) : (
-                    <Text
-                      bold
-                      color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
-                      ثبت
-                    </Text>
-                  )}
-                </Pressable>
               </View>
             ) : (
               <FlatList
@@ -303,6 +284,25 @@ const SympDegreeModal = ({
                 }}
               />
             )}
+            <Pressable
+              onPress={submit}
+              style={{
+                ...styles.submitBtn,
+                borderColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
+              }}>
+              {isSending ? (
+                <ActivityIndicator
+                  color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+                  size="small"
+                />
+              ) : (
+                <Text
+                  bold
+                  color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
+                  ثبت
+                </Text>
+              )}
+            </Pressable>
           </View>
         )}
       </View>
@@ -361,7 +361,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 120,
     height: 120,
-    backgroundColor: 'red',
   },
 });
 

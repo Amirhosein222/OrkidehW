@@ -4,12 +4,7 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import Modal from 'react-native-modal';
 import moment from 'moment-jalaali';
 
-import {
-  Button,
-  Text,
-  InputRow,
-  Snackbar,
-} from '../../../../components/common';
+import { Button, Text, InputRow } from '../../../../components/common';
 import { rw, rh, COLORS, ICON_SIZE } from '../../../../configs';
 import getLoginClient from '../../../../libs/api/loginClientApi';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
@@ -24,6 +19,7 @@ const EditInfoModal = ({
   closeModal,
   displayName,
   oldName,
+  setSnackbar,
 }) => {
   const isPeriodDay = useIsPeriodDay();
 
@@ -31,13 +27,7 @@ const EditInfoModal = ({
   const [name, setName] = useState();
   const [username, setUsername] = useState();
   const [isUpdating, setIsUpdating] = useState(false);
-  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-
-  const handleVisible = () => {
-    setSnackbar({
-      visible: !snackbar.visible,
-    });
-  };
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     setName(oldName);
@@ -46,46 +36,65 @@ const EditInfoModal = ({
     return () => {
       setName();
       setUsername();
+      setShowError(false);
     };
   }, []);
 
+  const validateNames = () => {
+    if (!name || !username) {
+      return setShowError(true);
+    }
+    if (title === 'نام' && name === oldName) {
+      return closeModal();
+    }
+    if (title === 'نام نمایشی' && username === displayName) {
+      return closeModal();
+    }
+    return true;
+  };
+
   const updateName = async function () {
-    const loginClient = await getLoginClient();
-    setIsUpdating(true);
-    const formData = new FormData();
-    formData.append('display_name', username);
-    formData.append('name', name);
-    formData.append(
-      'birth_date',
-      moment(fullInfo.birth_date, 'X').locale('en').format('jYYYY/jMM/jDD'),
-    );
-    formData.append('gender', 'woman');
-    formData.append('is_password_active', Number(fullInfo.is_password_active));
-    formData.append('is_finger_active', Number(fullInfo.is_finger_active));
-    formData.append('password', fullInfo.password);
-    formData.append('repeat_password', fullInfo.password);
-    loginClient
-      .post('complete/profile', formData)
-      .then(response => {
-        setIsUpdating(false);
-        if (response.data.is_successful) {
-          saveFullInfo(response.data.data);
-          setSnackbar({
-            msg: 'اطلاعات شما با موفقیت ویرایش شد',
-            visible: true,
-            type: 'success',
-          });
-          closeModal();
-        } else {
-          setSnackbar({
-            msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
-            visible: true,
-          });
-        }
-      })
-      .catch(e => {
-        // console.log(e);
-      });
+    if (validateNames() === true) {
+      const loginClient = await getLoginClient();
+      setIsUpdating(true);
+      const formData = new FormData();
+      formData.append('display_name', username);
+      formData.append('name', name);
+      formData.append(
+        'birth_date',
+        moment(fullInfo.birth_date, 'X').locale('en').format('jYYYY/jMM/jDD'),
+      );
+      formData.append('gender', 'woman');
+      formData.append(
+        'is_password_active',
+        Number(fullInfo.is_password_active),
+      );
+      formData.append('is_finger_active', Number(fullInfo.is_finger_active));
+      formData.append('password', fullInfo.password);
+      formData.append('repeat_password', fullInfo.password);
+      loginClient
+        .post('complete/profile', formData)
+        .then(response => {
+          setIsUpdating(false);
+          if (response.data.is_successful) {
+            saveFullInfo(response.data.data);
+            setSnackbar({
+              msg: 'اطلاعات شما با موفقیت ویرایش شد',
+              visible: true,
+              type: 'success',
+            });
+            closeModal();
+          } else {
+            setSnackbar({
+              msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+              visible: true,
+            });
+          }
+        })
+        .catch(e => {
+          // console.log(e);
+        });
+    }
   };
 
   return (
@@ -121,6 +130,8 @@ const EditInfoModal = ({
               name="name"
               containerStyle={styles.input}
               editedText={name}
+              required={showError}
+              tipText="وارد کردن نام الزامی است"
             />
           ) : (
             <InputRow
@@ -130,6 +141,8 @@ const EditInfoModal = ({
               name="username"
               containerStyle={styles.input}
               editedText={username}
+              required={showError}
+              tipText=" وارد کردن نام نمایشی الزامی است"
             />
           )}
         </View>
@@ -144,13 +157,6 @@ const EditInfoModal = ({
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
         />
       </View>
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null}
     </Modal>
   );
 };

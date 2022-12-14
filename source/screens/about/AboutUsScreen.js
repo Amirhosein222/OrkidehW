@@ -24,7 +24,7 @@ const AboutUsScreen = ({ navigation }) => {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <ScreenHeader title="درباره ارکیده" />
+      <ScreenHeader title="درباره کلوچه" />
       <View style={styles.container}>
         <MaterialCommunityIcons
           name="google-circles-extended"

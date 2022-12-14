@@ -1,7 +1,7 @@
 import {
   ChartScreen,
   ContactCounselorScreen,
-  LearningBankScreen,
+  MagazineScreen,
   SymptomsScreen,
   LoveNotificationScreen,
 } from './screens';
@@ -9,7 +9,7 @@ import {
 export {
   ChartScreen,
   ContactCounselorScreen,
-  LearningBankScreen,
+  MagazineScreen,
   SymptomsScreen,
   LoveNotificationScreen,
 };

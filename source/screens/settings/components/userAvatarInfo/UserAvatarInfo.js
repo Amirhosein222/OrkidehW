@@ -21,18 +21,17 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
   const navigation = useNavigation();
 
   return (
-    <View
+    <Pressable
+      onPress={() => navigation.navigate('Profile')}
       style={{
         ...styles.avatarContainer,
         justifyContent: profile ? 'center' : 'flex-end',
       }}>
       {!profile && (
         <>
-          <Pressable
-            onPress={() => navigation.navigate('Profile')}
-            style={{ marginTop: rh(0.5), marginRight: 'auto' }}>
+          <View style={{ marginTop: rh(0.5), marginRight: 'auto' }}>
             <NextPage style={ICON_SIZE} />
-          </Pressable>
+          </View>
           <View style={styles.nameContainer}>
             <Text
               bold
@@ -94,7 +93,7 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
           </Pressable>
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

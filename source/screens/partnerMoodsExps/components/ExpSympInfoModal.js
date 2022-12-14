@@ -50,8 +50,14 @@ const ExpSympInfoModal = ({ item, visible, closeModal }) => {
           />
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text color={COLORS.textCommentCal} bold marginTop={rh(2)}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ marginHorizontal: rw(4) }}>
+          <Text
+            color={COLORS.textCommentCal}
+            bold
+            textAlign="right"
+            marginTop={rh(2)}>
             {item.expectation.title}
           </Text>
           {item.expectation.description ? (

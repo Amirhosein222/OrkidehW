@@ -112,11 +112,8 @@ const AddRelScreen = ({ navigation, route }) => {
   return (
     <BackgroundView>
       <View style={styles.content}>
-        <ScreenHeader
-          title="افزودن پارتنر جدید"
-          disableBack={addRel.isFetching}
-        />
-        <SelectPicture
+        <ScreenHeader title="افزودن دلبر " disableBack={addRel.isFetching} />
+        {/* <SelectPicture
           picture={picture}
           setShowPictureModal={setShowPictureModal}
         />
@@ -125,18 +122,18 @@ const AddRelScreen = ({ navigation, route }) => {
           width={rw(80)}
           color={COLORS.textDark}
           style={{ borderBottomWidth: 0.4, marginTop: rh(4) }}
-        />
-        <View style={{ marginTop: rh(3) }}>
+        /> */}
+        <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <InputRow
             title="نام :"
-            placeholder="نام پارتنر را اینجا وارد کنید"
+            placeholder="نام دلبر را اینجا وارد کنید"
             handleTextInput={setPartner}
             name="pName"
             containerStyle={styles.input}
           />
           <InputRow
             title="شماره موبایل :"
-            placeholder="شماره موبایل پارتنر را اینجا وارد کنید"
+            placeholder="شماره موبایل دلبر را اینجا وارد کنید"
             handleTextInput={setPartnerMobile}
             name="pMobile"
             kType="numeric"
@@ -151,7 +148,7 @@ const AddRelScreen = ({ navigation, route }) => {
           Icon={() => <EnabledCheck style={ICON_SIZE} />}
           color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={onSubmitRel}
-          style={{ marginTop: 'auto', marginBottom: rh(4) }}
+          style={{ marginBottom: rh(4) }}
         />
       </View>
       {showPictureModal && (

@@ -46,8 +46,8 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
         {testInfo.image ? (
           <Image
             source={{ uri: baseUrl + testInfo.image }}
-            style={{ width: 200, height: 200 }}
-            resizeMode="contain"
+            style={{ width: 180, height: 180, borderRadius: 7 }}
+            resizeMode="cover"
           />
         ) : (
           <Octicons
@@ -65,7 +65,7 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
 
         <View style={{ width: rw(70), marginVertical: rh(1) }}>
           <Text size={11} color={COLORS.textLight} textAlign="right">
-            {testInfo.des.replace(/(<([^>]+)>)/gi, '')}
+            {testInfo?.des.replace(/(<([^>]+)>)/gi, '')}
           </Text>
         </View>
 

@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'yellow',
-    marginTop: rh(2),
   },
   pregnancyPercentText: {
     ...StyleSheet.absoluteFillObject,

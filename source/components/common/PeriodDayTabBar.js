@@ -77,7 +77,7 @@ const PeriodDayTabBar = ({
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback
-            onPress={() => navigation.navigate('LearningBank')}>
+            onPress={() => navigation.navigate('Magazine')}>
             <Image
               source={
                 isPeriodDay

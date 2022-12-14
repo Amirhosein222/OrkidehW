@@ -23,19 +23,15 @@ import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import { COLORS, rw, rh } from '../../../configs';
 
 import AddMemoriesIcon from '../../../assets/icons/btns/add-memories.svg';
+import MaritalStatus from './MaritalStatus';
 
-const PersonalInfo = ({
-  goToNextStage,
-  editProfile,
-  editName,
-  setNameAndPicAndBirth,
-  navigation,
-}) => {
+const PersonalInfo = ({ goToNextStage, editProfile, editName, navigation }) => {
   const { registerStage } = useContext(WomanInfoContext);
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [family, setFamily] = useState('');
+  const [marital, setMarital] = useState('');
   const [picture, setPicture] = useState('');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayModal, setShowBirthdayModal] = useState(false);
@@ -89,15 +85,6 @@ const PersonalInfo = ({
     });
   };
 
-  // const handleLayoutAnimation = () => {
-  //   LayoutAnimation.configureNext({
-  //     duration: 500,
-  //     create: { type: 'easeIn', property: 'scaleY' },
-  //     update: { type: 'spring', springDamping: 0.9 },
-  //     delete: { type: 'easeOut', property: 'scaleY' },
-  //   });
-  // };
-
   // Set name and pic in the EnterInfo Screen as informations state.
   // const handleNextStage = function () {
   //   setNameAndPicAndBirth({
@@ -122,6 +109,7 @@ const PersonalInfo = ({
     formData.append('display_name', username);
     formData.append('name', name);
     formData.append('birth_date', birthday);
+    formData.append('status_married', marital);
     formData.append('is_password_active', 0);
     formData.append('is_finger_active', 0);
     formData.append('password', '');
@@ -132,9 +120,6 @@ const PersonalInfo = ({
       .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
-          setNameAndPicAndBirth({
-            name: name,
-          });
           goToNextStage(1);
         } else {
           setSnackbar({
@@ -227,17 +212,17 @@ const PersonalInfo = ({
             color={COLORS.primary}
             alignSelf="flex-end"
             marginRight={rw(4)}>
-            نام برای مشاهده در بخش ارتباط با همسر استفاده می شود
+            نام فقط برای مشاهده در بخش ارتباط با دلبر استفاده می شود
           </Text>
         </View>
         <InputRow
           title="نام خانوادگی :"
-          placeholder="نام خانوادگی خود را اینجا وارد کنید"
+          placeholder="اختیاری"
           handleTextInput={setFamily}
           name="familyName"
         />
         <View
-          style={{ width: rw(100), alignItems: 'center', marginBottom: rh(2) }}>
+          style={{ width: rw(100), alignItems: 'center', marginBottom: rh(1) }}>
           <View style={styles.birthdayContainer}>
             <Pressable
               hitSlop={7}
@@ -255,10 +240,11 @@ const PersonalInfo = ({
             </View>
             <View style={{ width: rw(27) }}>
               <Text size={11} color={COLORS.textLight} alignSelf="flex-end">
-                تاریخ تولد
+                تاریخ تولد :
               </Text>
             </View>
           </View>
+
           {!birthday && (
             <View
               style={{
@@ -273,6 +259,8 @@ const PersonalInfo = ({
             </View>
           )}
         </View>
+
+        <MaritalStatus setMarital={setMarital} selectedValue={marital} />
 
         <View style={styles.stepperContainer}>
           <View style={{ width: rw(24) }} />
@@ -398,7 +386,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 50,
     marginVertical: rh(2),
-    // overflow: 'hidden',
   },
   birthdayContainer: {
     width: rw(100),
@@ -447,8 +434,7 @@ const styles = StyleSheet.create({
   stepperContainer: {
     flexDirection: 'row',
     width: rw(100),
-    marginBottom: rh(3),
-    marginTop: 'auto',
+    marginVertical: rh(3),
     alignItems: 'center',
     justifyContent: 'space-between',
   },

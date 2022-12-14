@@ -14,7 +14,7 @@ import {
   LoveNotificationScreen,
   SettingsScreen,
   EditCyclesScreen,
-  LearningBankScreen,
+  MagazineScreen,
 } from '../screens';
 import { BottomTabs } from './BottomTabNavigator';
 
@@ -27,7 +27,7 @@ const DrawerNavigator = function () {
     <Drawer.Navigator
       edgeWidth={0}
       drawerPosition="right"
-      drawerContent={(props) => <DrawerUi {...props} />}
+      drawerContent={props => <DrawerUi {...props} />}
       drawerWidth={200}
       drawerContentOptions={{
         activeTintColor: '#ffffff',
@@ -60,7 +60,7 @@ const DrawerNavigator = function () {
       />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="EditCycles" component={EditCyclesScreen} />
-      <Drawer.Screen name="LearningBank" component={LearningBankScreen} />
+      <Drawer.Screen name="Magazine" component={MagazineScreen} />
     </Drawer.Navigator>
   );
 };

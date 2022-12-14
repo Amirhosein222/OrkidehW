@@ -24,6 +24,7 @@ const MyGapsScreen = ({ navigation }) => {
     id: null,
   });
   const [shouldUpdate, setShouldUpdate] = useState(false);
+  const [gaps, setGaps] = useState([]);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [edit, setEdit] = useState({ isEdit: false, memory: null });
   const [myGaps, setMyGaps] = useApi(() => getMyGapsApi());
@@ -76,6 +77,9 @@ const MyGapsScreen = ({ navigation }) => {
   }, [shouldUpdate]);
 
   useEffect(() => {
+    if (myGaps.data && myGaps.data.is_successful) {
+      setGaps(myGaps.data.data.reverse());
+    }
     myGaps.data &&
       !myGaps.data.is_successful &&
       setSnackbar({
@@ -91,9 +95,9 @@ const MyGapsScreen = ({ navigation }) => {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      {myGaps.data && myGaps.data.data.length ? (
+      {gaps.length ? (
         <FlatList
-          data={myGaps.data.data}
+          data={gaps}
           keyExtractor={item => String(item.id)}
           renderItem={RenderMemory}
           contentContainerStyle={{
@@ -139,7 +143,6 @@ const MyGapsScreen = ({ navigation }) => {
           message={snackbar.msg}
           type={snackbar.type}
           handleVisible={handleVisible}
-          atBottom={true}
         />
       ) : null}
     </BackgroundView>

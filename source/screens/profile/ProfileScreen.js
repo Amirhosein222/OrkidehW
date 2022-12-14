@@ -218,6 +218,7 @@ const ProfileScreen = ({ navigation }) => {
           closeModal={() => setShowModal(false)}
           displayName={fullInfo.display_name}
           oldName={fullInfo.name}
+          setSnackbar={setSnackbar}
         />
       )}
     </BackgroundView>

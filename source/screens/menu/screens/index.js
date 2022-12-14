@@ -1,13 +1,13 @@
 import ChartScreen from './ChartScreen';
 import ContactCounselorScreen from './ContactCounselorScreen';
-import LearningBankScreen from './LearningBankScreen';
+import MagazineScreen from './MagazineScreen';
 import SymptomsScreen from './SymptomsScreen';
 import LoveNotificationScreen from './loveNotificationScreen';
 
 export {
   ChartScreen,
   ContactCounselorScreen,
-  LearningBankScreen,
+  MagazineScreen,
   SymptomsScreen,
   LoveNotificationScreen,
 };

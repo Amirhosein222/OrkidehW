@@ -18,6 +18,7 @@ const AllGapsScreen = ({ navigation }) => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [gaps, setGaps] = useState([]);
   const [allGaps, setAllGaps] = useApi(() => getAllGapsApi());
   const selectedMemId = useRef(null);
 
@@ -59,6 +60,9 @@ const AllGapsScreen = ({ navigation }) => {
     if (allGaps.data && allGaps.data.is_successful && isRefreshing) {
       setIsRefreshing(false);
     }
+    if (allGaps.data && allGaps.data.is_successful) {
+      setGaps(allGaps.data.data.reverse());
+    }
 
     allGaps.data &&
       !allGaps.data.is_successful &&
@@ -86,9 +90,9 @@ const AllGapsScreen = ({ navigation }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        {allGaps.data && allGaps.data.data.length ? (
+        {gaps.length ? (
           <FlatList
-            data={allGaps.data.data}
+            data={gaps}
             onRefresh={onRefresh}
             refreshing={isRefreshing}
             keyExtractor={item => String(item.id)}
@@ -114,7 +118,6 @@ const AllGapsScreen = ({ navigation }) => {
             message={snackbar.msg}
             type={snackbar.type}
             handleVisible={handleVisible}
-            atBottom={true}
           />
         ) : null}
       </BackgroundView>

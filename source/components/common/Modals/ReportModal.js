@@ -79,6 +79,7 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
     });
     setReports(result);
   }, []);
+
   useEffect(() => {
     if (report.data && report.data.is_successful) {
       closeModal();

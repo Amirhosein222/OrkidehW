@@ -14,7 +14,7 @@ const getDates = function (firstDay) {
     days.push(momentJ(day).locale('en').format('jYYYY/jMM/jDD'));
     day = day.clone().add(1, 'd');
   }
-  return days;
+  return days.reverse();
 };
 
 export default getDates;

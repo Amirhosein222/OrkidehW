@@ -196,10 +196,20 @@ const AddMemoryModal = ({
           title={edit.isEdit ? 'ویرایش خاطره' : 'ارسال'}
           Icon={
             edit.isEdit
-              ? () => <EnabledEdit style={ICON_SIZE} />
+              ? isPeriodDay
+                ? null
+                : () => <EnabledEdit style={ICON_SIZE} />
               : () => <EnabledSend style={ICON_SIZE} />
           }
-          color={edit.isEdit ? COLORS.borderLinkBtn : COLORS.primary}
+          color={
+            edit.isEdit
+              ? isPeriodDay
+                ? COLORS.periodDay
+                : COLORS.borderLinkBtn
+              : isPeriodDay
+              ? COLORS.periodDay
+              : COLORS.primary
+          }
           style={styles.btn}
           loading={isSending ? true : false}
           disabled={isSending ? true : false}

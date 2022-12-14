@@ -66,8 +66,7 @@ const SetPassword = ({ route, navigation }) => {
     if (submitPassword.data && submitPassword.data.is_successful) {
       disableBack.current = true;
       setSnackbar({
-        msg:
-          'رمز عبور شما با موفقیت تغییر یافت، لطفا با رمز عبور جدید وارد شود',
+        msg: 'رمز عبور شما با موفقیت تغییر یافت، لطفا با رمز عبور جدید وارد شود',
         visible: true,
         type: 'success',
       });
@@ -82,7 +81,7 @@ const SetPassword = ({ route, navigation }) => {
             ],
           }),
         );
-      }, 3000);
+      }, 2500);
     }
     if (submitPassword.data && !submitPassword.data.is_successful) {
       setSnackbar({
@@ -90,6 +89,10 @@ const SetPassword = ({ route, navigation }) => {
         visible: true,
       });
     }
+
+    () => {
+      clearTimeout();
+    };
   }, [submitPassword]);
 
   return (

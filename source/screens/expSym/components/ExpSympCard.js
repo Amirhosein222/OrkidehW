@@ -1,20 +1,80 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { StyleSheet, View, Image, Pressable, Text } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Pressable,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
+import { deleteSignApi, deleteExpApi, storeExpectationApi } from '../apis';
 import { baseUrl, COLORS } from '../../../configs';
 import { rw, rh } from '../../../configs';
-import { useIsPeriodDay } from '../../../libs/hooks';
+import { useApi, useIsPeriodDay } from '../../../libs/hooks';
+import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
+import { adjust } from '../../../libs/helpers';
 
 const ExpSympCard = ({
   item,
   onPress,
-  onReadMore,
   isExp = false,
+  selectedExp = {},
   alreadySelected,
+  setSnackbar,
+  updateData,
 }) => {
   const isPeriodDay = useIsPeriodDay();
+  const { activeRel } = useContext(WomanInfoContext);
+  const [deleteExp, setDeleteExp] = useApi(() =>
+    deleteExpApi(alreadySelected.id, activeRel.relId),
+  );
+  const [deleteSign, setDeleteSign] = useApi(() =>
+    deleteSignApi(alreadySelected.id),
+  );
+  const onDelete = () => {
+    if (isExp) {
+      setDeleteExp();
+    } else {
+      setDeleteSign();
+    }
+  };
+
+  useEffect(() => {
+    if (deleteExp.data && deleteExp.data.is_successful) {
+      setSnackbar({
+        msg: 'با موفقیت حذف شد',
+        visible: true,
+        type: 'success',
+      });
+      updateData();
+    }
+    deleteExp.data &&
+      !deleteExp.data.is_successful &&
+      setSnackbar({
+        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+        visible: true,
+      });
+  }, [deleteExp]);
+
+  useEffect(() => {
+    if (deleteSign.data && deleteSign.data.is_successful) {
+      updateData();
+      setSnackbar({
+        msg: 'با موفقیت حذف شد',
+        visible: true,
+        type: 'success',
+      });
+    }
+    deleteSign.data &&
+      !deleteSign.data.is_successful &&
+      setSnackbar({
+        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+        visible: true,
+      });
+  }, [deleteSign]);
 
   return (
     <View
@@ -23,29 +83,59 @@ const ExpSympCard = ({
         backgroundColor: alreadySelected ? COLORS.lightPink : COLORS.cardBg,
       }}>
       {alreadySelected && (
-        <AntDesign
-          name="checkcircle"
-          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
-          size={32}
+        <Pressable
+          disabled={deleteExp.isFetching || deleteSign.isFetching}
           style={styles.selectedBadge}
-        />
+          onPress={onDelete}>
+          {deleteExp.isFetching || deleteSign.isFetching ? (
+            <View
+              style={[
+                styles.deleteActivity,
+                {
+                  backgroundColor: isPeriodDay
+                    ? COLORS.periodDay
+                    : COLORS.primary,
+                },
+              ]}>
+              <ActivityIndicator size="small" color="white" />
+            </View>
+          ) : (
+            <AntDesign
+              name="closecircle"
+              color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+              size={32}
+            />
+          )}
+        </Pressable>
       )}
 
       <Pressable onPress={() => onPress(item)}>
-        <Image
-          source={
-            item.image
-              ? { uri: baseUrl + item.image }
-              : require('../../../assets/images/icons8-heart-100.png')
-          }
-          style={styles.icon}
-          resizeMode="contain"
-        />
+        {selectedExp.id === item.id && selectedExp.isStoring ? (
+          <View style={{ height: 128, justifyContent: 'center' }}>
+            <ActivityIndicator
+              size="large"
+              color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+            />
+          </View>
+        ) : (
+          <Image
+            source={
+              item.image
+                ? { uri: baseUrl + item.image }
+                : require('../../../assets/images/icons8-heart-100.png')
+            }
+            style={styles.icon}
+            resizeMode="contain"
+          />
+        )}
       </Pressable>
 
       <View style={styles.titleContainer}>
         <Text
-          style={[styles.text, { color: COLORS.textCommentCal, fontSize: 12 }]}>
+          style={[
+            styles.text,
+            { color: COLORS.textCommentCal, fontSize: adjust(9.5) },
+          ]}>
           {item.title}
         </Text>
         {alreadySelected && !isExp ? (
@@ -67,19 +157,7 @@ const ExpSympCard = ({
               </Text>
             </Text>
           </View>
-        ) : (
-          <Pressable onPress={() => onReadMore(item)} hitSlop={5}>
-            <Text
-              style={{
-                ...styles.text,
-                color: '#B7AFB9',
-                marginTop: rh(0.2),
-                fontSize: 10,
-              }}>
-              بیشتر بخوانید...
-            </Text>
-          </Pressable>
-        )}
+        ) : null}
       </View>
     </View>
   );
@@ -88,7 +166,7 @@ const ExpSympCard = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    width: rw(39),
+    width: rw(40),
     borderRadius: 20,
     elevation: 5,
     marginVertical: rh(2),
@@ -96,8 +174,8 @@ const styles = StyleSheet.create({
     paddingBottom: rh(1.5),
   },
   icon: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     marginTop: rh(1),
   },
   text: {
@@ -107,7 +185,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'flex-end',
     alignSelf: 'flex-end',
-    marginRight: rw(3),
+    marginRight: rw(2),
     justifyContent: 'center',
     flexShrink: 1,
     borderRightWidth: 2,
@@ -125,6 +203,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '90%',
     flexShrink: 1,
+  },
+  deleteActivity: {
+    width: 32,
+    height: 32,
+    borderRadius: 32 / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

@@ -29,17 +29,18 @@ const PsychologyTestCard = ({
   };
 
   return (
-    <View style={styles.container}>
+    <Pressable onPress={() => handleNavigation()} style={styles.container}>
       {testImage ? (
         <Image
           source={{ uri: baseUrl + testImage }}
-          style={{ width: 150, height: 150 }}
-          resizeMode="contain"
+          style={{ width: 150, height: 150, borderRadius: 7 }}
+          resizeMode="cover"
         />
       ) : (
         <Octicons
           name="checklist"
-          size={80}
+          size={100}
+          style={{ marginLeft: rh(2) }}
           color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
         />
       )}
@@ -59,8 +60,7 @@ const PsychologyTestCard = ({
           paddingHorizontal: rw(4),
           paddingVertical: rh(1.5),
         }}>
-        <Pressable
-          onPress={() => handleNavigation()}
+        <View
           style={{
             flexDirection: 'row',
             alignSelf: 'flex-end',
@@ -78,7 +78,7 @@ const PsychologyTestCard = ({
           <Text small alignSelf="flex-end" bold color={COLORS.textLight}>
             /100
           </Text>
-        </Pressable>
+        </View>
         <View
           style={{
             width: '100%',
@@ -92,6 +92,7 @@ const PsychologyTestCard = ({
             marginRight="10"
             alignSelf="flex-end"
             bold
+            size={10}
             color={COLORS.textCommentCal}>
             {testTitle}
           </Text>
@@ -101,12 +102,13 @@ const PsychologyTestCard = ({
             marginRight="10"
             alignSelf="flex-end"
             marginTop="5"
+            bold
             textAlign="right">
             {description ? description.replace(/(<([^>]+)>)/gi, '') : ''}
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

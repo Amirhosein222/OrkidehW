@@ -34,7 +34,7 @@ const Tab = createBottomTabNavigator();
 export function BottomTabs() {
   const { isPeriodDay } = useContext(WomanInfoContext);
 
-  const handleTabsStyle = (focused) => {
+  const handleTabsStyle = focused => {
     return {
       backgroundColor: isPeriodDay && COLORS.lightGrey,
     };
@@ -44,7 +44,7 @@ export function BottomTabs() {
     <Tab.Navigator
       initialRouteName="HomeScreen"
       backBehavior="none"
-      tabBar={(props) => <TabBar {...props} />}
+      tabBar={props => <TabBar {...props} />}
       swipeEnabled={false}
       animationEnabled={false}
       tabBarOptions={{
@@ -76,7 +76,7 @@ export function BottomTabs() {
       <Tab.Screen
         name="MemoriesTab"
         options={{
-          title: 'خاطرات',
+          title: 'گپ',
           tabBarIcon: ({ tintColor, focused }) => (
             <View style={[handleTabsStyle(focused), { marginTop: rw(1) }]}>
               {focused ? (

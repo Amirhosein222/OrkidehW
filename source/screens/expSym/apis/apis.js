@@ -67,3 +67,28 @@ export const storeExpectationApi = async function (expId, activeRel) {
     throw error;
   }
 };
+
+export const deleteSignApi = async function (sign) {
+  try {
+    const loginClient = await getLoginClient();
+    const res = await loginClient.delete(`sign/${sign}?gender=woman`);
+
+    return res.data;
+  } catch (error) {
+    // console.log('e ', error.response);
+    throw error;
+  }
+};
+
+export const deleteExpApi = async function (exp, rel) {
+  try {
+    const loginClient = await getLoginClient();
+    const res = await loginClient.delete(
+      `expectation/${exp}?gender=woman&relation_id=${rel}`,
+    );
+    return res.data;
+  } catch (error) {
+    // console.log('e ', error.response);
+    throw error;
+  }
+};

@@ -200,7 +200,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
                   resizeMode="contain"
                 />
                 <Text bold size={13} color={COLORS.textLight}>
-                  پارتنر شما امروز چیزی رو ثبت نکرده!
+                  دلبر شما امروز چیزی رو ثبت نکرده!
                 </Text>
                 <Pressable onPress={getSpouseMoodsAndExps}>
                   <Ionicons

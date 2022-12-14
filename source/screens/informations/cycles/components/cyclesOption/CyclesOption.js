@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -8,10 +9,10 @@ import { numberConverter } from '../../../../../libs/helpers';
 
 const CyclesOption = ({ name = 'default', cycle, icon, onPress, data }) => {
   return (
-    <View style={styles.container}>
-      <Pressable hitslop={10} onPress={() => onPress(cycle)}>
+    <Pressable onPress={() => onPress(cycle)} style={styles.container}>
+      <View hitslop={10}>
         <FontAwesome5 name="pen" size={16} color={COLORS.textLight} />
-      </Pressable>
+      </View>
 
       <View style={{ flexDirection: 'row' }}>
         <Text color={COLORS.textDark} marginRight={rw(4)}>
@@ -28,7 +29,7 @@ const CyclesOption = ({ name = 'default', cycle, icon, onPress, data }) => {
           style={{ marginTop: rh(0.5) }}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 

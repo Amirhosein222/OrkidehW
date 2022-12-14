@@ -13,6 +13,7 @@ const Picker = ({
   listMode = 'FLATLIST',
   reset = false,
   defaultValue = null,
+  containerStyle = {},
 }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -58,7 +59,7 @@ const Picker = ({
           color={COLORS.textLight}
         />
       )}
-      containerStyle={styles.pickerContainer}
+      containerStyle={{ ...styles.pickerContainer, ...containerStyle }}
       style={{
         backgroundColor: COLORS.inputTabBarBg,
         borderWidth: 0,

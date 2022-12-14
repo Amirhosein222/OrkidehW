@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import Modal from 'react-native-modal';
 
 import { Text, Button, Picker } from '../common';
@@ -12,13 +12,9 @@ import EnableCheck from '../../assets/icons/btns/enabled-check.svg';
 import Close from '../../assets/icons/btns/close.svg';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
-const SelectMaritalModal = ({
-  defaultValue,
-  visible,
-  closeModal,
-  setSnackbar,
-}) => {
-  const { saveFullInfo, fullInfo, allSettings } = useContext(WomanInfoContext);
+const SelectMaritalModal = ({ visible, closeModal, setSnackbar }) => {
+  const { saveFullInfo, fullInfo, allSettings, isPeriodDay } =
+    useContext(WomanInfoContext);
   const [resetPicker, setResetPicker] = useState(false);
   const selectedOption = useRef(null);
   const [maritalStatOptions, setMaritalStatOptions] = useState([]);
@@ -114,7 +110,7 @@ const SelectMaritalModal = ({
         <Button
           title="تایید اطلاعات"
           Icon={() => <EnableCheck style={ICON_SIZE} />}
-          color={COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={onSubmit}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
           loading={status.isFetching}

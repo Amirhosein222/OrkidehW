@@ -101,7 +101,12 @@ const ExpSympInfoModal = ({
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text color={COLORS.textCommentCal} bold medium marginTop={rh(2)}>
+          <Text
+            color={COLORS.textCommentCal}
+            textAlign="right"
+            bold
+            medium
+            marginTop={rh(2)}>
             {item.title}
           </Text>
           {item.description ? (
