@@ -19,8 +19,8 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
         autoPlay
         loop
         style={{
-          width: 300,
-          height: 300,
+          width: 280,
+          height: 280,
         }}
       />
       {!isFetching ? (
@@ -28,7 +28,7 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
           <Text size={32} bold color={COLORS.white}>
             {pregnancy && numberConverter(pregnancy)}
           </Text>
-          <Text size={16} bold color={COLORS.white}>
+          <Text size={14} bold color={COLORS.white}>
             احتمال بارداری
           </Text>
         </View>
@@ -43,9 +43,8 @@ const Pregnancy = ({ pregnancy, isFetching }) => {
 
 const styles = StyleSheet.create({
   pregnancyContainer: {
-    // justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'yellow',
   },
   pregnancyPercentText: {
     ...StyleSheet.absoluteFillObject,

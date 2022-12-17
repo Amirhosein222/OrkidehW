@@ -85,16 +85,6 @@ const PersonalInfo = ({ goToNextStage, editProfile, editName, navigation }) => {
     });
   };
 
-  // Set name and pic in the EnterInfo Screen as informations state.
-  // const handleNextStage = function () {
-  //   setNameAndPicAndBirth({
-  //     name: name,
-  //     picture: picture,
-  //     birthday: birthday,
-  //   });
-  //   goToNextStage(1);
-  // };
-
   const completeRegister = async function () {
     const loginClient = await getLoginClient();
     setIsLoading(true);

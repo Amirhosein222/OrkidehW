@@ -10,6 +10,7 @@ import {
   Pressable,
 } from 'react-native';
 import moment from 'moment-jalaali';
+import { CommonActions } from '@react-navigation/native';
 
 import { Pregnancy } from '../components';
 import Slider from '../components/slider';
@@ -39,7 +40,6 @@ import {
 
 import { COLORS, STATUS_BAR_HEIGHT, rw, rh } from '../../../configs';
 import { ScrollView } from 'react-native-gesture-handler';
-import { CommonActions } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation, route }) => {
   const params = route.params || {};

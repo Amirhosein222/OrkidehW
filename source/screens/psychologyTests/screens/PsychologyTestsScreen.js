@@ -96,7 +96,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
           />
         ) : (
           <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-            <Text large color={COLORS.blue}>
+            <Text size={14} color={COLORS.blue}>
               در حال حاضر هیچ تستی وجود ندارد!
             </Text>
           </View>

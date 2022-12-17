@@ -3,17 +3,17 @@ import React, { useRef, useEffect } from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-import { rh, rw } from '../../../configs';
+import { HEIGHT, rh, rw } from '../../../configs';
 
 const love = '../../../assets/animations/100025-email-send-love-letter.json';
 
-const ShowLovePopup = ({ handleVisible, delay = 1000 }) => {
+const ShowLovePopup = ({ handleVisible, delay = 1010 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
-      top: rh(10),
+      top: HEIGHT - rh(50),
       left: 0,
       right: 0,
       zIndex: 1000,
@@ -53,7 +53,6 @@ const ShowLovePopup = ({ handleVisible, delay = 1000 }) => {
             },
           ],
           borderRadius: 12,
-          // elevation: 3,
           width: rw(50),
           height: rh(21),
           alignItems: 'center',
@@ -65,8 +64,8 @@ const ShowLovePopup = ({ handleVisible, delay = 1000 }) => {
           source={require(love)}
           autoPlay
           style={{
-            width: 400,
-            height: 400,
+            width: 200,
+            height: 200,
             alignSelf: 'center',
             position: 'relative',
           }}

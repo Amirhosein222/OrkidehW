@@ -6,13 +6,11 @@ import ImagePicker from 'react-native-image-crop-picker';
 import SelectPictureModal from '../../components/informations/SelectPictureModal';
 import {
   Button,
-  Divider,
   InputRow,
   Snackbar,
   ScreenHeader,
   BackgroundView,
 } from '../../components/common';
-import SelectPicture from './components/selectPicture';
 
 import { addRelApi } from './apis';
 import { rw, rh, COLORS, ICON_SIZE } from '../../configs';
@@ -113,16 +111,6 @@ const AddRelScreen = ({ navigation, route }) => {
     <BackgroundView>
       <View style={styles.content}>
         <ScreenHeader title="افزودن دلبر " disableBack={addRel.isFetching} />
-        {/* <SelectPicture
-          picture={picture}
-          setShowPictureModal={setShowPictureModal}
-        />
-
-        <Divider
-          width={rw(80)}
-          color={COLORS.textDark}
-          style={{ borderBottomWidth: 0.4, marginTop: rh(4) }}
-        /> */}
         <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <InputRow
             title="نام :"

@@ -84,7 +84,7 @@ const WomanInfoProvider = function ({ children }) {
         applicant: rel.applicant,
         verifyCode: rel.verification_code,
       });
-      if (rel.is_active === 1 && rel.id === Number(lastActiveRel)) {
+      if (rel.is_active === true && rel.id === Number(lastActiveRel)) {
         activeRell = rel;
       }
     });

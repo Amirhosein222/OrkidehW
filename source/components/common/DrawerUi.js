@@ -26,7 +26,6 @@ import { CalendarModal } from '../../screens/calendar/components';
 import CalendarIcon from '../../assets/icons/drawerSettings/calendar-menu.svg';
 import SympMenu from '../../assets/icons/drawerSettings/symptoms-menu.svg';
 import MemMenu from '../../assets/icons/drawerSettings/memories-menu.svg';
-import SweetHeartMenu from '../../assets/icons/drawerSettings/sweetheart-menu.svg';
 import PsycheTestMenu from '../../assets/icons/drawerSettings/psychologicalTest-menu.svg';
 import ChartMenu from '../../assets/icons/drawerSettings/chart-menu.svg';
 import ContactAnExpertMenu from '../../assets/icons/drawerSettings/contactAnExpert-menu.svg';
@@ -269,7 +268,6 @@ const DrawerUi = ({ navigation }) => {
           onPress={() => navigate('ContactCounselor')}
           style={styles.itemContainer}>
           <Text size={11} bold marginRight="15">
-            {' '}
             ارتباط با کارشناس
           </Text>
           <ContactAnExpertMenu style={{ width: 25, height: 25 }} />

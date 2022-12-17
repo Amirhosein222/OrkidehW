@@ -10,9 +10,7 @@ import {
   Snackbar,
   ScreenHeader,
   BackgroundView,
-  Divider,
 } from '../../components/common';
-import SelectPicture from './components/selectPicture';
 
 import { rw, rh, COLORS, baseUrl, ICON_SIZE } from '../../configs';
 
@@ -26,14 +24,13 @@ const UpdateRelScreen = ({ navigation, route }) => {
 
   const params = route.params || {};
   const [partner, setPartner] = useState(params.rel.label);
-  const [partnerMobile, setPartnerMobile] = useState(params.rel.mobile);
   const [picture, setPicture] = useState(
     params.rel.image ? baseUrl + params.rel.image : '',
   );
   const [showPictureModal, setShowPictureModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const [update, setUpdate] = useApi(() =>
-    updateRelApi(params.rel.value, partner, partnerMobile, picture),
+    updateRelApi(params.rel.value, partner, params.rel.mobile, picture),
   );
 
   const onUpdateRel = () => {
@@ -121,7 +118,7 @@ const UpdateRelScreen = ({ navigation, route }) => {
             title="شماره موبایل :"
             name="pMobile"
             kType="numeric"
-            editedText={partnerMobile}
+            editedText={params.rel.mobile}
             containerStyle={styles.input}
             editable={false}
           />

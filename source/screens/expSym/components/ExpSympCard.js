@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import { deleteSignApi, deleteExpApi, storeExpectationApi } from '../apis';
+import { deleteSignApi, deleteExpApi } from '../apis';
 import { baseUrl, COLORS } from '../../../configs';
 import { rw, rh } from '../../../configs';
 import { useApi, useIsPeriodDay } from '../../../libs/hooks';
@@ -197,7 +197,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     top: rh(-1.5),
     left: rw(-3),
-    // zIndex: 1,
   },
   degreeContainer: {
     flexDirection: 'row',
